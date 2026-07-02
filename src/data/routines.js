@@ -95,4 +95,20 @@ export const routines = [
       description: 'Cervical decompression sequence ideal after hours of computer or phone use. Reverses accumulated postural damage.',
     },
   },
+  {
+    id: 'fascia-release',
+    pro: true,
+    durationMin: 12,
+    exercises: ['suboccipital-release', 'temporal-release', 'platysma-release'],
+    es: {
+      name: 'Liberación fascial',
+      subtitle: 'Red conectiva completa',
+      description: 'Protocolo de liberación miofascial que trabaja desde la base del cráneo hasta el cuello. Reduce la tensión acumulada que frena los resultados de los ejercicios estructurales.',
+    },
+    en: {
+      name: 'Fascia release',
+      subtitle: 'Full connective tissue reset',
+      description: 'Myofascial release protocol working from the skull base to the neck. Reduces accumulated tension that blocks results from structural exercises.',
+    },
+  }
 ]

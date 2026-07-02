@@ -266,3 +266,107 @@ export const categories = {
   breathing: { es: 'Respiración', en: 'Breathing', color: '#7a9aaa' },
   face: { es: 'Rostro', en: 'Face', color: '#aa8a9a' },
 }
+
+// ── FASCIA ─────────────────────────────────────────────────────────────────
+
+exercises.push(
+  {
+    id: 'temporal-release',
+    category: 'fascia',
+    pro: true,
+    durationSec: 120,
+    reps: null,
+    icon: 'face',
+    es: {
+      name: 'Release temporal',
+      subtitle: 'Liberación de la fascia craneal',
+      description: 'La fascia temporal envuelve los músculos de la sien y conecta directamente con la mandíbula, el cuero cabelludo y el cuello. Liberar esta zona reduce la tensión acumulada en el cráneo y mejora la definición facial.',
+      steps: [
+        'Coloca los dedos índice y medio en las sienes',
+        'Aplica una presión suave y sostenida en círculos lentos',
+        'Busca puntos de mayor tensión y quédate 20-30 segundos en ellos',
+        'Trabaja desde la sien hacia la oreja y luego hacia la mandíbula',
+      ],
+      tip: 'No masajees rápido. La fascia necesita presión sostenida y lenta para liberarse, no fricción.',
+    },
+    en: {
+      name: 'Temporal release',
+      subtitle: 'Cranial fascia release',
+      description: 'The temporal fascia wraps the temples and connects directly to the jaw, scalp and neck. Releasing this area reduces accumulated cranial tension and improves facial definition.',
+      steps: [
+        'Place index and middle fingers on the temples',
+        'Apply gentle, sustained pressure in slow circles',
+        'Find points of greater tension and hold 20-30 seconds on each',
+        'Work from the temple toward the ear and then toward the jaw',
+      ],
+      tip: 'Do not massage quickly. Fascia needs slow, sustained pressure to release — not friction.',
+    },
+  },
+  {
+    id: 'platysma-release',
+    category: 'fascia',
+    pro: true,
+    durationSec: 90,
+    reps: 8,
+    icon: 'neck',
+    es: {
+      name: 'Release del platisma',
+      subtitle: 'Fascia superficial del cuello',
+      description: 'El platisma es una lámina muscular y fascial que cubre el cuello y tira de la cara hacia abajo. Estirar y liberar esta estructura ayuda a contrarrestar el descenso de los tejidos faciales.',
+      steps: [
+        'Siéntate erguido y lleva el mentón ligeramente hacia arriba',
+        'Mueve la mandíbula inferior hacia adelante hasta sentir tensión en el cuello',
+        'Inclina la cabeza suavemente hacia un lado y mantén 15 segundos',
+        'Repite al otro lado. Haz 4 series por lado',
+      ],
+      tip: 'Si sientes el cuello delante, lo estás haciendo bien. Es una sensación de estiramiento, nunca de dolor.',
+    },
+    en: {
+      name: 'Platysma release',
+      subtitle: 'Superficial neck fascia',
+      description: 'The platysma is a muscular and fascial sheet covering the neck that pulls facial tissue downward. Stretching and releasing this structure helps counteract the descent of facial tissues.',
+      steps: [
+        'Sit upright and tilt your chin slightly upward',
+        'Move your lower jaw forward until you feel tension in the neck',
+        'Gently tilt your head to one side and hold 15 seconds',
+        'Repeat on the other side. Do 4 sets per side',
+      ],
+      tip: 'If you feel the front of the neck, you are doing it right. It should feel like a stretch, never pain.',
+    },
+  },
+  {
+    id: 'suboccipital-release',
+    category: 'fascia',
+    pro: true,
+    durationSec: 150,
+    reps: null,
+    icon: 'chin',
+    es: {
+      name: 'Release suboccipital',
+      subtitle: 'Base del cráneo y mandíbula',
+      description: 'Los músculos suboccipitales conectan la base del cráneo con las primeras vértebras cervicales. Su tensión crónica provoca dolor de cabeza, mandíbula cerrada y postura de cabeza adelantada.',
+      steps: [
+        'Túmbate boca arriba sin almohada',
+        'Coloca los pulgares o una pelota de tenis bajo la base del cráneo',
+        'Deja que el peso de la cabeza haga presión durante 1-2 minutos',
+        'Mueve la cabeza muy despacio de lado a lado sin levantar el peso',
+      ],
+      tip: 'La liberación ocurre cuando sientes que la zona "cede" y el calor se extiende. No hay que hacer nada más que esperar.',
+    },
+    en: {
+      name: 'Suboccipital release',
+      subtitle: 'Skull base and jaw',
+      description: 'The suboccipital muscles connect the base of the skull to the first cervical vertebrae. Chronic tension here causes headaches, clenched jaw and forward head posture.',
+      steps: [
+        'Lie face up without a pillow',
+        'Place your thumbs or a tennis ball under the base of the skull',
+        'Let the weight of your head apply pressure for 1-2 minutes',
+        'Move your head very slowly side to side without lifting the weight',
+      ],
+      tip: 'Release happens when you feel the area "give" and warmth spreads. You do not need to do anything else — just wait.',
+    },
+  }
+)
+
+// Añadir categoría fascia
+categories.fascia = { es: 'Fascia', en: 'Fascia', color: '#9a8aaa' }
