@@ -1,16 +1,15 @@
 import { useState } from 'react'
 import { useApp } from '../context/AppContext'
 
-// Reemplaza con el permalink de tu producto en Gumroad
-// Ej: si tu URL es gumroad.com/l/faceo-pro, pon 'faceo-pro'
-const GUMROAD_PERMALINK = 'ikoaq'
-const GUMROAD_CHECKOUT = `https://danimij.gumroad.com/l/${GUMROAD_PERMALINK}`
+const GUMROAD_URL = 'https://danimij.gumroad.com/l/ikoaq'
+
+// Códigos válidos — añade más cuando quieras
+const VALID_CODES = ['FACEO2024', 'FACEOPROX', 'FACEOPRO1']
 
 export default function ProModal({ onClose }) {
   const { lang, setIsPro } = useApp()
-  const [step, setStep] = useState('offer') // 'offer' | 'key'
-  const [licenseKey, setLicenseKey] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [step, setStep] = useState('offer')
+  const [code, setCode] = useState('')
   const [error, setError] = useState('')
 
   const tx = {
@@ -26,15 +25,14 @@ export default function ProModal({ onClose }) {
       price: '9,99 €',
       priceSub: 'Pago único · Acceso permanente',
       cta: 'Comprar en Gumroad',
-      haveKey: 'Ya tengo una clave de licencia',
+      haveKey: 'Ya tengo un código de acceso',
       later: 'Ahora no',
-      keyTitle: 'Introduce tu clave',
-      keySub: 'Encontrarás la clave en el email de confirmación de Gumroad',
-      keyPlaceholder: 'XXXX-XXXX-XXXX-XXXX',
+      keyTitle: 'Introduce tu código',
+      keySub: 'Encontrarás el código en el email de confirmación de tu compra',
+      keyPlaceholder: 'FACEO2024',
       verify: 'Activar Pro',
       back: 'Volver',
-      errInvalid: 'Clave no válida. Comprueba que la has copiado bien.',
-      errNetwork: 'Error de conexión. Inténtalo de nuevo.',
+      errInvalid: 'Código no válido. Comprueba el email de confirmación.',
     },
     en: {
       title: 'FACEO Pro',
@@ -48,43 +46,23 @@ export default function ProModal({ onClose }) {
       price: '€9.99',
       priceSub: 'One-time payment · Permanent access',
       cta: 'Buy on Gumroad',
-      haveKey: 'I already have a license key',
+      haveKey: 'I already have an access code',
       later: 'Not now',
-      keyTitle: 'Enter your key',
-      keySub: 'You\'ll find the key in your Gumroad confirmation email',
-      keyPlaceholder: 'XXXX-XXXX-XXXX-XXXX',
+      keyTitle: 'Enter your code',
+      keySub: 'You\'ll find the code in your purchase confirmation email',
+      keyPlaceholder: 'FACEO2024',
       verify: 'Activate Pro',
       back: 'Back',
-      errInvalid: 'Invalid key. Make sure you copied it correctly.',
-      errNetwork: 'Connection error. Please try again.',
+      errInvalid: 'Invalid code. Check your confirmation email.',
     },
   }[lang]
 
-  async function verifyKey() {
-    if (!licenseKey.trim()) return
-    setLoading(true)
-    setError('')
-    try {
-      const res = await fetch('https://api.gumroad.com/v2/licenses/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          product_permalink: GUMROAD_PERMALINK,
-          license_key: licenseKey.trim(),
-          increment_uses_count: 'false',
-        }),
-      })
-      const data = await res.json()
-      if (data.success) {
-        setIsPro(true)
-        onClose()
-      } else {
-        setError(tx.errInvalid)
-      }
-    } catch {
-      setError(tx.errNetwork)
-    } finally {
-      setLoading(false)
+  function verifyCode() {
+    if (VALID_CODES.includes(code.trim().toUpperCase())) {
+      setIsPro(true)
+      onClose()
+    } else {
+      setError(tx.errInvalid)
     }
   }
 
@@ -121,16 +99,13 @@ export default function ProModal({ onClose }) {
               </svg>
             </div>
 
-            <a
-              href={GUMROAD_CHECKOUT}
-              target="_blank"
-              rel="noopener noreferrer"
+            <a href={GUMROAD_URL} target="_blank" rel="noopener noreferrer"
               className="block w-full bg-accent font-semibold py-4 rounded-2xl text-sm tracking-wide text-center mb-3 active:scale-95 transition-transform"
               style={{ color: '#080706' }}>
               {tx.cta}
             </a>
 
-            <button onClick={() => setStep('key')}
+            <button onClick={() => setStep('code')}
               className="w-full border border-border text-stone-300 text-sm py-3.5 rounded-2xl mb-3 active:bg-card transition-colors">
               {tx.haveKey}
             </button>
@@ -154,20 +129,18 @@ export default function ProModal({ onClose }) {
 
             <input
               type="text"
-              value={licenseKey}
-              onChange={e => { setLicenseKey(e.target.value.toUpperCase()); setError('') }}
+              value={code}
+              onChange={e => { setCode(e.target.value); setError('') }}
               placeholder={tx.keyPlaceholder}
               className="w-full bg-card border border-border rounded-xl px-4 py-3.5 text-warm text-sm font-mono tracking-widest mb-2 focus:outline-none focus:border-accent/50 transition-colors"
             />
             {error && <p className="text-red-400 text-xs mb-4">{error}</p>}
             {!error && <div className="mb-4"/>}
 
-            <button
-              onClick={verifyKey}
-              disabled={loading || !licenseKey.trim()}
+            <button onClick={verifyCode} disabled={!code.trim()}
               className="w-full bg-accent font-semibold py-4 rounded-2xl text-sm tracking-wide active:scale-95 transition-transform disabled:opacity-40"
               style={{ color: '#080706' }}>
-              {loading ? '...' : tx.verify}
+              {tx.verify}
             </button>
           </>
         )}
