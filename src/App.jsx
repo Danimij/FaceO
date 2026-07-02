@@ -12,7 +12,7 @@ import Profile from './pages/Profile'
 export default function App() {
   return (
     <AppProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/FaceO/">
         <div className="relative min-h-svh bg-stone-950 text-stone-100">
           <Routes>
             <Route path="/" element={<Home />} />
