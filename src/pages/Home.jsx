@@ -48,7 +48,7 @@ export default function Home() {
 
       {/* Hero */}
       <div className="relative h-72 overflow-hidden">
-        <img src={HERO_IMG} alt="" className="absolute inset-0 w-full h-full object-cover object-top" />
+        <img src={HERO_IMG} alt="" fetchpriority="high" className="absolute inset-0 w-full h-full object-cover object-top" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-base" />
         <div className="absolute bottom-0 left-0 right-0 px-5 pb-6">
           <p className="text-stone-300 text-sm mb-1">{greeting(lang)}</p>
@@ -148,7 +148,7 @@ export default function Home() {
                     onClick={() => navigate(`/exercise/${ex.id}`)}
                     className="w-full rounded-2xl overflow-hidden border border-border text-left active:scale-[0.98] transition-transform flex items-stretch h-20">
                     <div className="relative w-20 flex-shrink-0">
-                      <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover"/>
+                      <img src={img} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover"/>
                       <div className="absolute inset-0 bg-black/30"/>
                       <div className="absolute inset-0 flex items-center justify-center">
                         <ExerciseIcon type={ex.icon} category={ex.category} size={22}/>

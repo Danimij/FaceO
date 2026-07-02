@@ -56,7 +56,7 @@ export default function Train() {
               className="w-full rounded-2xl overflow-hidden border border-border text-left active:scale-[0.98] transition-transform">
               {/* Image header */}
               <div className="relative h-36">
-                <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover"/>
+                <img src={img} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover"/>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10"/>
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <div className="flex items-end justify-between">
@@ -110,7 +110,7 @@ export default function Train() {
             <button key={ex.id} onClick={() => handleExercise(ex)}
               className="w-full rounded-2xl overflow-hidden border border-border text-left active:scale-[0.98] transition-transform flex items-stretch h-20">
               <div className="relative w-24 flex-shrink-0">
-                <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover"/>
+                <img src={img} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover"/>
                 <div className="absolute inset-0 bg-black/40"/>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <ExerciseIcon type={ex.icon} category={ex.category} size={22}/>
