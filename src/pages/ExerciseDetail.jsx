@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { exercises } from '../data/exercises'
-import { CATEGORY_IMG } from '../data/images'
+import { EXERCISE_IMG, CATEGORY_IMG } from '../data/images'
 import ExerciseIcon from '../components/ExerciseIcon'
 
 function formatTime(s) {
@@ -28,7 +28,7 @@ export default function ExerciseDetail() {
 
   const exData = ex[lang]
   const totalSec = ex.durationSec
-  const img = CATEGORY_IMG[ex.category]
+  const img = EXERCISE_IMG[ex.id] || CATEGORY_IMG[ex.category]
   const circumference = 2 * Math.PI * 52
   const timerProgress = 1 - timeLeft / totalSec
 

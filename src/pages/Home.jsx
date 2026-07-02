@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext'
 import { exercises } from '../data/exercises'
 import { routines } from '../data/routines'
 import { plan30 } from '../data/plan'
-import { CATEGORY_IMG, HERO_IMG } from '../data/images'
+import { EXERCISE_IMG, HERO_IMG } from "../data/images"
 import ExerciseIcon from '../components/ExerciseIcon'
 
 function greeting(lang) {
@@ -141,7 +141,7 @@ export default function Home() {
             <div className="space-y-2">
               {recommended.map(ex => {
                 const exData = ex[lang]
-                const img = CATEGORY_IMG[ex.category]
+                const img = EXERCISE_IMG[ex.id]
                 return (
                   <button
                     key={ex.id}
