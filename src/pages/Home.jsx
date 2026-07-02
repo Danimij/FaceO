@@ -3,6 +3,7 @@ import { useApp } from '../context/AppContext'
 import { exercises } from '../data/exercises'
 import { routines } from '../data/routines'
 import { plan30 } from '../data/plan'
+import { CATEGORY_IMG, HERO_IMG } from '../data/images'
 import ExerciseIcon from '../components/ExerciseIcon'
 
 function greeting(lang) {
@@ -15,14 +16,6 @@ function greeting(lang) {
   if (h < 12) return 'Good morning'
   if (h < 20) return 'Good afternoon'
   return 'Good evening'
-}
-
-const CAT_GRADIENT = {
-  palate:   'from-amber-900/40 to-stone-900',
-  jaw:      'from-orange-900/30 to-stone-900',
-  posture:  'from-emerald-900/30 to-stone-900',
-  breathing:'from-blue-900/30 to-stone-900',
-  face:     'from-purple-900/30 to-stone-900',
 }
 
 export default function Home() {
@@ -53,17 +46,22 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-full pb-24 animate-fade-in">
 
-      {/* Hero header */}
-      <div className="relative px-5 pt-16 pb-8 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-amber-950/20 to-transparent pointer-events-none" />
-        <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-amber-900/8 blur-3xl pointer-events-none" />
+      {/* Hero */}
+      <div className="relative h-72 overflow-hidden">
+        <img src={HERO_IMG} alt="" className="absolute inset-0 w-full h-full object-cover object-top" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-base" />
+        <div className="absolute bottom-0 left-0 right-0 px-5 pb-6">
+          <p className="text-stone-300 text-sm mb-1">{greeting(lang)}</p>
+          <h1 className="text-4xl font-semibold text-warm tracking-tight">FACEO</h1>
+        </div>
+      </div>
 
-        <p className="text-muted text-sm mb-1 relative">{greeting(lang)}</p>
-        <h1 className="text-4xl font-semibold text-warm tracking-tight relative mb-6">FACEO</h1>
+      <div className="px-5 -mt-1 space-y-6">
 
-        {/* Ring + stats */}
-        <div className="flex items-center gap-6 relative">
-          <div className="relative w-20 h-20 flex-shrink-0">
+        {/* Stats row */}
+        <div className="flex items-center gap-4 bg-card border border-border rounded-2xl p-4">
+          {/* Ring */}
+          <div className="relative w-16 h-16 flex-shrink-0">
             <svg className="w-full h-full -rotate-90" viewBox="0 0 60 60">
               <circle cx="30" cy="30" r="26" fill="none" stroke="#1e1a14" strokeWidth="5"/>
               <circle cx="30" cy="30" r="26" fill="none" stroke="#c9a96e" strokeWidth="5"
@@ -71,35 +69,22 @@ export default function Home() {
                 strokeLinecap="round" className="transition-all duration-700"/>
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-lg font-semibold text-warm">{pct}%</span>
+              <span className="text-sm font-semibold text-warm">{pct}%</span>
             </div>
           </div>
-          <div className="flex gap-5">
-            <div>
-              <div className="text-2xl font-light text-warm">{progress.streak}</div>
-              <div className="text-xs text-muted uppercase tracking-widest mt-0.5">
-                {lang === 'es' ? 'racha' : 'streak'}
+          <div className="flex-1 grid grid-cols-3 gap-2">
+            {[
+              { val: progress.streak, label: lang === 'es' ? 'racha' : 'streak' },
+              { val: `${doneCount}/${totalCount}`, label: lang === 'es' ? 'hoy' : 'today' },
+              { val: currentPlanDay, label: lang === 'es' ? 'día plan' : 'plan day' },
+            ].map(({ val, label }) => (
+              <div key={label} className="text-center">
+                <div className="text-xl font-light text-warm">{val}</div>
+                <div className="text-[10px] text-muted uppercase tracking-widest mt-0.5">{label}</div>
               </div>
-            </div>
-            <div className="w-px bg-border" />
-            <div>
-              <div className="text-2xl font-light text-warm">{doneCount}<span className="text-muted text-base">/{totalCount}</span></div>
-              <div className="text-xs text-muted uppercase tracking-widest mt-0.5">
-                {lang === 'es' ? 'hoy' : 'today'}
-              </div>
-            </div>
-            <div className="w-px bg-border" />
-            <div>
-              <div className="text-2xl font-light text-warm">{currentPlanDay}</div>
-              <div className="text-xs text-muted uppercase tracking-widest mt-0.5">
-                {lang === 'es' ? 'día plan' : 'plan day'}
-              </div>
-            </div>
+            ))}
           </div>
         </div>
-      </div>
-
-      <div className="px-5 space-y-6">
 
         {/* Today's plan routine */}
         {todayRoutine && doneCount < totalCount && (
@@ -112,22 +97,27 @@ export default function Home() {
                 if (todayRoutine.pro && !isPro) { navigate('/plan'); return }
                 navigate(`/routine/${todayRoutine.id}`)
               }}
-              className="w-full rounded-2xl overflow-hidden bg-gradient-to-br from-amber-950/60 to-card border border-accent/20 p-5 text-left active:scale-[0.98] transition-transform"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <div className="text-warm font-semibold text-base mb-1">{todayRoutine[lang].name}</div>
-                  <div className="text-muted text-xs">{todayRoutine[lang].subtitle}</div>
+              className="w-full rounded-2xl overflow-hidden border border-border text-left active:scale-[0.98] transition-transform">
+              <div className="relative h-32">
+                <img
+                  src={`https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=700&q=70&auto=format&fit=crop`}
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/30"/>
+                <div className="absolute inset-0 p-4 flex flex-col justify-end">
+                  <div className="text-warm font-semibold mb-0.5">{todayRoutine[lang].name}</div>
+                  <div className="text-stone-300 text-xs">{todayRoutine[lang].subtitle}</div>
                 </div>
-                <div className="bg-accent/20 rounded-xl px-3 py-1.5 flex-shrink-0">
-                  <span className="text-accent text-sm font-medium">{todayRoutine.durationMin} min</span>
+                <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm rounded-full px-2.5 py-1 text-xs text-warm">
+                  {todayRoutine.durationMin} min
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-accent text-xs font-medium">
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+              <div className="bg-card px-4 py-3 flex items-center justify-between">
+                <span className="text-accent text-xs font-medium">{lang === 'es' ? 'Comenzar ahora' : 'Start now'}</span>
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-accent">
                   <path fillRule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd"/>
                 </svg>
-                {lang === 'es' ? 'Comenzar rutina' : 'Start routine'}
               </div>
             </button>
           </div>
@@ -142,45 +132,41 @@ export default function Home() {
                 </svg>
               </div>
             </div>
-            <h2 className="text-warm text-xl font-semibold mb-2">
-              {lang === 'es' ? 'Todo completado' : 'All done'}
-            </h2>
-            <p className="text-muted text-sm">
-              {lang === 'es' ? 'Vuelve mañana para mantener tu racha' : 'Come back tomorrow to keep your streak'}
-            </p>
+            <h2 className="text-warm text-xl font-semibold mb-2">{lang === 'es' ? 'Todo completado' : 'All done'}</h2>
+            <p className="text-muted text-sm">{lang === 'es' ? 'Vuelve mañana para mantener tu racha' : 'Come back tomorrow to keep your streak'}</p>
           </div>
         ) : (
           <div>
-            <p className="text-xs uppercase tracking-widest text-muted mb-3">
-              {lang === 'es' ? 'Recomendados' : 'Recommended'}
-            </p>
+            <p className="text-xs uppercase tracking-widest text-muted mb-3">{lang === 'es' ? 'Recomendados' : 'Recommended'}</p>
             <div className="space-y-2">
               {recommended.map(ex => {
                 const exData = ex[lang]
-                const grad = CAT_GRADIENT[ex.category] || 'from-stone-800 to-card'
+                const img = CATEGORY_IMG[ex.category]
                 return (
                   <button
                     key={ex.id}
                     onClick={() => navigate(`/exercise/${ex.id}`)}
-                    className={`w-full bg-gradient-to-r ${grad} border border-border rounded-2xl p-4 flex items-center gap-4 text-left active:scale-[0.98] transition-transform`}
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-black/30 flex items-center justify-center flex-shrink-0">
-                      <ExerciseIcon type={ex.icon} category={ex.category} size={26} />
+                    className="w-full rounded-2xl overflow-hidden border border-border text-left active:scale-[0.98] transition-transform flex items-stretch h-20">
+                    <div className="relative w-20 flex-shrink-0">
+                      <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover"/>
+                      <div className="absolute inset-0 bg-black/30"/>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <ExerciseIcon type={ex.icon} category={ex.category} size={22}/>
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-warm font-medium text-sm mb-0.5">{exData.name}</div>
-                      <div className="text-muted text-xs">{exData.subtitle}</div>
+                    <div className="flex-1 bg-card px-4 flex items-center justify-between">
+                      <div>
+                        <div className="text-warm font-medium text-sm mb-0.5">{exData.name}</div>
+                        <div className="text-muted text-xs">{exData.subtitle}</div>
+                      </div>
+                      <div className="text-muted text-xs flex-shrink-0 ml-2">{Math.ceil(ex.durationSec / 60)} min</div>
                     </div>
-                    <div className="text-muted text-xs flex-shrink-0">{Math.ceil(ex.durationSec / 60)} min</div>
                   </button>
                 )
               })}
             </div>
-
-            <button
-              onClick={() => navigate('/train')}
-              className="mt-4 w-full border border-border text-muted text-sm font-medium py-3.5 rounded-2xl active:bg-card transition-colors"
-            >
+            <button onClick={() => navigate('/train')}
+              className="mt-4 w-full border border-border text-muted text-sm font-medium py-3.5 rounded-2xl active:bg-card transition-colors">
               {lang === 'es' ? 'Ver todos' : 'See all'}
             </button>
           </div>
