@@ -1,42 +1,42 @@
 import { NavLink } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 
-const HomeIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955a1.126 1.126 0 011.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+const HomeIcon = ({ active }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? "2" : "1.5"} className="w-5 h-5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955a1.126 1.126 0 011.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/>
   </svg>
 )
 
-const TrainIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z" />
+const TrainIcon = ({ active }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? "2" : "1.5"} className="w-5 h-5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"/>
   </svg>
 )
 
-const CalendarIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+const CalendarIcon = ({ active }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? "2" : "1.5"} className="w-5 h-5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
   </svg>
 )
 
-const UserIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+const UserIcon = ({ active }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? "2" : "1.5"} className="w-5 h-5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
   </svg>
 )
 
 const NAV = {
   es: [
-    { to: '/',        icon: HomeIcon,     label: 'Inicio'   },
-    { to: '/train',   icon: TrainIcon,    label: 'Entrenar' },
-    { to: '/plan',    icon: CalendarIcon, label: 'Plan'     },
-    { to: '/profile', icon: UserIcon,     label: 'Perfil'   },
+    { to: '/',        Icon: HomeIcon,     label: 'Inicio'   },
+    { to: '/train',   Icon: TrainIcon,    label: 'Entrenar' },
+    { to: '/plan',    Icon: CalendarIcon, label: 'Plan'     },
+    { to: '/profile', Icon: UserIcon,     label: 'Perfil'   },
   ],
   en: [
-    { to: '/',        icon: HomeIcon,     label: 'Home'    },
-    { to: '/train',   icon: TrainIcon,    label: 'Train'   },
-    { to: '/plan',    icon: CalendarIcon, label: 'Plan'    },
-    { to: '/profile', icon: UserIcon,     label: 'Profile' },
+    { to: '/',        Icon: HomeIcon,     label: 'Home'    },
+    { to: '/train',   Icon: TrainIcon,    label: 'Train'   },
+    { to: '/plan',    Icon: CalendarIcon, label: 'Plan'    },
+    { to: '/profile', Icon: UserIcon,     label: 'Profile' },
   ],
 }
 
@@ -45,21 +45,19 @@ export default function BottomNav() {
   const links = NAV[lang]
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-stone-950/95 backdrop-blur border-t border-stone-800/50 pb-safe">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 pb-safe" style={{ background: 'rgba(8,7,6,0.92)', backdropFilter: 'blur(20px)', borderTop: '1px solid #2a2520' }}>
       <div className="flex items-center justify-around max-w-lg mx-auto px-2 h-16">
-        {links.map(({ to, icon: Icon, label }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === '/'}
+        {links.map(({ to, Icon, label }) => (
+          <NavLink key={to} to={to} end={to === '/'}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all duration-200 ${
-                isActive ? 'text-accent' : 'text-stone-500'
-              }`
-            }
-          >
-            <Icon />
-            <span className="text-[10px] font-medium tracking-wide uppercase">{label}</span>
+              `flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all duration-200 ${isActive ? 'text-accent' : 'text-muted'}`
+            }>
+            {({ isActive }) => (
+              <>
+                <Icon active={isActive} />
+                <span className="text-[10px] font-medium tracking-wide uppercase">{label}</span>
+              </>
+            )}
           </NavLink>
         ))}
       </div>
