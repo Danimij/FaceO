@@ -3,8 +3,8 @@ import { useApp } from '../context/AppContext'
 
 // Reemplaza con el permalink de tu producto en Gumroad
 // Ej: si tu URL es gumroad.com/l/faceo-pro, pon 'faceo-pro'
-const GUMROAD_PERMALINK = 'faceo-pro'
-const GUMROAD_CHECKOUT = `https://danielmiralles.gumroad.com/l/${GUMROAD_PERMALINK}`
+const GUMROAD_PERMALINK = 'ikoaq'
+const GUMROAD_CHECKOUT = `https://danimij.gumroad.com/l/${GUMROAD_PERMALINK}`
 
 export default function ProModal({ onClose }) {
   const { lang, setIsPro } = useApp()
