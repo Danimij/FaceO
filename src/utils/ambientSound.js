@@ -126,6 +126,64 @@ function startPad(notes, level) {
   })
 }
 
+// ---- house / lounge voices (terrace-chill deep house) ----
+function kick(time) {
+  const o = ctx.createOscillator(), g = ctx.createGain()
+  o.type = 'sine'
+  o.frequency.setValueAtTime(130, time)
+  o.frequency.exponentialRampToValueAtTime(45, time + 0.11)
+  g.gain.setValueAtTime(0.85, time)
+  g.gain.exponentialRampToValueAtTime(0.001, time + 0.16)
+  o.connect(g); g.connect(master)
+  o.start(time); o.stop(time + 0.2)
+}
+function hat(time, v) {
+  const len = Math.floor(ctx.sampleRate * 0.05)
+  const b = ctx.createBuffer(1, len, ctx.sampleRate)
+  const d = b.getChannelData(0)
+  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1
+  const s = ctx.createBufferSource(); s.buffer = b
+  const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 7000
+  const g = ctx.createGain()
+  g.gain.setValueAtTime(v, time)
+  g.gain.exponentialRampToValueAtTime(0.001, time + 0.04)
+  s.connect(hp); hp.connect(g); g.connect(master)
+  s.start(time); s.stop(time + 0.06)
+}
+function bassNote(f, time, dur) {
+  const o = ctx.createOscillator(), g = ctx.createGain(), lp = ctx.createBiquadFilter()
+  o.type = 'sawtooth'; o.frequency.value = f
+  lp.type = 'lowpass'; lp.frequency.value = 260
+  g.gain.setValueAtTime(0.0001, time)
+  g.gain.linearRampToValueAtTime(0.26, time + 0.02)
+  g.gain.setValueAtTime(0.26, time + dur * 0.6)
+  g.gain.exponentialRampToValueAtTime(0.0001, time + dur)
+  o.connect(lp); lp.connect(g); g.connect(master)
+  o.start(time); o.stop(time + dur + 0.05)
+}
+function rhodes(freqs, time, dur) {
+  freqs.forEach(f => {
+    const o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain()
+    o.type = 'sine'; o2.type = 'triangle'
+    o.frequency.value = f; o2.frequency.value = f * 2
+    const o2g = ctx.createGain(); o2g.gain.value = 0.22
+    o2.connect(o2g); o2g.connect(g); o.connect(g)
+    const dry = ctx.createGain(); dry.gain.value = 0.5
+    const wet = ctx.createGain(); wet.gain.value = 0.4
+    g.connect(dry); dry.connect(master); g.connect(wet); wet.connect(reverb)
+    g.gain.setValueAtTime(0.0001, time)
+    g.gain.linearRampToValueAtTime(0.085, time + 0.015)
+    g.gain.exponentialRampToValueAtTime(0.0001, time + dur)
+    o.start(time); o2.start(time); o.stop(time + dur + 0.1); o2.stop(time + dur + 0.1)
+  })
+}
+const LOUNGE = [
+  { bass: 'A1', ch: ['A3', 'C4', 'E4', 'G4'] },
+  { bass: 'F1', ch: ['F3', 'A3', 'C4', 'E4'] },
+  { bass: 'C2', ch: ['C3', 'E3', 'G3', 'B3'] },
+  { bass: 'G1', ch: ['G3', 'B3', 'D4', 'F4'] },
+]
+
 // ---- chord progressions (I–V–vi–IV family) ----
 const PROG = {
   calm: [
@@ -152,6 +210,24 @@ const PROG = {
 const PATTERN = [0, 1, 2, 3, 4, 3, 2, 1]
 
 function buildConfig(mode) {
+  if (mode === 'lounge') {
+    const beat = 60 / 104, six = beat / 4
+    return {
+      interval: six,
+      pad: [],
+      play(s, time) {
+        const bar = Math.floor(s / 16) % LOUNGE.length
+        const inb = s % 16
+        const ch = LOUNGE[bar]
+        if (inb % 4 === 0) kick(time)
+        if (inb % 4 === 2) hat(time, 0.11)
+        if (inb % 2 === 1) hat(time, 0.045)
+        if (inb === 0) bassNote(freq(ch.bass), time, beat * 1.5)
+        if (inb === 10) bassNote(freq(ch.bass), time, beat * 0.5)
+        if (inb % 4 === 2) rhodes(ch.ch.map(freq), time, beat * 0.9)
+      },
+    }
+  }
   const prog = PROG[mode]
   const stepsPerChord = 8
   const interval = mode === 'calm' ? 0.52 : mode === 'focus' ? 0.85 : 0.3
@@ -244,4 +320,5 @@ export const MODES = [
   { id: 'calm',   es: 'Calma',         en: 'Calm',    icon: '◌' },
   { id: 'focus',  es: 'Concentración', en: 'Focus',   icon: '◎' },
   { id: 'energy', es: 'Energía',       en: 'Energy',  icon: '●' },
+  { id: 'lounge', es: 'Terraza',       en: 'Lounge',  icon: '◐' },
 ]
