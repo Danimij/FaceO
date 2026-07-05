@@ -52,6 +52,31 @@ function BreathingGuide({ phase, lang }) {
   )
 }
 
+const SOUND_ICONS = {
+  off: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="15" height="15">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.531V19.94a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.506-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"/>
+    </svg>
+  ),
+  calm: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="15" height="15">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.5c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0M3 9.5c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0M3 17.5c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/>
+    </svg>
+  ),
+  focus: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="15" height="15">
+      <circle cx="12" cy="12" r="9"/>
+      <circle cx="12" cy="12" r="4.5"/>
+      <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>
+    </svg>
+  ),
+  energy: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="15" height="15">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
+    </svg>
+  ),
+}
+
 function SoundPicker({ lang, value, onChange }) {
   return (
     <div className="flex gap-2 justify-center flex-wrap">
@@ -62,7 +87,7 @@ function SoundPicker({ lang, value, onChange }) {
               ? 'bg-accent/10 border-accent/40 text-accent'
               : 'border-border text-muted active:bg-card'
           }`}>
-          <span className="text-base leading-none">{m.icon}</span>
+          {SOUND_ICONS[m.id]}
           {m[lang]}
         </button>
       ))}
