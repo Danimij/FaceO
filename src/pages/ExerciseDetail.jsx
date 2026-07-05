@@ -4,9 +4,70 @@ import { useApp } from '../context/AppContext'
 import { exercises } from '../data/exercises'
 import { EXERCISE_IMG, CATEGORY_IMG } from '../data/images'
 import ExerciseIcon from '../components/ExerciseIcon'
+import { setMode, stopSound, MODES } from '../utils/ambientSound'
+
+const QUOTES = {
+  es: [
+    'Cada repetición te acerca a quien quieres ser.',
+    'La constancia supera al talento.',
+    'Tu cuerpo escucha todo lo que tu mente dice.',
+    'El progreso, no la perfección.',
+    'Respira. Enfócate. Avanza.',
+    'Los pequeños pasos crean grandes cambios.',
+    'Hoy es el día que construye el mañana.',
+    'La disciplina es libertad.',
+  ],
+  en: [
+    'Every rep brings you closer to who you want to be.',
+    'Consistency beats talent.',
+    'Your body hears everything your mind says.',
+    'Progress, not perfection.',
+    'Breathe. Focus. Move forward.',
+    'Small steps create big changes.',
+    'Today builds tomorrow.',
+    'Discipline is freedom.',
+  ],
+}
 
 function formatTime(s) {
   return `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`
+}
+
+function BreathingGuide({ phase, lang }) {
+  const labels = {
+    inhale:  { es: 'Inhala', en: 'Inhale' },
+    hold:    { es: 'Retén',  en: 'Hold'   },
+    exhale:  { es: 'Exhala', en: 'Exhale' },
+  }
+  const scales = { inhale: 'scale-125', hold: 'scale-125', exhale: 'scale-100' }
+  return (
+    <div className="flex flex-col items-center my-4">
+      <div className={`w-24 h-24 rounded-full border-2 border-accent/40 flex items-center justify-center transition-transform duration-[4000ms] ${scales[phase]}`}>
+        <div className={`w-16 h-16 rounded-full border border-accent/60 flex items-center justify-center transition-transform duration-[4000ms] ${scales[phase]}`}>
+          <div className={`w-10 h-10 rounded-full bg-accent/20 transition-transform duration-[4000ms] ${scales[phase]}`}/>
+        </div>
+      </div>
+      <p className="text-accent text-sm mt-3 font-medium">{labels[phase][lang]}</p>
+    </div>
+  )
+}
+
+function SoundPicker({ lang, value, onChange }) {
+  return (
+    <div className="flex gap-2 justify-center flex-wrap">
+      {MODES.map(m => (
+        <button key={m.id} onClick={() => onChange(m.id)}
+          className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium border transition-all ${
+            value === m.id
+              ? 'bg-accent/10 border-accent/40 text-accent'
+              : 'border-border text-muted active:bg-card'
+          }`}>
+          <span className="text-base leading-none">{m.icon}</span>
+          {m[lang]}
+        </button>
+      ))}
+    </div>
+  )
 }
 
 export default function ExerciseDetail() {
@@ -19,10 +80,14 @@ export default function ExerciseDetail() {
   const [timeLeft, setTimeLeft] = useState(ex?.durationSec || 60)
   const [paused, setPaused] = useState(false)
   const [currentStep, setCurrentStep] = useState(0)
+  const [soundMode, setSoundMode] = useState('off')
+  const [breathPhase, setBreathPhase] = useState('inhale')
+  const [quoteIdx, setQuoteIdx] = useState(0)
   const intervalRef = useRef(null)
+  const breathRef = useRef(null)
   const pausedRef = useRef(false)
 
-  useEffect(() => () => clearInterval(intervalRef.current), [])
+  useEffect(() => () => { clearInterval(intervalRef.current); clearInterval(breathRef.current); stopSound() }, [])
 
   if (!ex) { navigate('/train', { replace: true }); return null }
 
@@ -31,19 +96,49 @@ export default function ExerciseDetail() {
   const img = EXERCISE_IMG[ex.id] || CATEGORY_IMG[ex.category]
   const circumference = 2 * Math.PI * 52
   const timerProgress = 1 - timeLeft / totalSec
+  const isBreathing = ex.category === 'breathing'
+  const quotes = QUOTES[lang]
+
+  function handleSoundChange(mode) {
+    setSoundMode(mode)
+    setMode(mode)
+  }
+
+  function startBreathCycle() {
+    const cycle = [
+      { phase: 'inhale', dur: 4000 },
+      { phase: 'hold',   dur: 4000 },
+      { phase: 'exhale', dur: 6000 },
+    ]
+    let i = 0
+    function next() {
+      if (pausedRef.current) { breathRef.current = setTimeout(next, 200); return }
+      const { phase, dur } = cycle[i % cycle.length]
+      setBreathPhase(phase)
+      i++
+      breathRef.current = setTimeout(next, dur)
+    }
+    next()
+  }
 
   function startExercise() {
     setPhase('active')
     setTimeLeft(totalSec)
+    setQuoteIdx(Math.floor(Math.random() * quotes.length))
+    if (isBreathing) startBreathCycle()
+
     intervalRef.current = setInterval(() => {
       if (pausedRef.current) return
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(intervalRef.current)
+          clearTimeout(breathRef.current)
+          stopSound()
           setPhase('done')
           completeExercise(ex.id, Math.ceil(totalSec / 60))
           return 0
         }
+        if (prev % 30 === 0) setQuoteIdx(i => (i + 1) % quotes.length)
         return prev - 1
       })
     }, 1000)
@@ -52,6 +147,8 @@ export default function ExerciseDetail() {
   function togglePause() {
     pausedRef.current = !pausedRef.current
     setPaused(p => !p)
+    if (!pausedRef.current && soundMode !== 'off') setMode(soundMode)
+    if (pausedRef.current) stopSound()
   }
 
   return (
@@ -60,13 +157,11 @@ export default function ExerciseDetail() {
       {/* PREVIEW */}
       {phase === 'preview' && (
         <>
-          {/* Hero image */}
           <div className="relative h-64">
             <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover"/>
             <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-base"/>
-            <button
-              onClick={() => navigate(-1)}
-              className="absolute top-14 left-5 w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center active:bg-black/60 transition-colors">
+            <button onClick={() => navigate(-1)}
+              className="absolute top-14 left-5 w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center">
               <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" className="w-4 h-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
               </svg>
@@ -84,16 +179,14 @@ export default function ExerciseDetail() {
             </div>
           </div>
 
-          <div className="px-5 pt-5 space-y-6">
+          <div className="px-5 pt-5 space-y-5">
             <p className="text-stone-300 text-sm leading-relaxed">{exData.description}</p>
 
-            {/* Duration badges */}
             <div className="flex gap-2">
               <span className="bg-card border border-border rounded-full px-3 py-1.5 text-muted text-xs">{Math.ceil(totalSec / 60)} min</span>
-              {ex.reps && <span className="bg-card border border-border rounded-full px-3 py-1.5 text-muted text-xs">{ex.reps} {lang === 'es' ? 'repeticiones' : 'reps'}</span>}
+              {ex.reps && <span className="bg-card border border-border rounded-full px-3 py-1.5 text-muted text-xs">{ex.reps} {lang === 'es' ? 'reps' : 'reps'}</span>}
             </div>
 
-            {/* Steps */}
             <div>
               <p className="text-xs uppercase tracking-widest text-muted mb-3">{lang === 'es' ? 'Cómo hacerlo' : 'How to do it'}</p>
               <div className="space-y-2">
@@ -108,7 +201,12 @@ export default function ExerciseDetail() {
               </div>
             </div>
 
-            {/* Tip */}
+            {/* Sound picker en preview */}
+            <div>
+              <p className="text-xs uppercase tracking-widest text-muted mb-3">{lang === 'es' ? 'Ambiente sonoro' : 'Ambient sound'}</p>
+              <SoundPicker lang={lang} value={soundMode} onChange={handleSoundChange}/>
+            </div>
+
             {exData.tip && (
               <div className="relative rounded-2xl overflow-hidden">
                 <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20"/>
@@ -131,8 +229,8 @@ export default function ExerciseDetail() {
       {/* ACTIVE */}
       {phase === 'active' && (
         <div className="flex flex-col items-center flex-1 px-5 pt-14">
-          <button onClick={() => navigate(-1)}
-            className="self-start flex items-center gap-2 text-muted text-sm mb-8 active:text-warm">
+          <button onClick={() => { stopSound(); navigate(-1) }}
+            className="self-start flex items-center gap-2 text-muted text-sm mb-6">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4">
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
             </svg>
@@ -140,12 +238,12 @@ export default function ExerciseDetail() {
           </button>
 
           <h2 className="text-warm text-lg font-medium mb-1">{exData.name}</h2>
-          <p className="text-muted text-sm mb-10">{paused ? (lang === 'es' ? 'En pausa' : 'Paused') : (lang === 'es' ? 'En progreso' : 'In progress')}</p>
+          <p className="text-muted text-xs mb-6">{paused ? (lang === 'es' ? 'En pausa' : 'Paused') : (lang === 'es' ? 'En progreso' : 'In progress')}</p>
 
-          {/* Timer ring with image */}
-          <div className="relative w-52 h-52 mb-10">
+          {/* Timer ring */}
+          <div className="relative w-52 h-52 mb-4">
             <div className="absolute inset-4 rounded-full overflow-hidden">
-              <img src={img} alt="" className="w-full h-full object-cover opacity-30"/>
+              <img src={img} alt="" className="w-full h-full object-cover opacity-25"/>
             </div>
             <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 120 120">
               <circle cx="60" cy="60" r="52" fill="none" stroke="#1e1a14" strokeWidth="6"/>
@@ -159,10 +257,25 @@ export default function ExerciseDetail() {
             </div>
           </div>
 
-          <div className="w-full space-y-2 mb-8">
+          {/* Breathing guide */}
+          {isBreathing && !paused && <BreathingGuide phase={breathPhase} lang={lang}/>}
+
+          {/* Motivational quote */}
+          <div className="w-full bg-card border border-border rounded-2xl px-4 py-3 mb-5 min-h-[56px] flex items-center justify-center">
+            <p className="text-stone-400 text-sm text-center italic leading-relaxed">"{quotes[quoteIdx]}"</p>
+          </div>
+
+          {/* Sound picker */}
+          <div className="w-full mb-5">
+            <p className="text-[10px] uppercase tracking-widest text-muted mb-2 text-center">{lang === 'es' ? 'Sonido' : 'Sound'}</p>
+            <SoundPicker lang={lang} value={soundMode} onChange={handleSoundChange}/>
+          </div>
+
+          {/* Steps */}
+          <div className="w-full space-y-1.5 mb-5">
             {exData.steps.map((step, i) => (
               <button key={i} onClick={() => setCurrentStep(i)}
-                className={`w-full text-left px-4 py-3 rounded-xl text-sm transition-all border ${
+                className={`w-full text-left px-4 py-2.5 rounded-xl text-sm transition-all border ${
                   currentStep === i ? 'bg-card border-border text-stone-200' : 'border-transparent text-muted'
                 }`}>
                 <span className="text-muted text-xs mr-2">{i + 1}.</span>{step}
@@ -194,13 +307,12 @@ export default function ExerciseDetail() {
                 </div>
               </div>
             </div>
-
             <h2 className="text-warm text-2xl font-semibold mb-1">{lang === 'es' ? 'Completado' : 'Complete'}</h2>
             <p className="text-muted text-sm mb-1">{exData.name}</p>
-            <p className="text-stone-700 text-xs mb-3">{Math.ceil(totalSec / 60)} min</p>
+            <p className="text-stone-700 text-xs mb-5">{Math.ceil(totalSec / 60)} min</p>
 
             {exData.tip && (
-              <div className="bg-card border border-border rounded-2xl p-4 mb-8 text-left w-full">
+              <div className="bg-card border border-border rounded-2xl p-4 mb-6 text-left w-full">
                 <div className="text-[10px] uppercase tracking-widest text-accent mb-2">{lang === 'es' ? 'Recuerda' : 'Remember'}</div>
                 <p className="text-stone-400 text-sm leading-relaxed">{exData.tip}</p>
               </div>
