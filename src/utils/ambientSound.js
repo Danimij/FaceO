@@ -11,6 +11,14 @@ let currentMode = 'off'
 let nextTime = 0
 let step = 0
 let cfg = null
+let mediaEl = null
+
+// iOS silences pure Web Audio when the ring/silent switch is on. Routing the
+// output through an <audio> element (media channel) lets it play anyway.
+const IS_IOS = typeof navigator !== 'undefined' && (
+  /iP(hone|ad|od)/.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+)
 
 // ---- note helpers ----
 const NAMES = { C: 0, 'C#': 1, D: 2, 'D#': 3, E: 4, F: 5, 'F#': 6, G: 7, 'G#': 8, A: 9, 'A#': 10, B: 11 }
@@ -40,7 +48,22 @@ function getCtx() {
     ctx = new (window.AudioContext || window.webkitAudioContext)()
     master = ctx.createGain()
     master.gain.value = 0
-    master.connect(ctx.destination)
+    if (IS_IOS) {
+      // Route through a MediaStream -> <audio> element so iOS plays it on the
+      // media channel (ignores the silent switch). Fall back if unsupported.
+      try {
+        const dest = ctx.createMediaStreamDestination()
+        master.connect(dest)
+        mediaEl = new Audio()
+        mediaEl.playsInline = true
+        mediaEl.srcObject = dest.stream
+        mediaEl.play().catch(() => {})
+      } catch (e) {
+        master.connect(ctx.destination)
+      }
+    } else {
+      master.connect(ctx.destination)
+    }
     reverb = makeReverb(ctx, 3.2)
     const revGain = ctx.createGain()
     revGain.gain.value = 0.9
@@ -195,6 +218,7 @@ export function setMode(mode) {
   try {
     const c = getCtx()
     if (c.state === 'suspended') c.resume()
+    if (mediaEl) mediaEl.play().catch(() => {}) // re-arm media channel in-gesture
     cfg = buildConfig(mode)
     step = 0
     nextTime = c.currentTime + 0.15
