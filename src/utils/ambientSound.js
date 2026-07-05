@@ -110,8 +110,8 @@ export function stopSound() {
 }
 
 export const MODES = [
-  { id: 'off',    es: 'Silencio',      en: 'Silence', icon: '—' },
-  { id: 'calm',   es: 'Calma',         en: 'Calm',    icon: '◌' },
-  { id: 'focus',  es: 'Concentración', en: 'Focus',   icon: '◎' },
-  { id: 'energy', es: 'Energía',       en: 'Energy',  icon: '●' },
+  { id: 'off',    es: 'Silencio',      en: 'Silence', icon: '🔇' },
+  { id: 'calm',   es: 'Calma',         en: 'Calm',    icon: '🌊' },
+  { id: 'focus',  es: 'Concentración', en: 'Focus',   icon: '🎯' },
+  { id: 'energy', es: 'Energía',       en: 'Energy',  icon: '⚡' },
 ]
