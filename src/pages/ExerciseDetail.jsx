@@ -80,7 +80,7 @@ export default function ExerciseDetail() {
   const [timeLeft, setTimeLeft] = useState(ex?.durationSec || 60)
   const [paused, setPaused] = useState(false)
   const [currentStep, setCurrentStep] = useState(0)
-  const [soundMode, setSoundMode] = useState('off')
+  const [soundMode, setSoundMode] = useState('calm')
   const [breathPhase, setBreathPhase] = useState('inhale')
   const [quoteIdx, setQuoteIdx] = useState(0)
   const intervalRef = useRef(null)
@@ -125,6 +125,7 @@ export default function ExerciseDetail() {
     setPhase('active')
     setTimeLeft(totalSec)
     setQuoteIdx(Math.floor(Math.random() * quotes.length))
+    if (soundMode !== 'off') setMode(soundMode)
     if (isBreathing) startBreathCycle()
 
     intervalRef.current = setInterval(() => {
