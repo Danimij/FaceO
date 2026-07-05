@@ -262,8 +262,8 @@ export const exercises = [
 export const categories = {
   palate: { es: 'Paladar', en: 'Palate', color: '#c9b99a' },
   jaw: { es: 'Mandíbula', en: 'Jaw', color: '#a09070' },
-  posture: { es: 'Postura', en: 'Posture', color: '#8a9a8a' },
-  breathing: { es: 'Respiración', en: 'Breathing', color: '#7a9aaa' },
+  posture: { es: 'Postura', en: 'Posture', color: '#7fb89a' },
+  breathing: { es: 'Respiración', en: 'Breathing', color: '#4db8b0' },
   face: { es: 'Rostro', en: 'Face', color: '#aa8a9a' },
 }
 
@@ -365,8 +365,76 @@ exercises.push(
       ],
       tip: 'Release happens when you feel the area "give" and warmth spreads. You do not need to do anything else — just wait.',
     },
+  },
+  {
+    id: 'myofascial-ball',
+    category: 'fascia',
+    pro: true,
+    durationSec: 180,
+    reps: null,
+    icon: 'face',
+    es: {
+      name: 'Masaje miofascial con pelota',
+      subtitle: 'Liberación con pelota de masaje',
+      description: 'Una pelota de masaje (o de tenis/lacrosse) permite aplicar presión sostenida y precisa sobre los puntos gatillo de masetero, mejilla, sien y base del cráneo. Al liberar estas fascias mejora la simetría facial, se relaja la mandíbula y baja la tensión craneal.',
+      steps: [
+        'Usa una pelota pequeña y algo firme (masaje, tenis o lacrosse)',
+        'Contra la pared o con la mano, apoya la pelota en el masetero (mejilla, sobre la mandíbula)',
+        'Presión sostenida 30-40 s por punto, respirando lento; no frotes rápido',
+        'Sube a la sien (fascia temporal) y termina bajo la base del cráneo',
+        'Cambia de lado y compara la sensación de liberación',
+      ],
+      tip: 'La fascia cede con presión lenta y mantenida, no con fricción. Si duele mucho, baja la presión: buscas un “dolor bueno”, no forzar.',
+    },
+    en: {
+      name: 'Myofascial ball release',
+      subtitle: 'Release with a massage ball',
+      description: 'A massage ball (or tennis/lacrosse ball) lets you apply sustained, precise pressure on trigger points of the masseter, cheek, temple and skull base. Releasing these fasciae improves facial symmetry, relaxes the jaw and lowers cranial tension.',
+      steps: [
+        'Use a small, fairly firm ball (massage, tennis or lacrosse)',
+        'Against a wall or with your hand, press the ball into the masseter (cheek, over the jaw)',
+        'Hold 30-40 s per point, breathing slowly; do not rub fast',
+        'Move up to the temple (temporal fascia) and finish under the skull base',
+        'Switch sides and compare the sense of release',
+      ],
+      tip: 'Fascia releases with slow, sustained pressure, not friction. If it hurts a lot, ease off: aim for a “good” ache, never force it.',
+    },
+  },
+  {
+    id: 'fascial-chains',
+    category: 'fascia',
+    pro: true,
+    durationSec: 240,
+    reps: null,
+    icon: 'neck',
+    es: {
+      name: 'Cadenas fasciales · cuerpo completo',
+      subtitle: 'Movilidad de la fascia de pies a cabeza',
+      description: 'La fascia es una red continua: la línea posterior conecta la planta del pie con la nuca y el cuero cabelludo, y la línea frontal conecta el empeine con la mandíbula. Movilizar el cuerpo entero libera tensiones que “tiran” de la cara y el cuello, mejorando postura y definición.',
+      steps: [
+        'Rueda la planta del pie sobre una pelota 30 s por lado (línea posterior)',
+        'Flexión de pie hacia delante colgando la cabeza, 30 s (nuca y espalda)',
+        'Extensión suave de columna abriendo el pecho, mirada arriba, 20 s (línea frontal)',
+        'Estira el cuello a cada lado llevando la oreja al hombro, 20 s por lado',
+        'Termina con auto-masaje de la mandíbula y las sienes 30 s',
+      ],
+      tip: 'Si notas tensión facial o de mandíbula, revisa pies, cadera y espalda: la fascia lo transmite todo. Trabaja el cuerpo, no solo la cara.',
+    },
+    en: {
+      name: 'Fascial chains · full body',
+      subtitle: 'Fascia mobility from feet to head',
+      description: 'Fascia is one continuous web: the back line links the sole of the foot to the nape and scalp, and the front line links the instep to the jaw. Mobilising the whole body releases tension that “pulls” on the face and neck, improving posture and definition.',
+      steps: [
+        'Roll the sole of your foot on a ball 30 s per side (back line)',
+        'Standing forward fold letting the head hang, 30 s (nape and back)',
+        'Gentle spinal extension opening the chest, gaze up, 20 s (front line)',
+        'Stretch the neck to each side, ear toward shoulder, 20 s per side',
+        'Finish with self-massage of the jaw and temples 30 s',
+      ],
+      tip: 'If you feel facial or jaw tension, check feet, hips and back: fascia transmits everything. Work the body, not just the face.',
+    },
   }
 )
 
 // Añadir categoría fascia
-categories.fascia = { es: 'Fascia', en: 'Fascia', color: '#9a8aaa' }
+categories.fascia = { es: 'Fascia', en: 'Fascia', color: '#5aa89a' }

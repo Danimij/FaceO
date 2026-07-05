@@ -10,6 +10,8 @@ export default {
         muted: '#7a7166',
         accent: '#c9a96e',
         gold: '#b5885a',
+        teal: '#3fb8a8',
+        sage: '#7fb89a',
         warm: '#f0ede8',
       },
       fontFamily: {

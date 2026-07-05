@@ -23,6 +23,8 @@ export const EXERCISE_IMG = {
   'temporal-release':     U(FACE),    // fascia — head/face
   'platysma-release':     U(PROFILE), // neck fascia
   'suboccipital-release': U(FACE),    // skull base
+  'myofascial-ball':      U(FACE),    // ball release
+  'fascial-chains':       U(BREATH),  // full-body fascia mobility
 }
 
 export const CATEGORY_IMG = {

@@ -98,8 +98,8 @@ export const routines = [
   {
     id: 'fascia-release',
     pro: true,
-    durationMin: 12,
-    exercises: ['suboccipital-release', 'temporal-release', 'platysma-release'],
+    durationMin: 20,
+    exercises: ['fascial-chains', 'suboccipital-release', 'myofascial-ball', 'temporal-release', 'platysma-release'],
     es: {
       name: 'Liberación fascial',
       subtitle: 'Red conectiva completa',
