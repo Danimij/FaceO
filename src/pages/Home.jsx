@@ -100,7 +100,7 @@ export default function Home() {
               className="w-full rounded-2xl overflow-hidden border border-border text-left active:scale-[0.98] transition-transform">
               <div className="relative h-32">
                 <img
-                  src={`https://picsum.photos/id/1062/700/400`}
+                  src="https://picsum.photos/id/417/700/400"
                   alt=""
                   className="absolute inset-0 w-full h-full object-cover"
                 />
@@ -149,7 +149,7 @@ export default function Home() {
                     className="w-full rounded-2xl overflow-hidden border border-border text-left active:scale-[0.98] transition-transform flex items-stretch h-20">
                     <div className="relative w-20 flex-shrink-0">
                       <img src={img} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover"/>
-                      <div className="absolute inset-0 bg-black/30"/>
+                      <div className="absolute inset-0 bg-black/10"/>
                       <div className="absolute inset-0 flex items-center justify-center">
                         <ExerciseIcon type={ex.icon} category={ex.category} size={22}/>
                       </div>
