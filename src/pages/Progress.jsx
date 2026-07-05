@@ -44,31 +44,31 @@ export default function Progress() {
 
   return (
     <div className="flex flex-col min-h-full px-5 pt-14 pb-24 max-w-lg mx-auto animate-fade-in">
-      <h1 className="text-2xl font-semibold text-stone-50 tracking-tight mb-8">{tx.title}</h1>
+      <h1 className="text-2xl font-semibold text-warm tracking-tight mb-8">{tx.title}</h1>
 
       {/* Stats grid */}
       <div className="grid grid-cols-2 gap-3 mb-8">
-        <div className="bg-stone-900 rounded-2xl p-4 border border-stone-800/50">
-          <div className="text-3xl font-light text-stone-50 mb-0.5">{progress.streak}</div>
-          <div className="text-stone-500 text-xs uppercase tracking-widest">{tx.streak}</div>
+        <div className="bg-card rounded-2xl p-4 border border-border">
+          <div className="text-3xl font-light text-warm mb-0.5">{progress.streak}</div>
+          <div className="text-muted text-xs uppercase tracking-widest">{tx.streak}</div>
         </div>
-        <div className="bg-stone-900 rounded-2xl p-4 border border-stone-800/50">
-          <div className="text-3xl font-light text-stone-50 mb-0.5">{progress.bestStreak}</div>
-          <div className="text-stone-500 text-xs uppercase tracking-widest">{tx.best_streak}</div>
+        <div className="bg-card rounded-2xl p-4 border border-border">
+          <div className="text-3xl font-light text-warm mb-0.5">{progress.bestStreak}</div>
+          <div className="text-muted text-xs uppercase tracking-widest">{tx.best_streak}</div>
         </div>
-        <div className="bg-stone-900 rounded-2xl p-4 border border-stone-800/50">
-          <div className="text-3xl font-light text-stone-50 mb-0.5">{progress.totalSessions}</div>
-          <div className="text-stone-500 text-xs uppercase tracking-widest">{tx.sessions}</div>
+        <div className="bg-card rounded-2xl p-4 border border-border">
+          <div className="text-3xl font-light text-warm mb-0.5">{progress.totalSessions}</div>
+          <div className="text-muted text-xs uppercase tracking-widest">{tx.sessions}</div>
         </div>
-        <div className="bg-stone-900 rounded-2xl p-4 border border-stone-800/50">
-          <div className="text-3xl font-light text-stone-50 mb-0.5">{progress.totalMinutes}</div>
-          <div className="text-stone-500 text-xs uppercase tracking-widest">{tx.minutes}</div>
+        <div className="bg-card rounded-2xl p-4 border border-border">
+          <div className="text-3xl font-light text-warm mb-0.5">{progress.totalMinutes}</div>
+          <div className="text-muted text-xs uppercase tracking-widest">{tx.minutes}</div>
         </div>
       </div>
 
       {/* Weekly chart */}
-      <div className="bg-stone-900 border border-stone-800/50 rounded-2xl p-5 mb-6">
-        <h3 className="text-stone-500 text-xs uppercase tracking-widest mb-5">{tx.week}</h3>
+      <div className="bg-card border border-border rounded-2xl p-5 mb-6">
+        <h3 className="text-muted text-xs uppercase tracking-widest mb-5">{tx.week}</h3>
         <div className="flex items-end gap-2 h-24">
           {last7.map((date, i) => {
             const count = historyMap[date]?.exercises?.length || 0
@@ -79,12 +79,12 @@ export default function Progress() {
                 <div className="w-full flex flex-col justify-end" style={{ height: 80 }}>
                   <div
                     className={`w-full rounded-t-sm transition-all duration-500 ${
-                      isToday ? 'bg-accent' : count > 0 ? 'bg-stone-600' : 'bg-stone-800'
+                      isToday ? 'bg-accent' : count > 0 ? 'bg-stone-600/80' : 'bg-border/30'
                     }`}
                     style={{ height: `${height}%` }}
                   />
                 </div>
-                <span className={`text-[10px] ${isToday ? 'text-accent' : 'text-stone-600'}`}>
+                <span className={`text-[10px] ${isToday ? 'text-accent' : 'text-muted'}`}>
                   {orderedLabels[i]}
                 </span>
               </div>
@@ -94,7 +94,7 @@ export default function Progress() {
       </div>
 
       {/* History */}
-      <h3 className="text-stone-500 text-xs uppercase tracking-widest mb-4">{tx.history}</h3>
+      <h3 className="text-muted text-xs uppercase tracking-widest mb-4">{tx.history}</h3>
       <div className="space-y-2">
         {[...progress.history].reverse().slice(0, 10).map((h, i) => {
           const date = new Date(h.date)
@@ -102,10 +102,10 @@ export default function Progress() {
             weekday: 'long', day: 'numeric', month: 'short'
           })
           return (
-            <div key={i} className="bg-stone-900 border border-stone-800/50 rounded-xl p-4 flex items-center justify-between">
+            <div key={i} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
               <div>
                 <div className="text-stone-300 text-sm capitalize">{label}</div>
-                <div className="text-stone-600 text-xs mt-0.5">
+                <div className="text-muted text-xs mt-0.5">
                   {h.exercises?.length || 0} {tx.completed_exercises} · {h.minutes || 0} min
                 </div>
               </div>
