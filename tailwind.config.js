@@ -3,11 +3,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        base: '#080706',
-        surface: '#111009',
-        card: '#181510',
-        border: '#2a2520',
-        muted: '#6b6560',
+        base: '#15100b',
+        surface: '#1e1811',
+        card: '#282018',
+        border: '#3b3125',
+        muted: '#7a7166',
         accent: '#c9a96e',
         gold: '#b5885a',
         warm: '#f0ede8',

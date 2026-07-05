@@ -1,36 +1,45 @@
-// Picsum Photos — free CDN, no API key, hotlinking allowed
+// Curated Unsplash photos — verified content, free (images.unsplash.com), hotlink-friendly.
 
+const U = (id, w = 700) => `https://images.unsplash.com/photo-${id}?w=${w}&q=70&auto=format&fit=crop`
+
+// Verified images:
+const PROFILE = '1530821232314-604f58821dd4'  // young man, strong jaw profile at sunset
+const FACE    = '1617925357736-8a4ea869b800'  // man profile, clear facial structure
+const BREATH  = '1713428856206-d692c1ed42d6'  // man deep breathing, chest open
+const NOSE    = '1775133262755-254aeaa47843'  // nasal / pranayama breathing
+
+// Hero: warm canyon sunrise (aspirational, chosen by user)
 export const HERO_IMG = 'https://picsum.photos/id/1016/900/600'
 
 export const EXERCISE_IMG = {
-  'mewing':               'https://picsum.photos/id/1005/700/400', // portrait, person
-  'palate-expansion':     'https://picsum.photos/id/1062/700/400', // calm face/neutral
-  'jaw-clench':           'https://picsum.photos/id/1011/700/400', // strong portrait
-  'chin-tuck':            'https://picsum.photos/id/1025/700/400', // person outdoors
-  'nasal-breathing':      'https://picsum.photos/id/417/700/400',  // misty nature/breathe
-  'co2-tolerance':        'https://picsum.photos/id/137/700/400',  // water/waves
-  'neck-pull':            'https://picsum.photos/id/219/700/400',  // stretch/nature
-  'face-yoga':            'https://picsum.photos/id/1027/700/400', // person zen
-  'temporal-release':     'https://picsum.photos/id/307/700/400',  // serene landscape
-  'platysma-release':     'https://picsum.photos/id/453/700/400',  // calm tones
-  'suboccipital-release': 'https://picsum.photos/id/188/700/400',  // forest calm
+  'mewing':               U(PROFILE), // tongue posture — jaw/profile
+  'palate-expansion':     U(FACE),
+  'jaw-clench':           U(PROFILE), // masseter — jawline
+  'chin-tuck':            U(PROFILE), // posture — profile
+  'nasal-breathing':      U(NOSE),    // nasal breathing
+  'co2-tolerance':        U(BREATH),  // breathing
+  'neck-pull':            U(FACE),
+  'face-yoga':            U(FACE),
+  'temporal-release':     U(FACE),    // fascia — head/face
+  'platysma-release':     U(PROFILE), // neck fascia
+  'suboccipital-release': U(FACE),    // skull base
 }
 
 export const CATEGORY_IMG = {
-  palate:   'https://picsum.photos/id/1005/700/400',
-  jaw:      'https://picsum.photos/id/1011/700/400',
-  breathing:'https://picsum.photos/id/417/700/400',
-  posture:  'https://picsum.photos/id/1025/700/400',
-  face:     'https://picsum.photos/id/1027/700/400',
-  fascia:   'https://picsum.photos/id/307/700/400',
+  palate:    U(FACE),
+  jaw:       U(PROFILE),
+  breathing: U(BREATH),
+  posture:   U(PROFILE),
+  face:      U(FACE),
+  fascia:    U(FACE),
 }
 
 export const ROUTINE_IMG = {
-  'morning':         'https://picsum.photos/id/96/700/400',   // sunrise
-  'jaw-focus':       'https://picsum.photos/id/1011/700/400', // strong portrait
-  'night':           'https://picsum.photos/id/106/700/400',  // night/calm
-  'breathing-deep':  'https://picsum.photos/id/417/700/400',  // misty/breathe
-  'full-face':       'https://picsum.photos/id/1005/700/400', // portrait
-  'posture-reset':   'https://picsum.photos/id/1025/700/400', // outdoors/posture
-  'fascia-release':  'https://picsum.photos/id/188/700/400',  // forest/calm
+  'morning':        U(BREATH),
+  'jaw-focus':      U(PROFILE),
+  'night':          U(FACE),
+  'breathing-deep': U(NOSE),
+  'full-face':      U(FACE),
+  'posture-reset':  U(PROFILE),
+  'fascia-release': U(FACE),
 }
