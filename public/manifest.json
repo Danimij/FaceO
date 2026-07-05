@@ -2,13 +2,15 @@
   "name": "FACEO — Mejora Facial",
   "short_name": "FACEO",
   "description": "Ejercicios faciales para mandíbula, respiración y postura craneofacial",
-  "start_url": "/",
+  "id": "/FaceO/",
+  "start_url": "/FaceO/",
+  "scope": "/FaceO/",
   "display": "standalone",
   "background_color": "#0c0a09",
   "theme_color": "#0c0a09",
   "orientation": "portrait",
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "/FaceO/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/FaceO/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }
