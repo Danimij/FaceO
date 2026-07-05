@@ -4,12 +4,37 @@ import { useApp } from '../context/AppContext'
 import { routines } from '../data/routines'
 import { exercises } from '../data/exercises'
 import ExerciseIcon from '../components/ExerciseIcon'
+import { setMode, stopSound, MODES } from '../utils/ambientSound'
 
 function formatTime(s) {
   return `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`
 }
 
 const REST_SEC = 10
+
+
+const SOUND_ICONS = {
+  off: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="14" height="14"><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.531V19.94a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.506-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"/></svg>,
+  calm: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="14" height="14"><path strokeLinecap="round" strokeLinejoin="round" d="M3 13.5c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0M3 9.5c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/></svg>,
+  focus: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="14" height="14"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>,
+  energy: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="14" height="14"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>,
+}
+
+function SoundPicker({ lang, value, onChange }) {
+  return (
+    <div className="flex gap-2 justify-center flex-wrap">
+      {MODES.map(m => (
+        <button key={m.id} onClick={() => onChange(m.id)}
+          className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium border transition-all ${
+            value === m.id ? 'bg-accent/10 border-accent/40 text-accent' : 'border-border text-muted active:bg-card'
+          }`}>
+          {SOUND_ICONS[m.id]}
+          {m[lang]}
+        </button>
+      ))}
+    </div>
+  )
+}
 
 export default function RoutinePlayer() {
   const { id } = useParams()
@@ -23,10 +48,11 @@ export default function RoutinePlayer() {
   const [exIndex, setExIndex] = useState(0)
   const [timeLeft, setTimeLeft] = useState(0)
   const [paused, setPaused] = useState(false)
+  const [soundMode, setSoundMode] = useState('calm')
   const intervalRef = useRef(null)
   const pausedRef = useRef(false)
 
-  useEffect(() => () => clearInterval(intervalRef.current), [])
+  useEffect(() => () => { clearInterval(intervalRef.current); stopSound() }, [])
 
   if (!routine) { navigate('/train', { replace: true }); return null }
 
@@ -50,13 +76,14 @@ export default function RoutinePlayer() {
 
   function startRoutine() {
     setPhase('exercise'); setExIndex(0)
+    if (soundMode !== 'off') setMode(soundMode)
     tick(routineExercises[0].durationSec, () => finishExercise(0))
   }
 
   function finishExercise(idx) {
     completeExercise(routineExercises[idx].id, Math.ceil(routineExercises[idx].durationSec / 60))
     const next = idx + 1
-    if (next >= routineExercises.length) { setPhase('done') }
+    if (next >= routineExercises.length) { stopSound(); setPhase('done') }
     else { setPhase('rest'); tick(REST_SEC, () => startNext(next)) }
   }
 
@@ -65,7 +92,12 @@ export default function RoutinePlayer() {
     tick(routineExercises[idx].durationSec, () => finishExercise(idx))
   }
 
-  function togglePause() { pausedRef.current = !pausedRef.current; setPaused(p => !p) }
+  function togglePause() {
+    pausedRef.current = !pausedRef.current
+    setPaused(p => !p)
+    if (pausedRef.current) stopSound()
+    else if (soundMode !== 'off') setMode(soundMode)
+  }
 
   return (
     <div className="flex flex-col min-h-full pb-24 animate-fade-in">
@@ -105,6 +137,11 @@ export default function RoutinePlayer() {
               ))}
             </div>
 
+            <div className="mb-6">
+              <p className="text-xs uppercase tracking-widest text-muted mb-3">{lang === 'es' ? 'Ambiente sonoro' : 'Ambient sound'}</p>
+              <SoundPicker lang={lang} value={soundMode} onChange={mode => { setSoundMode(mode); setMode(mode) }}/>
+            </div>
+
             <button onClick={startRoutine}
               className="w-full bg-accent font-semibold py-4 rounded-2xl text-sm tracking-wide active:scale-95 transition-transform"
               style={{ color: '#080706' }}>
@@ -116,6 +153,13 @@ export default function RoutinePlayer() {
         {/* EXERCISE */}
         {phase === 'exercise' && currentEx && (
           <div className="flex flex-col items-center flex-1">
+            <div className="flex justify-end mb-2">
+              <button onClick={() => { const next = MODES[(MODES.findIndex(m=>m.id===soundMode)+1)%MODES.length]; setSoundMode(next.id); setMode(next.id) }}
+                className="flex items-center gap-1 text-muted text-[10px] border border-border rounded-full px-2 py-1 active:bg-card transition-colors">
+                {SOUND_ICONS[soundMode]}
+                <span>{MODES.find(m=>m.id===soundMode)?.[lang]}</span>
+              </button>
+            </div>
             <div className="flex gap-1.5 mb-8">
               {routineExercises.map((_, i) => (
                 <div key={i} className={`h-1 rounded-full transition-all duration-300 ${

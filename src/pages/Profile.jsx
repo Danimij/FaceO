@@ -98,24 +98,17 @@ export default function Profile() {
             <Toggle value={reminderEnabled} onChange={setReminderEnabled}/>
           </Row>
           {reminderEnabled && (
-            <Row label={tx.reminderTime} last>
+            <Row label={tx.reminderTime}>
               <input type="time" value={reminderTime} onChange={e => setReminderTime(e.target.value)}
                 className="bg-surface text-stone-200 text-sm rounded-lg px-3 py-1.5 border border-border outline-none"/>
             </Row>
           )}
-          {!reminderEnabled && (
-            <Row label={tx.about} last>
-              <span className="text-muted text-sm">1.0.0</span>
-            </Row>
-          )}
+          <Row label={tx.about} last>
+            <span className="text-muted text-sm">1.0.0</span>
+          </Row>
         </div>
 
         <div className="bg-card rounded-2xl border border-border px-4">
-          {reminderEnabled && (
-            <Row label={tx.about}>
-              <span className="text-muted text-sm">1.0.0</span>
-            </Row>
-          )}
           <Row label={tx.restore} last>
             <button className="text-muted text-sm active:text-stone-300 transition-colors">
               {lang === 'es' ? 'Restaurar' : 'Restore'}

@@ -100,7 +100,7 @@ export default function Home() {
               className="w-full rounded-2xl overflow-hidden border border-border text-left active:scale-[0.98] transition-transform">
               <div className="relative h-32">
                 <img
-                  src={`https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=700&q=70&auto=format&fit=crop`}
+                  src={`https://picsum.photos/id/1062/700/400`}
                   alt=""
                   className="absolute inset-0 w-full h-full object-cover"
                 />
