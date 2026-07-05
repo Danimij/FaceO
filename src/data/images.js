@@ -1,6 +1,6 @@
 // Picsum Photos — free CDN, no API key, hotlinking allowed
 
-export const HERO_IMG = 'https://picsum.photos/id/64/900/500'
+export const HERO_IMG = 'https://picsum.photos/id/1016/900/600'
 
 export const EXERCISE_IMG = {
   'mewing':               'https://picsum.photos/id/1005/700/400', // portrait, person
