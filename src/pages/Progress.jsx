@@ -1,6 +1,7 @@
 import { useApp } from '../context/AppContext'
 import { t } from '../data/i18n'
 import { exercises } from '../data/exercises'
+import PhotoLog from '../components/PhotoLog'
 
 const DAYS_ES = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
 const DAYS_EN = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
@@ -114,6 +115,7 @@ export default function Progress() {
           )
         })}
       </div>
+      <PhotoLog />
     </div>
   )
 }
