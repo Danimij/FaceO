@@ -2,6 +2,7 @@ import { useApp } from '../context/AppContext'
 import { t } from '../data/i18n'
 import { exercises } from '../data/exercises'
 import PhotoLog from '../components/PhotoLog'
+import StreakCalendar from '../components/StreakCalendar'
 
 const DAYS_ES = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
 const DAYS_EN = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
@@ -71,6 +72,7 @@ export default function Progress() {
         </div>
       </div>
 
+      <StreakCalendar />
       {/* Weekly chart */}
       <div className="bg-card border border-border rounded-2xl p-5 mb-6">
         <h3 className="text-muted text-xs uppercase tracking-widest mb-5">{tx.week}</h3>

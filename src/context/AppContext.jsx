@@ -10,6 +10,7 @@ const defaultProgress = {
   completedToday: [],
   history: [],
   bestStreak: 0,
+  freezeMonth: null, // YYYY-MM when the monthly streak-freeze was used
 }
 
 export function AppProvider({ children }) {
@@ -108,11 +109,24 @@ export function AppProvider({ children }) {
       let newStreak = prev.streak
       let newBestStreak = prev.bestStreak
 
+      let newFreezeMonth = prev.freezeMonth
       if (isNewDay) {
         const yesterday = new Date()
         yesterday.setDate(yesterday.getDate() - 1)
         const yStr = yesterday.toISOString().split('T')[0]
-        newStreak = prev.lastDate === yStr ? prev.streak + 1 : 1
+        const dayBefore = new Date()
+        dayBefore.setDate(dayBefore.getDate() - 2)
+        const dbStr = dayBefore.toISOString().split('T')[0]
+        const thisMonth = today.slice(0, 7)
+        if (prev.lastDate === yStr) {
+          newStreak = prev.streak + 1
+        } else if (prev.lastDate === dbStr && prev.freezeMonth !== thisMonth && prev.streak > 0) {
+          // one missed day + monthly freeze available -> keep the streak alive
+          newStreak = prev.streak + 1
+          newFreezeMonth = thisMonth
+        } else {
+          newStreak = 1
+        }
         newBestStreak = Math.max(newStreak, prev.bestStreak)
       }
 
@@ -134,6 +148,7 @@ export function AppProvider({ children }) {
         totalMinutes: prev.totalMinutes + durationMin,
         streak: newStreak,
         bestStreak: newBestStreak,
+        freezeMonth: newFreezeMonth,
         history: newHistory.slice(-60),
       }
     })

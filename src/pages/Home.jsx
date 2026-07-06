@@ -19,7 +19,7 @@ function greeting(lang) {
 }
 
 export default function Home() {
-  const { lang, progress, isPro } = useApp()
+  const { lang, progress, isPro, goal } = useApp()
   const navigate = useNavigate()
 
   const today = new Date().toISOString().split('T')[0]
@@ -38,6 +38,7 @@ export default function Home() {
 
   const recommended = (isPro ? exercises : freeExercises)
     .filter(e => !completedToday.includes(e.id))
+    .sort((a, b) => (b.category === goal ? 1 : 0) - (a.category === goal ? 1 : 0))
     .slice(0, 3)
 
   const circumference = 2 * Math.PI * 26

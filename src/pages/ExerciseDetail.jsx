@@ -5,6 +5,7 @@ import { exercises } from '../data/exercises'
 import { EXERCISE_IMG, CATEGORY_IMG } from '../data/images'
 import ExerciseIcon from '../components/ExerciseIcon'
 import { setMode, stopSound, MODES } from '../utils/ambientSound'
+import { speak, stopSpeak, voiceEnabled, setVoiceEnabled } from '../utils/voice'
 
 const QUOTES = {
   es: [
@@ -113,12 +114,13 @@ export default function ExerciseDetail() {
   const [currentStep, setCurrentStep] = useState(0)
   const [soundMode, setSoundMode] = useState('calm')
   const [breathPhase, setBreathPhase] = useState('inhale')
+  const [voiceOn, setVoiceOn] = useState(voiceEnabled())
   const [quoteIdx, setQuoteIdx] = useState(0)
   const intervalRef = useRef(null)
   const breathRef = useRef(null)
   const pausedRef = useRef(false)
 
-  useEffect(() => () => { clearInterval(intervalRef.current); clearInterval(breathRef.current); stopSound() }, [])
+  useEffect(() => () => { clearInterval(intervalRef.current); clearInterval(breathRef.current); stopSound(); stopSpeak() }, [])
 
   if (!ex) { navigate('/train', { replace: true }); return null }
 
@@ -146,6 +148,8 @@ export default function ExerciseDetail() {
       if (pausedRef.current) { breathRef.current = setTimeout(next, 200); return }
       const { phase, dur } = cycle[i % cycle.length]
       setBreathPhase(phase)
+      const say = { inhale: { es: 'Inhala', en: 'Inhale' }, hold: { es: 'Reten', en: 'Hold' }, exhale: { es: 'Exhala', en: 'Exhale' } }
+      speak(say[phase][lang], lang)
       i++
       breathRef.current = setTimeout(next, dur)
     }
@@ -157,6 +161,7 @@ export default function ExerciseDetail() {
     setTimeLeft(totalSec)
     setQuoteIdx(Math.floor(Math.random() * quotes.length))
     if (soundMode !== 'off') setMode(soundMode)
+    speak(isBreathing ? (lang==='es'?'Comenzamos. Sigue mi voz.':'Let us begin. Follow my voice.') : (exData.steps?.[0] || ''), lang)
     if (isBreathing) startBreathCycle()
 
     intervalRef.current = setInterval(() => {
@@ -166,6 +171,7 @@ export default function ExerciseDetail() {
           clearInterval(intervalRef.current)
           clearTimeout(breathRef.current)
           stopSound()
+          speak(lang==='es'?'Muy bien. Ejercicio completado.':'Well done. Exercise complete.', lang)
           setPhase('done')
           completeExercise(ex.id, Math.ceil(totalSec / 60))
           return 0
@@ -301,6 +307,15 @@ export default function ExerciseDetail() {
           <div className="w-full mb-5">
             <p className="text-[10px] uppercase tracking-widest text-muted mb-2 text-center">{lang === 'es' ? 'Sonido' : 'Sound'}</p>
             <SoundPicker lang={lang} value={soundMode} onChange={handleSoundChange}/>
+            <div className="flex justify-center mt-3">
+              <button onClick={() => { const on = !voiceOn; setVoiceOn(on); setVoiceEnabled(on); if (on) speak(lang === 'es' ? 'Voz activada' : 'Voice on', lang) }}
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium border transition-all ${voiceOn ? 'bg-accent/10 border-accent/40 text-accent' : 'border-border text-muted'}`}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="14" height="14">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+                </svg>
+                {voiceOn ? (lang === 'es' ? 'Voz guía' : 'Voice guide') : (lang === 'es' ? 'Voz off' : 'Voice off')}
+              </button>
+            </div>
           </div>
 
           {/* Steps */}

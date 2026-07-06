@@ -89,6 +89,15 @@ export default function ProModal({ onClose }) {
               ))}
             </ul>
 
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="w-4 h-4 text-accent">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-accent text-xs font-semibold tracking-wide">
+                {lang === 'es' ? 'Pago único · Sin suscripción · Sin cobros sorpresa' : 'One-time payment · No subscription · No surprise charges'}
+              </span>
+            </div>
+
             <div className="bg-amber-950/30 rounded-2xl p-4 mb-6 border border-amber-900/20 flex items-center justify-between">
               <div>
                 <div className="text-warm text-xl font-semibold">{tx.price}</div>
