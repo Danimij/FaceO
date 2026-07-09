@@ -47,7 +47,23 @@ export function speak(text, lang = 'es') {
   } catch {}
 }
 
+// Play a pre-recorded MP3 from /FaceO/audio/<key>.mp3 if present; otherwise
+// fall back to the device voice. Lets recorded human audio drop in later.
+let sayEl = null
+export function speakFile(key, fallbackText, lang = 'es') {
+  if (!enabled) return
+  if (sayEl) { try { sayEl.pause() } catch {} sayEl = null }
+  stopSpeak()
+  try {
+    const el = new Audio(`/FaceO/audio/${key}.mp3`)
+    sayEl = el
+    el.addEventListener('error', () => { if (sayEl === el) speak(fallbackText, lang) })
+    el.play().catch(() => { if (sayEl === el) speak(fallbackText, lang) })
+  } catch { speak(fallbackText, lang) }
+}
+
 export function stopSpeak() {
+  if (sayEl) { try { sayEl.pause() } catch {} sayEl = null }
   if (typeof speechSynthesis !== 'undefined') {
     try { speechSynthesis.cancel() } catch {}
   }

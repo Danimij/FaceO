@@ -5,7 +5,7 @@ import { exercises } from '../data/exercises'
 import { EXERCISE_IMG, CATEGORY_IMG } from '../data/images'
 import ExerciseIcon from '../components/ExerciseIcon'
 import { setMode, stopSound, MODES } from '../utils/ambientSound'
-import { speak, stopSpeak, voiceEnabled, setVoiceEnabled } from '../utils/voice'
+import { speak, speakFile, stopSpeak, voiceEnabled, setVoiceEnabled } from '../utils/voice'
 
 const QUOTES = {
   es: [
@@ -149,7 +149,8 @@ export default function ExerciseDetail() {
       const { phase, dur } = cycle[i % cycle.length]
       setBreathPhase(phase)
       const say = { inhale: { es: 'Inhala', en: 'Inhale' }, hold: { es: 'Reten', en: 'Hold' }, exhale: { es: 'Exhala', en: 'Exhale' } }
-      speak(say[phase][lang], lang)
+      const vk = phase==='inhale'?'inhala':phase==='exhale'?'exhala':'reten'
+      if (lang==='es') speakFile(vk, say[phase][lang], lang); else speak(say[phase][lang], lang)
       i++
       breathRef.current = setTimeout(next, dur)
     }
@@ -161,7 +162,8 @@ export default function ExerciseDetail() {
     setTimeLeft(totalSec)
     setQuoteIdx(Math.floor(Math.random() * quotes.length))
     if (soundMode !== 'off') setMode(soundMode)
-    speak(isBreathing ? (lang==='es'?'Comenzamos. Sigue mi voz.':'Let us begin. Follow my voice.') : (exData.steps?.[0] || ''), lang)
+    if (isBreathing && lang==='es') speakFile('comenzamos','Comenzamos. Sigue mi voz.', lang)
+    else speak(isBreathing ? (lang==='es'?'Comenzamos. Sigue mi voz.':'Let us begin. Follow my voice.') : (exData.steps?.[0] || ''), lang)
     if (isBreathing) startBreathCycle()
 
     intervalRef.current = setInterval(() => {
@@ -171,7 +173,7 @@ export default function ExerciseDetail() {
           clearInterval(intervalRef.current)
           clearTimeout(breathRef.current)
           stopSound()
-          speak(lang==='es'?'Muy bien. Ejercicio completado.':'Well done. Exercise complete.', lang)
+          if (lang==='es') speakFile('completado','Muy bien. Ejercicio completado.', lang); else speak('Well done. Exercise complete.', lang)
           setPhase('done')
           completeExercise(ex.id, Math.ceil(totalSec / 60))
           return 0

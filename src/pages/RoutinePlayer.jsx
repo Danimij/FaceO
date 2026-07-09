@@ -5,7 +5,7 @@ import { routines } from '../data/routines'
 import { exercises } from '../data/exercises'
 import ExerciseIcon from '../components/ExerciseIcon'
 import { setMode, stopSound, MODES } from '../utils/ambientSound'
-import { speak, stopSpeak } from '../utils/voice'
+import { speak, speakFile, stopSpeak } from '../utils/voice'
 
 function formatTime(s) {
   return `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`
@@ -87,8 +87,8 @@ export default function RoutinePlayer() {
   function finishExercise(idx) {
     completeExercise(routineExercises[idx].id, Math.ceil(routineExercises[idx].durationSec / 60))
     const next = idx + 1
-    if (next >= routineExercises.length) { stopSound(); speak(lang==='es'?'Rutina completada. Muy bien.':'Routine complete. Well done.', lang); setPhase('done') }
-    else { const nx = routineExercises[next]; speak((lang==='es'?'Descansa. Ahora: ':'Rest. Next: ')+nx[lang].name, lang); setPhase('rest'); tick(REST_SEC, () => startNext(next)) }
+    if (next >= routineExercises.length) { stopSound(); (lang==='es'?speakFile('rutina-fin','Rutina completada. Muy bien.',lang):speak('Routine complete. Well done.', lang)); setPhase('done') }
+    else { const nx = routineExercises[next]; (lang==='es'?speakFile('descansa','Descansa. Ahora, el siguiente.',lang):speak('Rest. Next: '+nx[lang].name, lang)); setPhase('rest'); tick(REST_SEC, () => startNext(next)) }
   }
 
   function startNext(idx) {
