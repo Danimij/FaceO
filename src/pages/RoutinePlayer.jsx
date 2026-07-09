@@ -5,6 +5,7 @@ import { routines } from '../data/routines'
 import { exercises } from '../data/exercises'
 import ExerciseIcon from '../components/ExerciseIcon'
 import { setMode, stopSound, MODES } from '../utils/ambientSound'
+import { speak, stopSpeak } from '../utils/voice'
 
 function formatTime(s) {
   return `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`
@@ -53,7 +54,7 @@ export default function RoutinePlayer() {
   const intervalRef = useRef(null)
   const pausedRef = useRef(false)
 
-  useEffect(() => () => { clearInterval(intervalRef.current); stopSound() }, [])
+  useEffect(() => () => { clearInterval(intervalRef.current); stopSound(); stopSpeak() }, [])
 
   if (!routine) { navigate('/train', { replace: true }); return null }
 
@@ -78,19 +79,23 @@ export default function RoutinePlayer() {
   function startRoutine() {
     setPhase('exercise'); setExIndex(0)
     if (soundMode !== 'off') setMode(soundMode)
-    tick(routineExercises[0].durationSec, () => finishExercise(0))
+    const ex0 = routineExercises[0]
+    speak((lang==='es'?'Empezamos con ':'Starting with ')+ex0[lang].name+'. '+(ex0[lang].steps?.[0]||''), lang)
+    tick(ex0.durationSec, () => finishExercise(0))
   }
 
   function finishExercise(idx) {
     completeExercise(routineExercises[idx].id, Math.ceil(routineExercises[idx].durationSec / 60))
     const next = idx + 1
-    if (next >= routineExercises.length) { stopSound(); setPhase('done') }
-    else { setPhase('rest'); tick(REST_SEC, () => startNext(next)) }
+    if (next >= routineExercises.length) { stopSound(); speak(lang==='es'?'Rutina completada. Muy bien.':'Routine complete. Well done.', lang); setPhase('done') }
+    else { const nx = routineExercises[next]; speak((lang==='es'?'Descansa. Ahora: ':'Rest. Next: ')+nx[lang].name, lang); setPhase('rest'); tick(REST_SEC, () => startNext(next)) }
   }
 
   function startNext(idx) {
     setExIndex(idx); setPhase('exercise')
-    tick(routineExercises[idx].durationSec, () => finishExercise(idx))
+    const ex = routineExercises[idx]
+    speak(ex[lang].name+'. '+(ex[lang].steps?.[0]||''), lang)
+    tick(ex.durationSec, () => finishExercise(idx))
   }
 
   function togglePause() {
