@@ -9,6 +9,7 @@ import RoutinePlayer from './pages/RoutinePlayer'
 import Plan from './pages/Plan'
 import Progress from './pages/Progress'
 import Profile from './pages/Profile'
+import Learn from './pages/Learn'
 
 function Shell() {
   const { onboarded } = useApp()
@@ -23,6 +24,7 @@ function Shell() {
           <Route path="/routine/:id" element={<RoutinePlayer />} />
           <Route path="/plan" element={<Plan />} />
           <Route path="/progress" element={<Progress />} />
+          <Route path="/learn" element={<Learn />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
         <BottomNav />
