@@ -8,3 +8,12 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 )
+
+// Fade out the branded splash once the app has mounted (min visible time for polish)
+window.setTimeout(() => {
+  const s = document.getElementById('splash')
+  if (s) {
+    s.classList.add('hide')
+    window.setTimeout(() => s.remove(), 600)
+  }
+}, 650)
