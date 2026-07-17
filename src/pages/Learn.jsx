@@ -86,6 +86,16 @@ export default function Learn() {
         })}
       </div>
 
+      <div className="px-5 mt-6">
+        <a href="academia.html" target="_blank" rel="noopener noreferrer"
+          className="block w-full text-center bg-accent/12 border border-accent/30 rounded-2xl p-4 text-accent font-medium text-sm active:scale-[0.98] transition-transform">
+          {lang === 'es' ? 'Ver academia completa · 16 lecciones →' : 'See full academy · 16 lessons →'}
+        </a>
+        <p className="text-muted text-xs text-center mt-2">
+          {lang === 'es' ? 'Rostro + los 8 pilares de biohacking, en un solo sitio' : 'Face + the 8 biohacking pillars, in one place'}
+        </p>
+      </div>
+
       {selected && <LessonDetail lesson={selected} lang={lang} onClose={() => setSelected(null)} />}
     </div>
   )
