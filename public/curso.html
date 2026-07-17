@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Curso · Salud Real</title>
+<meta name="description" content="El método completo Salud Real: 8 semanas para transformar tu rostro, cuerpo y mente. Curso en vídeo + retos + comunidad.">
+<meta name="theme-color" content="#15100b">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--bg:#15100b;--surface:#1e1811;--card:#241d14;--border:#3a2e1f;--warm:#f4ead9;--muted:#a8967a;--accent:#d08a2c;--gold:#c9a96e;--stone:#c7b8a2}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--warm);font-family:'Inter',-apple-system,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+  h1,h2,h3.serif{font-family:'Fraunces',Georgia,serif;letter-spacing:-.015em}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px 90px}
+  /* hero */
+  .hero{position:relative;padding:70px 20px 34px;max-width:760px;margin:0 auto;text-align:center}
+  .eyebrow{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:12px}
+  .hero h1{font-size:38px;font-weight:600;line-height:1.05;margin-bottom:12px}
+  .hero p{color:var(--muted);font-size:15.5px;max-width:520px;margin:0 auto}
+  .pill{display:inline-flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+  .pill span{font-size:11.5px;color:var(--stone);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:6px 12px}
+  /* value */
+  .value{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;margin:8px 0 24px}
+  .value h3{font-size:16px;font-weight:600;margin-bottom:14px}
+  .vrow{display:flex;gap:11px;padding:8px 0;align-items:flex-start}
+  .vrow svg{width:18px;height:18px;color:var(--accent);flex-shrink:0;margin-top:1px}
+  .vrow span{font-size:14px;color:var(--stone)}
+  /* buy / gate */
+  .buy{background:linear-gradient(135deg,rgba(208,138,44,.16),rgba(208,138,44,.04));border:1px solid var(--border);border-radius:22px;padding:26px;text-align:center;margin-bottom:28px}
+  .buy .price{font-family:'Fraunces',serif;font-size:42px;font-weight:600;color:var(--gold);line-height:1}
+  .buy .price small{font-size:15px;color:var(--muted);font-weight:400}
+  .buy .note{color:var(--muted);font-size:12.5px;margin:6px 0 18px}
+  .btn{display:inline-block;width:100%;max-width:340px;background:var(--accent);color:#15100b;font-weight:700;font-size:15px;padding:15px;border-radius:14px;text-decoration:none;border:none;cursor:pointer;font-family:inherit}
+  .btn.ghost{background:transparent;color:var(--warm);border:1px solid var(--border);font-weight:600;margin-top:10px}
+  .codewrap{margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+  .codewrap label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px}
+  .coderow{display:flex;gap:8px;max-width:360px;margin:0 auto}
+  .coderow input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;color:var(--warm);font-size:14px;font-family:inherit;text-align:center;letter-spacing:.06em;text-transform:uppercase}
+  .coderow button{background:var(--gold);color:#15100b;border:none;border-radius:12px;padding:0 18px;font-weight:700;cursor:pointer;font-family:inherit}
+  .codemsg{font-size:12.5px;margin-top:10px;min-height:16px}
+  /* section title */
+  .sect{display:flex;align-items:center;gap:10px;margin:34px 0 6px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+  .sect .line{flex:1;height:1px;background:var(--border)}
+  /* progress */
+  .prog{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:16px;display:none}
+  .prog.show{display:block}
+  .prog .bar{height:7px;background:var(--surface);border-radius:4px;overflow:hidden;margin:8px 0 4px}
+  .prog .fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--accent));border-radius:4px;transition:width .5s}
+  .prog .t{font-size:13px;font-weight:600}.prog .s{font-size:11.5px;color:var(--muted)}
+  /* modules */
+  .mod{background:var(--card);border:1px solid var(--border);border-radius:18px;margin-bottom:10px;overflow:hidden}
+  .mod.done{border-color:rgba(208,138,44,.4)}
+  .mhead{display:flex;align-items:center;gap:14px;padding:16px;cursor:pointer;user-select:none}
+  .mnum{width:34px;height:34px;border-radius:10px;background:var(--surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent);font-weight:700;font-size:13px}
+  .mod.done .mnum{background:var(--accent);color:#15100b}
+  .mic{color:var(--gold);display:flex;flex-shrink:0}.mic svg{width:20px;height:20px}
+  .mbody{flex:1;min-width:0}
+  .mtitle{font-size:15px;font-weight:600}.msub{font-size:12.5px;color:var(--muted)}
+  .mdur{font-size:11px;color:var(--muted);flex-shrink:0}
+  .mchev{color:#6b5a42;flex-shrink:0;transition:transform .25s;font-size:16px}
+  .mod.open .mchev{transform:rotate(90deg)}
+  .mcontent{display:none;padding:0 16px 20px;border-top:1px solid var(--border)}
+  .mod.open .mcontent{display:block}
+  .locked .mcontent,.locked .mhead{pointer-events:none}
+  .lockicon{color:var(--muted);flex-shrink:0}.lockicon svg{width:16px;height:16px}
+  .video{position:relative;width:100%;aspect-ratio:16/9;background:var(--surface);border:1px solid var(--border);border-radius:12px;margin:16px 0 14px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .video iframe{width:100%;height:100%;border:0}
+  .video .ph{text-align:center;color:var(--muted);font-size:13px;padding:20px}
+  .mcontent h4{color:var(--accent);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin:16px 0 8px}
+  .mcontent p{color:var(--stone);font-size:14px;margin-bottom:6px}
+  .alist{list-style:none}.alist li{display:flex;gap:9px;padding:6px 0;font-size:13.5px;color:var(--stone)}
+  .alist li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:7px}
+  .reto{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:12px;padding:12px 14px;margin-top:14px}
+  .reto .rt{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:700;margin-bottom:4px}
+  .reto p{font-size:13.5px;color:var(--warm);margin:0}
+  .doneBtn{margin-top:14px;width:100%;background:transparent;border:1px solid var(--border);color:var(--warm);border-radius:12px;padding:11px;font-weight:600;font-size:13.5px;cursor:pointer;font-family:inherit}
+  .mod.done .doneBtn{background:rgba(208,138,44,.14);border-color:rgba(208,138,44,.4);color:var(--accent)}
+  /* community */
+  .comm{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;text-align:center;margin-top:26px}
+  .comm h3{font-size:17px;font-weight:600;margin-bottom:6px}
+  .comm p{color:var(--muted);font-size:13.5px;margin-bottom:16px}
+  footer{text-align:center;color:#6b5a42;font-size:11.5px;padding:34px 20px 20px;line-height:1.7}
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="eyebrow">Curso · Salud Real</div>
+  <h1>El método completo para tu rostro, cuerpo y mente</h1>
+  <p>8 semanas, paso a paso. La ciencia de las dos apps convertida en un plan guiado que sí se sostiene.</p>
+  <div class="pill"><span>9 módulos</span><span>Vídeo + acción</span><span>Retos semanales</span><span>Comunidad</span><span>Acceso de por vida</span></div>
+</div>
+
+<div class="wrap">
+  <div class="value">
+    <h3>Qué incluye</h3>
+    <div class="vrow"><svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25l2.6 5.5 6 .8-4.3 4.2 1 6L12 15.9 6.7 18.75l1-6L3.4 8.55l6-.8L12 2.25z" clip-rule="evenodd"/></svg><span>9 módulos en vídeo, del pilar de la luz a tu protocolo definitivo.</span></div>
+    <div class="vrow"><svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25l2.6 5.5 6 .8-4.3 4.2 1 6L12 15.9 6.7 18.75l1-6L3.4 8.55l6-.8L12 2.25z" clip-rule="evenodd"/></svg><span>Un reto práctico por semana, integrado con FACEO e INSPIRAPP.</span></div>
+    <div class="vrow"><svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25l2.6 5.5 6 .8-4.3 4.2 1 6L12 15.9 6.7 18.75l1-6L3.4 8.55l6-.8L12 2.25z" clip-rule="evenodd"/></svg><span>Seguimiento de tu progreso y comunidad privada de apoyo.</span></div>
+    <div class="vrow"><svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25l2.6 5.5 6 .8-4.3 4.2 1 6L12 15.9 6.7 18.75l1-6L3.4 8.55l6-.8L12 2.25z" clip-rule="evenodd"/></svg><span>Pago único, acceso para siempre. Sin suscripción.</span></div>
+  </div>
+
+  <!-- BUY / GATE (visible only when locked) -->
+  <div class="buy" id="buybox">
+    <div class="price">39€ <small>· pago único</small></div>
+    <div class="note">Acceso de por vida a todo el curso y a la comunidad.</div>
+    <a class="btn" id="buybtn" href="https://danimij.gumroad.com/l/curso" target="_blank" rel="noopener">Conseguir el curso →</a>
+    <div class="codewrap">
+      <label>¿Ya tienes tu código de acceso?</label>
+      <div class="coderow">
+        <input id="code" placeholder="CURSO-XXXX-XXXX" maxlength="14" autocomplete="off">
+        <button onclick="redeem()">Entrar</button>
+      </div>
+      <div class="codemsg" id="codemsg"></div>
+    </div>
+  </div>
+
+  <div class="prog" id="prog">
+    <div class="t">Tu progreso</div>
+    <div class="bar"><div class="fill" id="progfill" style="width:0%"></div></div>
+    <div class="s"><span id="progn">0</span> de 9 módulos completados</div>
+  </div>
+
+  <div class="sect"><span>Los 9 módulos</span><span class="line"></span></div>
+  <div id="mods"></div>
+
+  <div class="comm" id="comm">
+    <h3>Comunidad Salud Real</h3>
+    <p>Comparte tu progreso, resuelve dudas y no lo hagas en solitario. Acceso incluido con el curso.</p>
+    <a class="btn" id="commbtn" href="https://t.me/+xxxxxxxx" target="_blank" rel="noopener">Unirme a la comunidad →</a>
+  </div>
+</div>
+<footer>Contenido educativo. No sustituye consejo médico. Consulta a un profesional ante cualquier condición.<br>© Salud Real · FACEO + INSPIRAPP</footer>
+
+<script>
+var COURSE_CODES=['CURSO-WSL6-NOH0','CURSO-1GBZ-US17','CURSO-I3OE-4V8N','CURSO-O7GL-TZX2','CURSO-0WTZ-WVNK','CURSO-YNC4-L5ZA','CURSO-1CKA-ZT8S','CURSO-NXNJ-1JQ0','CURSO-H9FK-2SMM','CURSO-A9D2-HIH8','CURSO-P9I7-5M86','CURSO-V8QH-8A7O','CURSO-B0YV-0FFY','CURSO-SYRX-O3NF','CURSO-IAZ5-GTRD','CURSO-5GMA-EEON','CURSO-VQ1A-KJLM','CURSO-F30D-5QDQ','CURSO-YFD8-EB2V','CURSO-KXZW-34RQ','CURSO-52CO-HXS5','CURSO-JV9Y-4890','CURSO-G5BP-6ABP','CURSO-Q8C0-PB99','CURSO-R4FT-3MEM','CURSO-0W3N-EZTV','CURSO-32DV-LP2C','CURSO-OI5C-QMO6','CURSO-LXY0-8ZMQ','CURSO-FRGN-BKIX','CURSO-72BV-GC74','CURSO-GEZ6-AILY','CURSO-1K8E-60D5','CURSO-G8FA-5GLJ','CURSO-8J9E-NWZQ','CURSO-I3IH-LL69','CURSO-TZVM-V8FB','CURSO-63SQ-NCWX','CURSO-3U4W-HMMI','CURSO-MWKS-8IUW','CURSO-94ME-5I04','CURSO-GXSZ-1QVS','CURSO-GJ06-CGDT','CURSO-81YK-SJYZ','CURSO-ABJ1-RRK0','CURSO-P6UX-HLTN','CURSO-1BU8-UQC1','CURSO-N30T-3JG7','CURSO-DY4O-5GM9','CURSO-D9TY-535Q'];
+
+function _s(p){return "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'>"+p+"</svg>";}
+var IC={
+  flag:_s("<path d='M5 21V4M5 4c3-2 7 2 10 0v9c-3 2-7-2-10 0'/>"),
+  light:_s("<circle cx='12' cy='12' r='4'/><path d='M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19'/>"),
+  breath:_s("<path d='M3 8h11a3 3 0 1 0-3-3'/><path d='M3 12h15a3 3 0 1 1-3 3'/><path d='M3 16h8a2.4 2.4 0 1 1-2.4 2.4'/>"),
+  cold:_s("<path d='M12 2v20M4 6l16 12M20 6L4 18'/>"),
+  move:_s("<circle cx='13' cy='5' r='1.8'/><path d='M6 20l3-5 3 2 2-4M9 15l-1-4 5-1 2 3 3 1'/>"),
+  face:_s("<circle cx='12' cy='12' r='9'/><path d='M9 10h.01M15 10h.01M8.5 14.5c1.5 1.6 5.5 1.6 7 0'/>"),
+  food:_s("<path d='M6 3v7a2 2 0 0 0 4 0V3M8 3v18M18 3c-1.5 1-2 3-2 6s.5 4 2 4v8'/>"),
+  mind:_s("<path d='M12 5a4 4 0 0 0-4 4c-2 0-3 2-2 3.5C5 14 6 16 8 16v2a4 4 0 0 0 8 0v-2c2 0 3-2 2-3.5 1-1.5 0-3.5-2-3.5a4 4 0 0 0-4-4z'/>"),
+  target:_s("<circle cx='12' cy='12' r='8'/><circle cx='12' cy='12' r='4'/><circle cx='12' cy='12' r='1' fill='currentColor'/>")
+};
+var LOCK="<span class='lockicon'>"+_s("<rect x='5' y='11' width='14' height='9' rx='2'/><path d='M8 11V8a4 4 0 0 1 8 0v3'/>")+"</span>";
+var CHEV="<span class='mchev'>›</span>";
+
+// MODULES — replace video:'' with your YouTube video ID when ready.
+var MODULES=[
+ {id:'m0',ic:'flag',title:'Módulo 0 · Bienvenida y línea base',sub:'Tu punto de partida',dur:'~15 min',video:'',
+  intro:'Antes de cambiar nada, mide de dónde partes. En 8 semanas volverás a medir y verás el cambio en números, no en sensaciones.',
+  acc:['Instala FACEO e INSPIRAPP y conéctalas al reto.','Mide tu línea base: test BOLT, horas de sueño, pasos, energía 1-10.','Hazte una foto frontal y de perfil con luz natural.','Escribe tus 3 objetivos y compártelos en la comunidad.'],
+  reto:'Completa tu ficha de línea base y preséntate en la comunidad.'},
+ {id:'m1',ic:'light',title:'Módulo 1 · La Luz',sub:'El reloj maestro que ordena todo lo demás',dur:'~20 min',video:'',
+  intro:'La luz es la señal principal de tu reloj biológico: regula sueño, energía, hormonas y hasta el apetito (leptina, grelina, insulina). Es el pilar que hay que arreglar primero.',
+  acc:['Sol en los ojos los primeros 30-60 min tras despertar (sin gafas).','Luz cálida/ámbar y tenue 2-3 h antes de dormir.','Duerme en oscuridad total; tapa los LED.','Toma sol también a lo largo del día siempre que puedas.'],
+  reto:'7 días de sol matutino + noche en ámbar. Anota cómo duermes.'},
+ {id:'m2',ic:'breath',title:'Módulo 2 · La Respiración',sub:'Regula el sistema nervioso a voluntad',dur:'~22 min',video:'',
+  intro:'Respirar menos, lento y por la nariz. El CO₂ no es un residuo: es la señal que libera el oxígeno en tus tejidos. Aquí INSPIRAPP es tu herramienta diaria.',
+  acc:['Respira siempre por la nariz, también al dormir.','5 min al día de coherencia cardíaca (5,5 - 5,5).','Suspiro fisiológico para calmarte en menos de 30 s.','Mide tu BOLT al empezar y al terminar la semana.'],
+  reto:'Sube tu BOLT +5 segundos en 7 días.'},
+ {id:'m3',ic:'cold',title:'Módulo 3 · Frío y Calor · Hormesis',sub:'Estrés breve que te fortalece',dur:'~18 min',video:'',
+  intro:'Una dosis pequeña de frío o calor activa reparación, dopamina y energía durante horas. Con seguridad y progresión.',
+  acc:['Ducha fría 1-3 min, respirando lento y relajándote dentro.','Objetivo semanal: unos 11 min de frío repartidos.','Si tienes acceso, sauna 15-20 min.','Nunca hiperventiles dentro del agua.'],
+  reto:'Acumula 11 min de frío en la semana, relajado, no en tensión.'},
+ {id:'m4',ic:'move',title:'Módulo 4 · Movimiento y Fuerza',sub:'Cuanto más te mueves, mejor',dur:'~20 min',video:'',
+  intro:'No hay número mágico: el enemigo es estar horas sentado. Pasos, fuerza y algo de intensidad construyen el cuerpo que sostiene tu cara y tu longevidad.',
+  acc:['Muévete a lo largo de todo el día; escaleras, levantarte a menudo.','Objetivo de pasos: 10.000-15.000 o más.','Fuerza 2-3 veces por semana.','Zona 2 (puedes hablar) varias veces + algo de intensidad.'],
+  reto:'10-15k pasos diarios + 2 sesiones de fuerza esta semana.'},
+ {id:'m5',ic:'face',title:'Módulo 5 · Tu Rostro',sub:'Mewing, masetero, fascia y yoga facial',dur:'~24 min',video:'',
+  intro:'La cara se entrena, se libera y se moldea. Postura lingual, mandíbula, fascia y los más de 40 músculos faciales. Aquí FACEO guía cada rutina.',
+  acc:['Mewing pasivo: toda la lengua al paladar, respiración nasal, todo el día.','Rutina facial guiada en FACEO varias veces por semana.','Libera fascia: masetero, sienes y base del cráneo, presión lenta.','Cuida postura: chin tucks y pantalla a la altura de los ojos.'],
+  reto:'7 días de rutina facial en FACEO + foto de seguimiento.'},
+ {id:'m6',ic:'food',title:'Módulo 6 · Nutrición y Entorno',sub:'Comida real, ventana horaria y tu casa',dur:'~22 min',video:'',
+  intro:'Qué comes y cuándo, más el entorno que te manda señales 24 h: luz, temperatura, aire, EMF y contacto con la tierra (grounding).',
+  acc:['Base de comida real y proteína en cada comida.','Ventana de 10-12 h, cenando pronto.','Dormitorio fresco (~18°C), oscuro y ventilado; router lejos de noche.','20 min de grounding descalzo al día.'],
+  reto:'Ventana de comida 10-12 h + auditoría del dormitorio + grounding diario.'},
+ {id:'m7',ic:'mind',title:'Módulo 7 · Mente y Sueño',sub:'Nervio vago, estrés y reparación nocturna',dur:'~22 min',video:'',
+  intro:'Mente, sistema nervioso e inmunidad son un solo sistema. Y el sueño es la base sobre la que se apoyan todos los pilares.',
+  acc:['Exhalación larga / suspiro fisiológico varias veces al día.','Meditación diaria, aunque sean 5-10 min.','Horario de sueño regular, también el fin de semana.','Sin pantallas ni cafeína a última hora; 4-7-8 en la cama.'],
+  reto:'Meditación diaria + horario de sueño regular toda la semana.'},
+ {id:'m8',ic:'target',title:'Módulo 8 · Integración',sub:'Tu protocolo de por vida',dur:'~18 min',video:'',
+  intro:'Junta todo en un protocolo de mañana, día y noche que combine ambas apps. Vuelve a medir tu línea base y compara con el Módulo 0.',
+  acc:['Diseña tu protocolo definitivo mañana / día / noche.','Repite las mediciones del Módulo 0 y compara.','Comparte tu antes/después y aprendizajes en la comunidad.','Elige tu siguiente reto: esto es una nueva línea base, no el final.'],
+  reto:'Publica tu transformación (antes/después) y tu protocolo final.'}
+];
+
+var UNLOCK_KEY='curso-unlock', CODE_KEY='curso-code', PROG_KEY='curso-progress', USED_KEY='curso-used';
+function isUnlocked(){return localStorage.getItem(UNLOCK_KEY)==='1';}
+function getProg(){try{return JSON.parse(localStorage.getItem(PROG_KEY)||'[]');}catch(e){return [];}}
+function saveProg(a){localStorage.setItem(PROG_KEY,JSON.stringify(a));}
+
+function redeem(){
+  var msg=document.getElementById('codemsg');
+  var code=(document.getElementById('code').value||'').trim().toUpperCase();
+  if(!code){msg.style.color='#c77';msg.textContent='Escribe tu código.';return;}
+  var used=[];try{used=JSON.parse(localStorage.getItem(USED_KEY)||'[]');}catch(e){}
+  if(COURSE_CODES.indexOf(code)===-1){msg.style.color='#e06a5a';msg.textContent='Código no válido.';return;}
+  localStorage.setItem(UNLOCK_KEY,'1');localStorage.setItem(CODE_KEY,code);
+  if(used.indexOf(code)===-1){used.push(code);localStorage.setItem(USED_KEY,JSON.stringify(used));}
+  msg.style.color='#7fb89a';msg.textContent='¡Acceso desbloqueado!';
+  setTimeout(render,500);
+}
+
+function toggleMod(i){
+  if(!isUnlocked())return;
+  var el=document.getElementById('mod'+i);el.classList.toggle('open');
+}
+function markDone(i,ev){
+  ev.stopPropagation();
+  var p=getProg();var id=MODULES[i].id;
+  var k=p.indexOf(id);
+  if(k===-1)p.push(id);else p.splice(k,1);
+  saveProg(p);render();
+}
+
+function render(){
+  var unlocked=isUnlocked();
+  document.getElementById('buybox').classList.toggle('hidden',unlocked);
+  document.getElementById('prog').classList.toggle('show',unlocked);
+  var prog=getProg();
+  var mh='';
+  MODULES.forEach(function(m,i){
+    var done=prog.indexOf(m.id)!==-1;
+    var open=false;
+    var vid=m.video?('<iframe src="https://www.youtube.com/embed/'+m.video+'" title="'+m.title+'" allowfullscreen loading="lazy"></iframe>'):'<div class="ph">Vídeo próximamente</div>';
+    var acc=m.acc.map(function(a){return '<li>'+a+'</li>';}).join('');
+    var content = unlocked ? (
+      '<div class="mcontent">'+
+        '<div class="video">'+vid+'</div>'+
+        '<h4>De qué va</h4><p>'+m.intro+'</p>'+
+        '<h4>Cómo aplicarlo</h4><ul class="alist">'+acc+'</ul>'+
+        '<div class="reto"><div class="rt">Reto de la semana</div><p>'+m.reto+'</p></div>'+
+        '<button class="doneBtn" onclick="markDone('+i+',event)">'+(done?'✓ Módulo completado':'Marcar como completado')+'</button>'+
+      '</div>'
+    ) : '';
+    mh+='<div class="mod'+(done?' done':'')+(unlocked?'':' locked')+'" id="mod'+i+'">'+
+      '<div class="mhead" onclick="toggleMod('+i+')">'+
+        '<span class="mnum">'+(done?'✓':(i))+'</span>'+
+        '<span class="mic">'+IC[m.ic]+'</span>'+
+        '<span class="mbody"><span class="mtitle">'+m.title+'</span><br><span class="msub">'+m.sub+'</span></span>'+
+        (unlocked?('<span class="mdur">'+m.dur+'</span>'+CHEV):LOCK)+
+      '</div>'+content+
+    '</div>';
+  });
+  document.getElementById('mods').innerHTML=mh;
+  var n=prog.length;
+  document.getElementById('progn').textContent=n;
+  document.getElementById('progfill').style.width=Math.round(n/MODULES.length*100)+'%';
+}
+render();
+</script>
+</body>
+</html>
