@@ -6,6 +6,7 @@ const GOALS = [
   { id: 'breathing', es: 'Respirar mejor',       en: 'Breathe better',   sub: { es: 'Nasal, CO₂, calma',            en: 'Nasal, CO₂, calm' } },
   { id: 'posture',   es: 'Postura y cuello',     en: 'Posture & neck',   sub: { es: 'Alineación craneofacial',      en: 'Craniofacial alignment' } },
   { id: 'fascia',    es: 'Liberar tensión',      en: 'Release tension',  sub: { es: 'Fascia y miofascial',          en: 'Fascia & myofascial' } },
+  { id: 'chain',     es: 'La cadena completa',   en: 'The full chain',   sub: { es: 'De los pies a la cara',        en: 'From feet to face' } },
 ]
 
 export default function Onboarding() {
@@ -16,12 +17,12 @@ export default function Onboarding() {
 
   const tx = {
     es: { next: 'Continuar', start: 'Empezar', skip: 'Ahora no',
-      t0: 'Bienvenido a FACEO', s0: 'Ejercicios diarios de 5-10 min para tu mandíbula, respiración y postura. Constancia, no perfección.',
+      t0: 'Tu cara no está aislada', s0: 'Está unida a tus pies por una cadena continua de fascia. Por eso aquí no trabajamos solo el rostro: liberamos la cadena entera, de abajo arriba. 5-10 min al día.',
       t1: '¿Cuál es tu objetivo?', s1: 'Personalizamos tus recomendaciones.',
       t2: 'Recordatorio diario', s2: 'Un aviso a la hora que elijas para no romper la racha.',
       enable: 'Activar recordatorio' },
     en: { next: 'Continue', start: 'Start', skip: 'Not now',
-      t0: 'Welcome to FACEO', s0: '5-10 min daily exercises for your jaw, breathing and posture. Consistency, not perfection.',
+      t0: 'Your face is not isolated', s0: 'It is linked to your feet by a continuous chain of fascia. So here we do not train only the face: we release the whole chain, bottom-up. 5-10 min a day.',
       t1: 'What is your goal?', s1: 'We personalize your recommendations.',
       t2: 'Daily reminder', s2: 'A nudge at your chosen time so you keep your streak.',
       enable: 'Enable reminder' },
@@ -51,11 +52,29 @@ export default function Onboarding() {
       <div className="flex-1 flex flex-col justify-center px-7">
         {step === 0 && (
           <div className="animate-fade-in text-center">
-            <div className="w-20 h-20 rounded-3xl bg-accent/15 flex items-center justify-center mx-auto mb-8">
-              <span className="text-4xl font-semibold text-accent" style={{ fontFamily: 'serif' }}>F</span>
-            </div>
+            {/* La cadena, dibujada: se entiende antes de leer nada. */}
+            <svg viewBox="0 0 120 200" className="w-24 h-40 mx-auto mb-7" fill="none">
+              <path d="M60 178 C60 150 60 150 60 128 C60 104 60 104 60 82 C60 58 60 48 60 26"
+                stroke="#c9a96e" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="3 5" opacity="0.55"/>
+              {[
+                { y: 26, r: 11, label: true },
+                { y: 62, r: 6 },
+                { y: 98, r: 6 },
+                { y: 134, r: 6 },
+                { y: 178, r: 8 },
+              ].map((n, i) => (
+                <g key={i}>
+                  <circle cx="60" cy={n.y} r={n.r + 5} stroke="#c9a96e" strokeWidth="1" opacity="0.18"/>
+                  <circle cx="60" cy={n.y} r={n.r} fill={i === 0 ? '#c9a96e' : 'none'} stroke="#c9a96e" strokeWidth="1.6"
+                    opacity={i === 0 ? 1 : 0.75}/>
+                </g>
+              ))}
+            </svg>
             <h1 className="text-3xl font-semibold text-warm mb-4">{tx.t0}</h1>
             <p className="text-stone-400 leading-relaxed">{tx.s0}</p>
+            <p className="text-accent/70 text-[11px] uppercase tracking-[0.18em] mt-6">
+              {lang === 'es' ? 'Pie · Cadera · Diafragma · Cuello · Cara' : 'Foot · Hip · Diaphragm · Neck · Face'}
+            </p>
           </div>
         )}
 
