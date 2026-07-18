@@ -6,6 +6,7 @@ import { exercises } from '../data/exercises'
 import ExerciseIcon from '../components/ExerciseIcon'
 import { setMode, stopSound, MODES } from '../utils/ambientSound'
 import { speak, speakFile, stopSpeak } from '../utils/voice'
+import { haptic } from '../utils/haptics'
 
 function formatTime(s) {
   return `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`
@@ -41,7 +42,7 @@ function SoundPicker({ lang, value, onChange }) {
 export default function RoutinePlayer() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { lang, completeExercise, generatedRoutine } = useApp()
+  const { lang, completeExercise, generatedRoutine, progress } = useApp()
 
   // 'generated' no está en el listado estático: viene del generador.
   const routine = id === 'generated' ? generatedRoutine : routines.find(r => r.id === id)
@@ -79,6 +80,7 @@ export default function RoutinePlayer() {
 
   function startRoutine() {
     setPhase('exercise'); setExIndex(0)
+    haptic.start()
     if (soundMode !== 'off') setMode(soundMode)
     const ex0 = routineExercises[0]
     speak((lang==='es'?'Empezamos con ':'Starting with ')+ex0[lang].name+'. '+(ex0[lang].steps?.[0]||''), lang)
@@ -88,12 +90,13 @@ export default function RoutinePlayer() {
   function finishExercise(idx) {
     completeExercise(routineExercises[idx].id, Math.ceil(routineExercises[idx].durationSec / 60))
     const next = idx + 1
-    if (next >= routineExercises.length) { stopSound(); (lang==='es'?speakFile('rutina-fin','Rutina completada. Muy bien.',lang):speak('Routine complete. Well done.', lang)); setPhase('done') }
-    else { const nx = routineExercises[next]; (lang==='es'?speakFile('descansa','Descansa. Ahora, el siguiente.',lang):speak('Rest. Next: '+nx[lang].name, lang)); setPhase('rest'); tick(REST_SEC, () => startNext(next)) }
+    if (next >= routineExercises.length) { stopSound(); haptic.done(); (lang==='es'?speakFile('rutina-fin','Rutina completada. Muy bien.',lang):speak('Routine complete. Well done.', lang)); setPhase('done') }
+    else { const nx = routineExercises[next]; (lang==='es'?speakFile('descansa','Descansa. Ahora, el siguiente.',lang):speak('Rest. Next: '+nx[lang].name, lang)); haptic.rest(); setPhase('rest'); tick(REST_SEC, () => startNext(next)) }
   }
 
   function startNext(idx) {
     setExIndex(idx); setPhase('exercise')
+    haptic.next()
     const ex = routineExercises[idx]
     speak(ex[lang].name+'. '+(ex[lang].steps?.[0]||''), lang)
     tick(ex.durationSec, () => finishExercise(idx))
@@ -240,15 +243,40 @@ export default function RoutinePlayer() {
             </div>
             <h2 className="text-warm text-2xl font-semibold mb-2">{lang === 'es' ? 'Rutina completada' : 'Routine complete'}</h2>
             <p className="text-muted text-sm mb-1">{routineData.name}</p>
-            <p className="text-stone-700 text-xs mb-12">{routine.durationMin} min · {routineExercises.length} {lang === 'es' ? 'ejercicios' : 'exercises'}</p>
-            <button onClick={() => navigate('/')}
+            <p className="text-stone-700 text-xs mb-8">{routine.durationMin} min · {routineExercises.length} {lang === 'es' ? 'ejercicios' : 'exercises'}</p>
+
+            {/* Recompensa: el momento de máxima satisfacción es donde mejor
+                entra la racha. Es lo que hace volver mañana. */}
+            <div className="w-full grid grid-cols-3 gap-2 mb-4">
+              {[
+                { v: progress.streak, l: lang === 'es' ? 'días seguidos' : 'day streak', hero: true },
+                { v: progress.totalSessions, l: lang === 'es' ? 'sesiones' : 'sessions' },
+                { v: progress.totalMinutes, l: lang === 'es' ? 'minutos' : 'minutes' },
+              ].map(({ v, l, hero }) => (
+                <div key={l} className={`rounded-2xl border py-4 ${hero ? 'border-accent/40 bg-accent/10' : 'border-border bg-card'}`}>
+                  <div className={`text-2xl font-semibold ${hero ? 'text-accent' : 'text-warm'}`}>{v}</div>
+                  <div className="text-[10px] text-muted uppercase tracking-widest mt-0.5">{l}</div>
+                </div>
+              ))}
+            </div>
+
+            {progress.streak > 1 && (
+              <p className="text-stone-500 text-xs mb-8">
+                {lang === 'es'
+                  ? `Llevas ${progress.streak} días seguidos. Vuelve mañana y no rompas la cadena.`
+                  : `${progress.streak} days in a row. Come back tomorrow and keep the chain going.`}
+              </p>
+            )}
+            {progress.streak <= 1 && <div className="mb-8" />}
+
+            <button onClick={() => navigate('/generate')}
               className="w-full bg-accent font-semibold py-4 rounded-2xl text-sm tracking-wide active:scale-95 transition-transform mb-3"
               style={{ color: '#080706' }}>
-              {lang === 'es' ? 'Volver al inicio' : 'Back to home'}
+              {lang === 'es' ? 'Generar otra rutina' : 'Generate another routine'}
             </button>
-            <button onClick={() => navigate('/train')}
+            <button onClick={() => navigate('/')}
               className="w-full border border-border text-muted text-sm py-4 rounded-2xl active:bg-card transition-colors">
-              {lang === 'es' ? 'Ver entrenamientos' : 'View workouts'}
+              {lang === 'es' ? 'Volver al inicio' : 'Back to home'}
             </button>
           </div>
         )}

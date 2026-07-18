@@ -59,6 +59,9 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 right-0 px-5 pb-6">
           <p className="text-stone-300 text-sm mb-1">{greeting(lang)}</p>
           <h1 className="text-4xl font-semibold text-warm tracking-tight">FACEO</h1>
+          <p className="text-accent/90 text-[11px] uppercase tracking-[0.2em] mt-1">
+            {lang === 'es' ? 'De los pies a la cara' : 'From feet to face'}
+          </p>
         </div>
       </div>
 
