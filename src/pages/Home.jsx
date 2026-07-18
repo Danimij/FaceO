@@ -133,6 +133,25 @@ export default function Home() {
           </svg>
         </button>
 
+        {/* Curso completo */}
+        <a href="curso.html" target="_blank" rel="noopener noreferrer"
+          className="w-full text-left rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform flex items-center gap-3 p-4"
+          style={{ background: 'linear-gradient(135deg,#241d16,#1a150f)', borderColor: 'rgba(201,169,110,0.3)' }}>
+          <div className="w-10 h-10 rounded-xl bg-accent/15 flex items-center justify-center flex-shrink-0 text-accent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.55-2.28A1 1 0 0121 8.6v6.8a1 1 0 01-1.45.89L15 14M4 6h9a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <div className="text-[10px] uppercase tracking-widest text-accent mb-0.5">{lang === 'es' ? 'Curso · 9 módulos' : 'Course · 9 modules'}</div>
+            <div className="text-warm font-semibold text-sm">{lang === 'es' ? 'El método completo en 8 semanas' : 'The full method in 8 weeks'}</div>
+            <div className="text-muted text-xs">{lang === 'es' ? 'Vídeo, retos semanales y comunidad' : 'Video, weekly challenges and community'}</div>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-stone-600 flex-shrink-0">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+
         {/* Today's plan routine */}
         {todayRoutine && doneCount < totalCount && (
           <div>
