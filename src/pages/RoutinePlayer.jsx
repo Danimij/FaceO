@@ -94,6 +94,16 @@ export default function RoutinePlayer() {
     else { const nx = routineExercises[next]; (lang==='es'?speakFile('descansa','Descansa. Ahora, el siguiente.',lang):speak('Rest. Next: '+nx[lang].name, lang)); haptic.rest(); setPhase('rest'); tick(REST_SEC, () => startNext(next)) }
   }
 
+  // Saltar avanza sin acreditar el ejercicio: las estadísticas deben reflejar
+  // lo que realmente has hecho, no lo que te has saltado.
+  function skipExercise(idx) {
+    clearInterval(intervalRef.current)
+    stopSpeak()
+    const next = idx + 1
+    if (next >= routineExercises.length) { stopSound(); haptic.done(); setPhase('done') }
+    else { haptic.rest(); setPhase('rest'); tick(REST_SEC, () => startNext(next)) }
+  }
+
   function startNext(idx) {
     setExIndex(idx); setPhase('exercise')
     haptic.next()
@@ -205,10 +215,18 @@ export default function RoutinePlayer() {
               ))}
             </div>
 
-            <button onClick={togglePause}
-              className="w-full border border-border text-stone-300 text-sm font-medium py-4 rounded-2xl active:bg-card transition-colors">
-              {paused ? (lang === 'es' ? 'Continuar' : 'Resume') : (lang === 'es' ? 'Pausar' : 'Pause')}
-            </button>
+            {/* Poder saltar un ejercicio que no puedes o no quieres hacer
+                evita el abandono: mejor saltar uno que dejar la rutina. */}
+            <div className="w-full flex gap-2">
+              <button onClick={togglePause}
+                className="flex-1 border border-border text-stone-300 text-sm font-medium py-4 rounded-2xl active:bg-card transition-colors">
+                {paused ? (lang === 'es' ? 'Continuar' : 'Resume') : (lang === 'es' ? 'Pausar' : 'Pause')}
+              </button>
+              <button onClick={() => { haptic.tap(); skipExercise(exIndex) }}
+                className="flex-1 border border-border text-muted text-sm font-medium py-4 rounded-2xl active:bg-card transition-colors">
+                {lang === 'es' ? 'Saltar' : 'Skip'}
+              </button>
+            </div>
           </div>
         )}
 
