@@ -4,13 +4,15 @@ import { useApp } from '../context/AppContext'
 import { exercises } from '../data/exercises'
 import { FOCUSES, DURATIONS, generateRoutine } from '../data/generator'
 import ExerciseIcon from '../components/ExerciseIcon'
+import ProModal from '../components/ProModal'
 
 export default function Generate() {
-  const { lang, saveGeneratedRoutine } = useApp()
+  const { lang, saveGeneratedRoutine, isPro } = useApp()
   const navigate = useNavigate()
   const [focus, setFocus] = useState('full')
   const [mins, setMins] = useState(5)
   const [preview, setPreview] = useState(null)
+  const [showPro, setShowPro] = useState(false)
 
   const es = lang === 'es'
   const tx = es
@@ -24,6 +26,22 @@ export default function Generate() {
         gen: 'Generate routine', regen: 'Generate another', start: 'Start routine →',
         note: 'Ordered bottom-up: the chain is released first, the face is worked after.',
         min: 'min', ex: 'exercises' }
+
+  const Lock = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" className="w-3.5 h-3.5 flex-shrink-0">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 11V8a4 4 0 018 0v3" /><rect x="4" y="11" width="14" height="9" rx="2" />
+    </svg>
+  )
+
+  function pickFocus(f) {
+    if (f.pro && !isPro) { setShowPro(true); return }
+    setFocus(f.id); setPreview(null)
+  }
+
+  function pickDuration(d) {
+    if (d.pro && !isPro) { setShowPro(true); return }
+    setMins(d.min); setPreview(null)
+  }
 
   function doGenerate() {
     const r = generateRoutine(focus, mins, lang)
@@ -52,9 +70,16 @@ export default function Generate() {
         <p className="text-xs uppercase tracking-widest text-muted mb-3">{tx.q1}</p>
         <div className="space-y-2 mb-7">
           {FOCUSES.map(f => (
-            <button key={f.id} onClick={() => { setFocus(f.id); setPreview(null) }}
+            <button key={f.id} onClick={() => pickFocus(f)}
               className={`w-full text-left rounded-2xl p-4 border transition-colors ${focus === f.id ? 'border-accent/50 bg-accent/10' : 'border-border bg-card'}`}>
-              <div className={`font-medium text-sm ${focus === f.id ? 'text-accent' : 'text-warm'}`}>{es ? f.es : f.en}</div>
+              <div className="flex items-center gap-2">
+                <div className={`font-medium text-sm ${focus === f.id ? 'text-accent' : (f.pro && !isPro ? 'text-stone-500' : 'text-warm')}`}>{es ? f.es : f.en}</div>
+                {f.pro && !isPro && (
+                  <span className="flex items-center gap-1 text-[9px] font-semibold uppercase tracking-wider text-accent/80 bg-accent/10 border border-accent/25 px-1.5 py-0.5 rounded-full">
+                    <Lock /> Pro
+                  </span>
+                )}
+              </div>
               <div className="text-muted text-xs mt-0.5">{es ? f.esSub : f.enSub}</div>
             </button>
           ))}
@@ -63,9 +88,10 @@ export default function Generate() {
         <p className="text-xs uppercase tracking-widest text-muted mb-3">{tx.q2}</p>
         <div className="flex gap-2 mb-7">
           {DURATIONS.map(d => (
-            <button key={d} onClick={() => { setMins(d); setPreview(null) }}
-              className={`flex-1 py-3 rounded-xl border text-sm font-medium transition-colors ${mins === d ? 'border-accent/50 bg-accent/10 text-accent' : 'border-border bg-card text-muted'}`}>
-              {d} {tx.min}
+            <button key={d.min} onClick={() => pickDuration(d)}
+              className={`flex-1 py-3 rounded-xl border text-sm font-medium transition-colors flex items-center justify-center gap-1 ${mins === d.min ? 'border-accent/50 bg-accent/10 text-accent' : `border-border bg-card ${d.pro && !isPro ? 'text-stone-600' : 'text-muted'}`}`}>
+              {d.pro && !isPro && <Lock />}
+              {d.min} {tx.min}
             </button>
           ))}
         </div>
@@ -111,6 +137,8 @@ export default function Generate() {
           </div>
         )}
       </div>
+
+      {showPro && <ProModal onClose={() => setShowPro(false)} />}
     </div>
   )
 }

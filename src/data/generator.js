@@ -16,6 +16,9 @@ const ORDER = {
   face: 7,       // musculatura facial
 }
 
+// `pro: true` = solo Premium. La versión gratuita mantiene dos focos completos
+// y útiles (cadena completa y rostro), para que se pueda juzgar el producto
+// de verdad antes de pagar. Lo que se paga es la profundidad, no el acceso.
 export const FOCUSES = [
   {
     id: 'full', es: 'Cadena completa', en: 'Full chain',
@@ -23,36 +26,36 @@ export const FOCUSES = [
     cats: ['chain', 'posture', 'fascia', 'breathing', 'palate', 'jaw', 'face'],
   },
   {
-    id: 'deepfront', es: 'Línea frontal profunda', en: 'Deep front line',
+    id: 'deepfront', pro: true, es: 'Línea frontal profunda', en: 'Deep front line',
     esSub: 'Lengua, diafragma, psoas y pie', enSub: 'Tongue, diaphragm, psoas and foot',
     cats: ['chain', 'breathing', 'palate', 'jaw'],
     chains: ['deepfront'],
   },
   {
-    id: 'posterior', es: 'Cadena posterior', en: 'Posterior chain',
+    id: 'posterior', pro: true, es: 'Cadena posterior', en: 'Posterior chain',
     esSub: 'Del pie a la ceja, por detrás', enSub: 'Foot to eyebrow, up the back',
     cats: ['chain', 'posture', 'fascia'],
     chains: ['back'],
   },
   {
-    id: 'anterior', es: 'Cadena anterior', en: 'Anterior chain',
+    id: 'anterior', pro: true, es: 'Cadena anterior', en: 'Anterior chain',
     esSub: 'Deshacer el plegado de estar sentado', enSub: 'Undo the sitting fold',
     cats: ['chain', 'posture', 'breathing'],
     chains: ['front'],
   },
   {
-    id: 'lateral', es: 'Cadenas laterales', en: 'Lateral chains',
+    id: 'lateral', pro: true, es: 'Cadenas laterales', en: 'Lateral chains',
     esSub: 'Costados y simetría', enSub: 'Side body and symmetry',
     cats: ['chain', 'posture', 'fascia'],
     chains: ['lateral', 'spiral'],
   },
   {
-    id: 'techneck', es: 'Cuello y postura', en: 'Neck & posture',
+    id: 'techneck', pro: true, es: 'Cuello y postura', en: 'Neck & posture',
     esSub: 'Deshacer el cuello adelantado', enSub: 'Undo forward head',
     cats: ['chain', 'posture', 'fascia'],
   },
   {
-    id: 'jawline', es: 'Mandíbula', en: 'Jawline',
+    id: 'jawline', pro: true, es: 'Mandíbula', en: 'Jawline',
     esSub: 'Definición y liberación', enSub: 'Definition and release',
     cats: ['fascia', 'jaw', 'palate', 'posture'],
   },
@@ -63,7 +66,12 @@ export const FOCUSES = [
   },
 ]
 
-export const DURATIONS = [3, 5, 10, 15]
+export const DURATIONS = [
+  { min: 3 },
+  { min: 5 },
+  { min: 10, pro: true },
+  { min: 15, pro: true },
+]
 
 function shuffle(arr) {
   const a = [...arr]
