@@ -33,6 +33,16 @@ export function AppProvider({ children }) {
     () => localStorage.getItem('forma_onboarded') === 'true'
   )
   const [goal, setGoal] = useState(() => localStorage.getItem('forma_goal') || 'jaw')
+  // Última rutina generada — se guarda para que el reproductor pueda abrirla
+  // y para que siga ahí si el usuario recarga a mitad.
+  const [generatedRoutine, setGeneratedRoutine] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('faceo_generated')) || null } catch { return null }
+  })
+  function saveGeneratedRoutine(r) {
+    setGeneratedRoutine(r)
+    try { localStorage.setItem('faceo_generated', JSON.stringify(r)) } catch {}
+  }
+
   const [photos, setPhotos] = useState(() => {
     try { return JSON.parse(localStorage.getItem('forma_photos')) || [] } catch { return [] }
   })
@@ -162,6 +172,7 @@ export function AppProvider({ children }) {
     <AppContext.Provider value={{
       lang, setLang,
       isPro, setIsPro,
+      generatedRoutine, saveGeneratedRoutine,
       progress,
       completeExercise,
       resetToday,

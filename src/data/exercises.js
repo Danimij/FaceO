@@ -438,3 +438,245 @@ exercises.push(
 
 // Añadir categoría fascia
 categories.fascia = { es: 'Fascia', en: 'Fascia', color: '#5aa89a' }
+
+// ── CADENA MIOFASCIAL · cuerpo completo ────────────────────────────────────
+// La fascia es continua: la Línea Frontal Profunda conecta la lengua y la
+// mandíbula con el diafragma, el psoas y la planta del pie. Trabajar la cara
+// sin la cadena deja la mitad del trabajo sin hacer.
+
+exercises.push(
+  {
+    id: 'plantar-release',
+    category: 'chain',
+    pro: false,
+    durationSec: 90,
+    reps: null,
+    icon: 'foot',
+    chain: ['back', 'deepfront'],
+    es: {
+      name: 'Liberación plantar',
+      subtitle: 'El primer eslabón de la cadena',
+      description: 'La planta del pie es el inicio de la línea posterior, que sube por gemelos, isquios y espalda hasta la nuca y el cuero cabelludo. Liberarla afloja toda la cadena hacia arriba.',
+      steps: [
+        'De pie, apoya una pelota bajo la planta del pie',
+        'Rueda lento del talón a los dedos, 45 s por pie',
+        'Detente 10 s en los puntos más sensibles, sin forzar',
+        'Al terminar, nota si ese lado del cuerpo se siente más largo',
+      ],
+      tip: 'Prueba a tocarte los pies antes y después de rodar un solo pie. La diferencia entre lados te enseña, mejor que ninguna explicación, que la fascia es continua.',
+    },
+    en: {
+      name: 'Plantar release',
+      subtitle: 'The first link in the chain',
+      description: 'The sole of the foot starts the back line, which runs up through calves, hamstrings and back to the nape and scalp. Releasing it loosens the whole chain upward.',
+      steps: [
+        'Standing, place a ball under the sole of your foot',
+        'Roll slowly from heel to toes, 45 s per foot',
+        'Pause 10 s on tender points, without forcing',
+        'Afterwards, notice if that side feels longer',
+      ],
+      tip: 'Try touching your toes before and after rolling just one foot. The difference between sides teaches you, better than any explanation, that fascia is continuous.',
+    },
+  },
+  {
+    id: 'posterior-chain',
+    category: 'chain',
+    pro: false,
+    durationSec: 120,
+    reps: null,
+    icon: 'spine',
+    chain: ['back'],
+    es: {
+      name: 'Línea posterior',
+      subtitle: 'De los gemelos a la nuca',
+      description: 'Un estiramiento continuo de toda la línea posterior. Cuando esta cadena está acortada, tira de la base del cráneo y adelanta la cabeza, lo que difumina la mandíbula.',
+      steps: [
+        'De pie, flexiona hacia delante dejando la cabeza colgar pesada',
+        'Rodillas ligeramente flexionadas, sin bloquear',
+        'Respira lento 60 s y deja que el cuerpo baje solo con cada exhalación',
+        'Sube vértebra a vértebra, dejando la cabeza para el final',
+      ],
+      tip: 'No busques tocar el suelo. Busca soltar la nuca: si el cuello está tenso, la cadena no se libera aunque bajes mucho.',
+    },
+    en: {
+      name: 'Posterior line',
+      subtitle: 'From calves to nape',
+      description: 'A continuous stretch of the whole back line. When this chain is shortened it pulls on the base of the skull and pushes the head forward, which blurs the jawline.',
+      steps: [
+        'Standing, fold forward letting your head hang heavy',
+        'Knees slightly bent, not locked',
+        'Breathe slowly for 60 s, letting the body sink with each exhale',
+        'Roll up vertebra by vertebra, head last',
+      ],
+      tip: 'Do not chase the floor. Chase releasing the nape: if the neck is tense, the chain will not release however far you go down.',
+    },
+  },
+  {
+    id: 'psoas-release',
+    category: 'chain',
+    pro: false,
+    durationSec: 120,
+    reps: null,
+    icon: 'hips',
+    chain: ['deepfront'],
+    es: {
+      name: 'Psoas y flexores',
+      subtitle: 'El centro de la línea frontal profunda',
+      description: 'El psoas es una pieza central de la Línea Frontal Profunda, la misma cadena en la que están la lengua, la mandíbula y el diafragma. Pasar horas sentado lo acorta y arrastra la postura entera.',
+      steps: [
+        'Apoya una rodilla en el suelo y el otro pie delante, en zancada',
+        'Mete la pelvis hacia dentro (retroversión) sin arquear la lumbar',
+        'Empuja la cadera hacia delante y mantén 45 s por lado',
+        'Respira profundo: el diafragma y el psoas comparten inserciones',
+      ],
+      tip: 'Si notas pinzamiento en la lumbar, has arqueado la espalda. Mete el coxis hacia dentro y el estiramiento se irá al sitio correcto.',
+    },
+    en: {
+      name: 'Psoas & hip flexors',
+      subtitle: 'The centre of the deep front line',
+      description: 'The psoas is a central piece of the Deep Front Line, the same chain the tongue, jaw and diaphragm belong to. Hours of sitting shorten it and drag your whole posture with it.',
+      steps: [
+        'Kneel on one knee with the other foot forward, in a lunge',
+        'Tuck the pelvis under without arching the lower back',
+        'Push the hip forward and hold 45 s per side',
+        'Breathe deeply: diaphragm and psoas share attachments',
+      ],
+      tip: 'If you feel pinching in the lower back, you have arched it. Tuck the tailbone and the stretch will move to the right place.',
+    },
+  },
+  {
+    id: 'diaphragm-release',
+    category: 'chain',
+    pro: false,
+    durationSec: 90,
+    reps: null,
+    icon: 'lungs',
+    chain: ['deepfront'],
+    es: {
+      name: 'Diafragma y costillas',
+      subtitle: 'El puente entre respiración y postura',
+      description: 'El diafragma une la respiración con la cadena profunda. Si está rígido, respiras alto y con el cuello, y esos músculos accesorios acaban tensando mandíbula y cara.',
+      steps: [
+        'Tumbado boca arriba con las rodillas flexionadas',
+        'Engancha los dedos bajo el borde de las costillas, con suavidad',
+        'Inhala empujando contra tus dedos, exhala hundiendo despacio',
+        'Repite 10 respiraciones lentas recorriendo todo el borde costal',
+      ],
+      tip: 'Si al respirar se te levantan los hombros, estás respirando con el cuello. Ahí empieza mucha de la tensión que luego notas en la cara.',
+    },
+    en: {
+      name: 'Diaphragm & ribs',
+      subtitle: 'The bridge between breathing and posture',
+      description: 'The diaphragm links breathing to the deep chain. If it is stiff you breathe high and with the neck, and those accessory muscles end up tightening jaw and face.',
+      steps: [
+        'Lie on your back with knees bent',
+        'Hook your fingers gently under the rib edge',
+        'Inhale pushing against your fingers, exhale sinking slowly',
+        'Repeat 10 slow breaths along the whole rib border',
+      ],
+      tip: 'If your shoulders rise when you breathe, you are breathing with your neck. That is where much of the tension you later feel in your face begins.',
+    },
+  },
+  {
+    id: 'thoracic-mobility',
+    category: 'chain',
+    pro: false,
+    durationSec: 90,
+    reps: null,
+    icon: 'spine',
+    chain: ['front', 'back'],
+    es: {
+      name: 'Movilidad torácica',
+      subtitle: 'Deshacer la joroba de pantalla',
+      description: 'La columna dorsal se queda rígida en flexión de tanto estar sentado. Esa rigidez obliga al cuello a adelantarse, y la cabeza adelantada es lo que más difumina la línea mandibular.',
+      steps: [
+        'Siéntate o ponte de rodillas, manos en la nuca',
+        'Abre los codos y extiende la zona dorsal llevando el pecho arriba',
+        'Mantén el abdomen firme para no arquear la lumbar',
+        'Repite 10 veces, lento, acompañando con la respiración',
+      ],
+      tip: 'El movimiento sale del pecho, no de la lumbar. Si arqueas la zona baja, has compensado y la dorsal sigue rígida.',
+    },
+    en: {
+      name: 'Thoracic mobility',
+      subtitle: 'Undoing the screen hunch',
+      description: 'The upper back stiffens in flexion from sitting. That stiffness forces the neck forward, and forward head is what most blurs the jawline.',
+      steps: [
+        'Sit or kneel, hands behind your head',
+        'Open the elbows and extend the upper back, chest rising',
+        'Keep the abs firm so the lower back does not arch',
+        'Repeat 10 times, slowly, with the breath',
+      ],
+      tip: 'The movement comes from the chest, not the lower back. If you arch low down, you have compensated and the upper back stays stiff.',
+    },
+  },
+  {
+    id: 'front-line-open',
+    category: 'chain',
+    pro: false,
+    durationSec: 90,
+    reps: null,
+    icon: 'chin',
+    chain: ['front'],
+    es: {
+      name: 'Apertura de línea frontal',
+      subtitle: 'Pecho, garganta y mandíbula',
+      description: 'La línea frontal superficial sube del empeine al esternón y de ahí al cuello y la mandíbula. Abrirla contrarresta las horas de encorvamiento y estiliza el perfil al instante.',
+      steps: [
+        'De pie, entrelaza las manos por detrás de la espalda',
+        'Abre el pecho llevando los hombros atrás y abajo',
+        'Alarga el cuello llevando la barbilla ligeramente atrás, no arriba',
+        'Mantén 30 s respirando por la nariz, repite 2 veces',
+      ],
+      tip: 'No eches la cabeza hacia atrás para estirar la garganta: comprime la nuca. Alarga primero, y el estiramiento llegará solo.',
+    },
+    en: {
+      name: 'Front line opening',
+      subtitle: 'Chest, throat and jaw',
+      description: 'The superficial front line runs from the instep to the sternum and on to the neck and jaw. Opening it counteracts hours of hunching and sharpens the profile instantly.',
+      steps: [
+        'Standing, interlace your hands behind your back',
+        'Open the chest, shoulders back and down',
+        'Lengthen the neck taking the chin slightly back, not up',
+        'Hold 30 s breathing through the nose, repeat twice',
+      ],
+      tip: 'Do not throw your head back to stretch the throat: it compresses the nape. Lengthen first and the stretch will come on its own.',
+    },
+  },
+  {
+    id: 'lateral-line',
+    category: 'chain',
+    pro: false,
+    durationSec: 90,
+    reps: null,
+    icon: 'spine',
+    chain: ['lateral'],
+    es: {
+      name: 'Línea lateral',
+      subtitle: 'El costado que equilibra la cara',
+      description: 'La línea lateral recorre el costado del cuerpo hasta el cuello y la oreja. Cuando un lado está más acortado que el otro, aparece asimetría de hombros y de mandíbula.',
+      steps: [
+        'De pie, pies a la anchura de las caderas',
+        'Estira un brazo arriba y flexiona el tronco al lado contrario',
+        'Empuja la cadera hacia fuera para alargar todo el costado',
+        'Mantén 30 s por lado y compara: casi siempre hay un lado más corto',
+      ],
+      tip: 'Trabaja más el lado corto, no el fácil. Compensar la asimetría del costado suele mejorar también la del rostro.',
+    },
+    en: {
+      name: 'Lateral line',
+      subtitle: 'The side body that balances the face',
+      description: 'The lateral line runs up the side of the body to the neck and ear. When one side is shorter than the other, shoulder and jaw asymmetry appear.',
+      steps: [
+        'Standing, feet hip-width apart',
+        'Reach one arm overhead and side-bend to the opposite side',
+        'Push the hip outward to lengthen the whole side',
+        'Hold 30 s per side and compare: there is almost always a shorter side',
+      ],
+      tip: 'Work the short side more, not the easy one. Evening out side-body asymmetry often improves facial asymmetry too.',
+    },
+  },
+)
+
+// Categoría de cadena miofascial
+categories.chain = { es: 'Cadena miofascial', en: 'Myofascial chain', color: '#8a9ac4' }

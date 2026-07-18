@@ -115,6 +115,24 @@ export default function Home() {
           </div>
         </button>
 
+        {/* Generador de rutinas */}
+        <button onClick={() => navigate('/generate')}
+          className="w-full text-left rounded-2xl overflow-hidden border border-border active:scale-[0.98] transition-transform flex items-center gap-3 bg-card p-4">
+          <div className="w-10 h-10 rounded-xl bg-accent/12 flex items-center justify-center flex-shrink-0 text-accent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 20v-6M4 10V4M12 20v-9M12 7V4M20 20v-4M20 12V4M1 14h6M9 7h6M17 16h6" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <div className="text-[10px] uppercase tracking-widest text-accent mb-0.5">{lang === 'es' ? 'Generador' : 'Generator'}</div>
+            <div className="text-warm font-semibold text-sm">{lang === 'es' ? 'Rutina a medida, nunca igual' : 'Custom routine, never the same'}</div>
+            <div className="text-muted text-xs">{lang === 'es' ? 'Cadena miofascial completa: de los pies a la cara' : 'Full myofascial chain: from feet to face'}</div>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-stone-600 flex-shrink-0">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
         {/* Academia */}
         <button onClick={() => navigate('/learn')}
           className="w-full text-left rounded-2xl overflow-hidden border border-border active:scale-[0.98] transition-transform flex items-center gap-3 bg-card p-4">

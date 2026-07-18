@@ -41,9 +41,10 @@ function SoundPicker({ lang, value, onChange }) {
 export default function RoutinePlayer() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { lang, completeExercise } = useApp()
+  const { lang, completeExercise, generatedRoutine } = useApp()
 
-  const routine = routines.find(r => r.id === id)
+  // 'generated' no está en el listado estático: viene del generador.
+  const routine = id === 'generated' ? generatedRoutine : routines.find(r => r.id === id)
   const routineExercises = routine ? routine.exercises.map(eid => exercises.find(e => e.id === eid)).filter(Boolean) : []
 
   const [phase, setPhase] = useState('preview')

@@ -10,6 +10,7 @@ import Plan from './pages/Plan'
 import Progress from './pages/Progress'
 import Profile from './pages/Profile'
 import Learn from './pages/Learn'
+import Generate from './pages/Generate'
 
 function Shell() {
   const { onboarded } = useApp()
@@ -25,6 +26,7 @@ function Shell() {
           <Route path="/plan" element={<Plan />} />
           <Route path="/progress" element={<Progress />} />
           <Route path="/learn" element={<Learn />} />
+          <Route path="/generate" element={<Generate />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
         <BottomNav />
