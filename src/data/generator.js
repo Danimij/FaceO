@@ -29,6 +29,24 @@ export const FOCUSES = [
     chains: ['deepfront'],
   },
   {
+    id: 'posterior', es: 'Cadena posterior', en: 'Posterior chain',
+    esSub: 'Del pie a la ceja, por detrás', enSub: 'Foot to eyebrow, up the back',
+    cats: ['chain', 'posture', 'fascia'],
+    chains: ['back'],
+  },
+  {
+    id: 'anterior', es: 'Cadena anterior', en: 'Anterior chain',
+    esSub: 'Deshacer el plegado de estar sentado', enSub: 'Undo the sitting fold',
+    cats: ['chain', 'posture', 'breathing'],
+    chains: ['front'],
+  },
+  {
+    id: 'lateral', es: 'Cadenas laterales', en: 'Lateral chains',
+    esSub: 'Costados y simetría', enSub: 'Side body and symmetry',
+    cats: ['chain', 'posture', 'fascia'],
+    chains: ['lateral', 'spiral'],
+  },
+  {
     id: 'techneck', es: 'Cuello y postura', en: 'Neck & posture',
     esSub: 'Deshacer el cuello adelantado', enSub: 'Undo forward head',
     cats: ['chain', 'posture', 'fascia'],
