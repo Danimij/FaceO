@@ -25,6 +25,21 @@ export const EXERCISE_IMG = {
   'suboccipital-release': U(FACE),    // skull base
   'myofascial-ball':      U(FACE),    // ball release
   'fascial-chains':       U(BREATH),  // full-body fascia mobility
+
+  // Cadena miofascial · cuerpo completo
+  'plantar-release':      U(BREATH),
+  'posterior-chain':      U(BREATH),
+  'psoas-release':        U(BREATH),
+  'diaphragm-release':    U(BREATH),  // diafragma — respiración
+  'thoracic-mobility':    U(BREATH),
+  'front-line-open':      U(BREATH),
+  'lateral-line':         U(BREATH),
+  'instep-quad':          U(BREATH),
+  'abdominal-front':      U(BREATH),
+  'it-band-hip':          U(BREATH),
+  'adductor-deep':        U(BREATH),
+  'throat-floor':         U(PROFILE), // garganta y submentón — perfil
+  'spiral-rotation':      U(BREATH),
 }
 
 export const CATEGORY_IMG = {
@@ -34,6 +49,14 @@ export const CATEGORY_IMG = {
   posture:   U(PROFILE),
   face:      U(FACE),
   fascia:    U(FACE),
+  chain:     U(BREATH),
+}
+
+// Red de seguridad: ningún ejercicio debe quedarse sin imagen.
+export const FALLBACK_IMG = U(BREATH)
+export function exerciseImg(ex) {
+  if (!ex) return FALLBACK_IMG
+  return EXERCISE_IMG[ex.id] || CATEGORY_IMG[ex.category] || FALLBACK_IMG
 }
 
 export const ROUTINE_IMG = {

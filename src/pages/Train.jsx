@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { routines } from '../data/routines'
 import { exercises } from '../data/exercises'
-import { EXERCISE_IMG, ROUTINE_IMG } from '../data/images'
+import { exerciseImg, ROUTINE_IMG } from '../data/images'
 import ExerciseIcon from '../components/ExerciseIcon'
 import ProModal from '../components/ProModal'
 
@@ -104,7 +104,7 @@ export default function Train() {
         {tab === 'exercises' && exercises.map(ex => {
           const exData = ex[lang]
           const locked = ex.pro && !isPro
-          const img = EXERCISE_IMG[ex.id]
+          const img = exerciseImg(ex)
 
           return (
             <button key={ex.id} onClick={() => handleExercise(ex)}

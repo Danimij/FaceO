@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { exercises } from '../data/exercises'
-import { EXERCISE_IMG, CATEGORY_IMG } from '../data/images'
+import { exerciseImg } from '../data/images'
 import ExerciseIcon from '../components/ExerciseIcon'
 import { setMode, stopSound, MODES } from '../utils/ambientSound'
 import { speak, speakFile, stopSpeak, voiceEnabled, setVoiceEnabled } from '../utils/voice'
@@ -126,7 +126,7 @@ export default function ExerciseDetail() {
 
   const exData = ex[lang]
   const totalSec = ex.durationSec
-  const img = EXERCISE_IMG[ex.id] || CATEGORY_IMG[ex.category]
+  const img = exerciseImg(ex)
   const circumference = 2 * Math.PI * 52
   const timerProgress = 1 - timeLeft / totalSec
   const isBreathing = ex.category === 'breathing'

@@ -4,6 +4,8 @@ const COLORS = {
   posture:  '#7a9a8a',
   breathing:'#6a8aaa',
   face:     '#9a7a9a',
+  fascia:   '#5aa89a',
+  chain:    '#8a9ac4',
 }
 
 export default function ExerciseIcon({ type, category, size = 28, color }) {
@@ -78,6 +80,31 @@ export default function ExerciseIcon({ type, category, size = 28, color }) {
       <circle cx="19.5" cy="11.5" r="1.5" fill={c} opacity="0.7"/>
       <path d="M11 16 Q16 21 21 16" stroke={c} strokeWidth="1.5" strokeLinecap="round"/>
       <path d="M10 24 Q16 28 22 24" stroke={c} strokeWidth="1.2" strokeLinecap="round" opacity="0.4"/>
+    </svg>
+  )
+
+  if (type === 'foot') return (
+    <svg {...p}>
+      <path d="M12 25c0-3-1-5-1-8 0-4 2-7 5-7s5 3 5 6c0 4-2 6-2 9" stroke={c} strokeWidth="1.5" strokeLinecap="round"/>
+      <circle cx="12" cy="8" r="1.4" stroke={c} strokeWidth="1.2"/>
+      <circle cx="15.5" cy="6.5" r="1.4" stroke={c} strokeWidth="1.2"/>
+      <circle cx="19" cy="6.5" r="1.3" stroke={c} strokeWidth="1.2"/>
+      <path d="M11 25h8" stroke={c} strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  )
+
+  if (type === 'hips') return (
+    <svg {...p}>
+      <path d="M9 7c0 5 1 7 3 9M23 7c0 5-1 7-3 9" stroke={c} strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M12 16h8" stroke={c} strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M13 16c-1 4-2 6-3 9M19 16c1 4 2 6 3 9" stroke={c} strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  )
+
+  if (type === 'spine') return (
+    <svg {...p}>
+      <path d="M16 4c-2 3 2 5 0 8s2 5 0 8 2 5 0 8" stroke={c} strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M12 7h8M12 13h8M12 19h8M12 25h8" stroke={c} strokeWidth="1.2" strokeLinecap="round" opacity="0.5"/>
     </svg>
   )
 
