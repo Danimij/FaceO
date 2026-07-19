@@ -135,6 +135,8 @@ nav button.on{color:var(--ac)}
       <span class="chev">›</span>
     </button>
 
+    <div id="today-card"></div>
+
     <div class="lbl" style="margin-top:22px">Sesiones rápidas</div>
     <div id="presets"></div>
 
@@ -313,10 +315,12 @@ function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floo
 var SESSION = null;
 function buildSession(cap, mins){
   var pool = EX.filter(function(e){ return S.mats.indexOf(e.mat)>=0; });
-  if(cap!=='mixto') pool = pool.filter(function(e){ return e.cap===cap; });
+  if(Array.isArray(cap)) pool = pool.filter(function(e){ return cap.indexOf(e.cap)>=0; });
+  else if(cap!=='mixto') pool = pool.filter(function(e){ return e.cap===cap; });
   if(!pool.length) return null;
 
   // Calentar con movilidad siempre que exista, y cerrar con movilidad si da tiempo.
+  var isMobOnly = (cap==='movilidad');
   var mob = shuffle(pool.filter(function(e){ return e.cap==='movilidad'; }));
   var rest = shuffle(pool.filter(function(e){ return e.cap!=='movilidad'; }));
   var budget = mins*60, picked = [], total = 0;
@@ -325,8 +329,8 @@ function buildSession(cap, mins){
   function add(e){ if(total + e.seg + REST > budget) return false; picked.push(e); total += e.seg + REST; return true; }
 
   if(mob.length) add(mob[0]);                     // calentamiento
-  var main = cap==='movilidad' ? mob.slice(1) : rest;
-  var alt = cap==='movilidad' ? [] : mob.slice(1);
+  var main = isMobOnly ? mob.slice(1) : rest;
+  var alt = isMobOnly ? [] : mob.slice(1);
   var i=0, j=0, turn=0;
   while(total < budget && (i<main.length || j<alt.length)){
     var e = null;
@@ -564,10 +568,44 @@ function isPro(){ return localStorage.getItem('fluo-pro')==='1'; }
 function redeem(){
   var el=document.getElementById('code-in'); var c=(el.value||'').trim().toUpperCase();
   if(CODES.indexOf(c)<0){ document.getElementById('code-msg').textContent='Código no válido.'; return; }
-  localStorage.setItem('fluo-pro','1'); vib(40); toast('Plan desbloqueado'); renderPlan();
+  localStorage.setItem('fluo-pro','1'); vib(40); toast('Plan desbloqueado'); renderPlan(); renderToday();
 }
 
 /* ══ PLAN 3 MESES ══ */
+function planWeek(){
+  if(!S.planStart) return 0;
+  var days = Math.floor((Date.now() - new Date(S.planStart).getTime())/86400000);
+  return Math.min(12, Math.max(1, Math.floor(days/7)+1));
+}
+function blockFor(w){
+  return PLAN.blocks.filter(function(b){ return b.weeks.indexOf(w)>=0; })[0] || PLAN.blocks[0];
+}
+function startPlan(){
+  if(!isPro()){ toast('El plan es premium'); return; }
+  S.planStart = new Date().toISOString(); save();
+  toast('Plan iniciado · semana 1'); vib(40); renderPlan(); renderToday();
+}
+function todaySession(){
+  var w = planWeek(); if(!w) return null;
+  var b = blockFor(w);
+  return buildSession(b.focus, b.minutes);
+}
+function startToday(){
+  var s = todaySession();
+  if(!s){ toast('Revisa tu material'); return; }
+  SESSION = s; startSession();
+}
+function renderToday(){
+  var el = document.getElementById('today-card'); if(!el) return;
+  var w = planWeek();
+  if(!w || !isPro()){ el.innerHTML=''; return; }
+  var b = blockFor(w);
+  el.innerHTML = '<div class="lbl" style="margin-top:22px">Tu plan</div>'+
+    '<button class="row" onclick="startToday()" style="border-color:rgba(46,230,200,.4)">'+
+    '<span class="ic" style="background:rgba(46,230,200,.15)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 9-14 9V3z"/></svg></span>'+
+    '<span class="rb"><span class="rt">Sesión de hoy</span><span class="rs">Semana '+w+' de 12 · '+b.name+' · '+b.minutes+' min</span></span>'+
+    '<span class="chev">›</span></button>';
+}
 function renderPlan(){
   var pro=isPro();
   var h='';
@@ -582,6 +620,21 @@ function renderPlan(){
       '<div style="display:flex;gap:8px"><input id="code-in" placeholder="FLUO-XXXX-XXXX" maxlength="14" style="flex:1;background:var(--surface);border:1px solid var(--br);border-radius:12px;padding:11px;color:var(--tx);text-align:center;font-family:inherit;text-transform:uppercase">'+
       '<button class="btn" style="width:auto;padding:11px 18px" onclick="redeem()">Entrar</button></div>'+
       '<div id="code-msg" style="font-size:12px;color:var(--ac2);margin-top:8px;min-height:14px"></div></div></div>';
+  }
+  if(pro){
+    var w=planWeek();
+    if(!w){
+      h+='<button class="btn" style="margin-bottom:16px" onclick="startPlan()">Empezar el plan · Semana 1</button>';
+    } else {
+      var b0=blockFor(w);
+      h+='<div class="card" style="margin-bottom:16px;border-color:rgba(46,230,200,.4)">'+
+        '<div style="display:flex;justify-content:space-between;align-items:baseline">'+
+        '<span style="font-size:15px;font-weight:700">Semana '+w+' de 12</span>'+
+        '<span style="font-size:11.5px;color:var(--ac)">'+b0.name+'</span></div>'+
+        '<div class="xpbar" style="height:6px;background:var(--surface);border-radius:3px;overflow:hidden;margin:10px 0 4px">'+
+        '<div style="height:100%;width:'+Math.round(w/12*100)+'%;background:var(--ac);border-radius:3px"></div></div>'+
+        '<button class="btn" style="margin-top:12px" onclick="startToday()">Sesión de hoy →</button></div>';
+    }
   }
   PLAN.blocks.forEach(function(b){
     h+='<div class="lbl" style="margin-top:20px">Bloque '+b.n+' · semanas '+b.weeks[0]+'-'+b.weeks[3]+'</div>'+
@@ -626,7 +679,7 @@ function renderStats(){
 /* ══ INIT ══ */
 document.getElementById('tg-voice').classList.toggle('on',PREF.voice);
 document.getElementById('tg-hap').classList.toggle('on',PREF.hap);
-renderMats(); renderGen(); renderBiblio(); renderPresets(); renderStats(); initHR(); renderPlan();
+renderMats(); renderGen(); renderBiblio(); renderPresets(); renderStats(); initHR(); renderPlan(); renderToday();
 document.querySelectorAll('.mo').forEach(function(o){ o.addEventListener('click',function(e){ if(e.target===o) o.classList.remove('on'); }); });
 window.addEventListener('load', function(){
   setTimeout(function(){
