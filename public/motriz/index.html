@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MOTRIZ — Fuerza y movilidad</title>
+<meta name="description" content="Entrena fuerza, movilidad y control con el mínimo material. Sesiones que nunca se repiten, adaptadas a lo que tengas en casa.">
+<meta name="theme-color" content="#14110f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MOTRIZ">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#14110f; --surface:#1c1917; --card:#232020; --br:#332e2b;
+  --tx:#f2ede8; --tx2:#9a908a; --ac:#d2703f; --ac2:#e08a5c; --ok:#4ac98a;
+}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',-apple-system,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100svh;overscroll-behavior:none}
+h1,h2,.serif{font-family:'Fraunces',Georgia,serif;letter-spacing:-.02em}
+.wrap{max-width:640px;margin:0 auto;padding:0 20px 110px}
+.sc{display:none}.sc.on{display:block;animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* header */
+header{padding:56px 20px 8px;max-width:640px;margin:0 auto}
+.eyebrow{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ac);font-weight:600}
+h1{font-size:30px;font-weight:600;line-height:1.1;margin:6px 0 4px}
+.sub{color:var(--tx2);font-size:14px}
+/* cards */
+.card{background:var(--card);border:1px solid var(--br);border-radius:18px;padding:16px}
+.row{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);border:1px solid var(--br);border-radius:18px;padding:15px;margin-bottom:9px;cursor:pointer;color:inherit;font:inherit;transition:transform .12s,border-color .15s}
+.row:active{transform:scale(.985)}
+.row.sel{border-color:var(--ac);background:rgba(210,112,63,.1)}
+.ic{width:40px;height:40px;border-radius:12px;background:var(--surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--ac)}
+.ic svg{width:21px;height:21px}
+.rb{flex:1;min-width:0}
+.rt{font-size:14.5px;font-weight:600}
+.rs{font-size:12px;color:var(--tx2);margin-top:1px}
+.chev{color:#5c534e;flex-shrink:0}
+/* chips */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.chip{flex:1;min-width:70px;text-align:center;padding:12px 8px;border-radius:13px;border:1px solid var(--br);background:var(--card);color:var(--tx2);font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s}
+.chip.on{border-color:var(--ac);background:rgba(210,112,63,.12);color:var(--ac)}
+.lbl{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx2);margin-bottom:10px;font-weight:600}
+/* buttons */
+.btn{width:100%;background:var(--ac);color:#14110f;border:none;border-radius:16px;padding:16px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform .12s}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:transparent;color:var(--tx);border:1px solid var(--br);font-weight:600}
+.btn.sm{padding:12px;font-size:13px}
+/* nav */
+nav{position:fixed;bottom:0;left:0;right:0;background:rgba(20,17,15,.95);backdrop-filter:blur(12px);border-top:1px solid var(--br);display:flex;padding:8px 0 max(8px,env(safe-area-inset-bottom));z-index:40}
+nav button{flex:1;background:none;border:none;color:#6b625c;font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px}
+nav button svg{width:21px;height:21px}
+nav button.on{color:var(--ac)}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.stat{background:var(--card);border:1px solid var(--br);border-radius:15px;padding:14px 6px;text-align:center}
+.stat.hero{background:rgba(210,112,63,.12);border-color:rgba(210,112,63,.4)}
+.sv{font-size:21px;font-weight:700}.stat.hero .sv{color:var(--ac)}
+.sl{font-size:9px;color:var(--tx2);text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
+/* player */
+#player{position:fixed;inset:0;background:var(--bg);z-index:60;display:none;flex-direction:column;padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom))}
+#player.on{display:flex}
+.pl-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pl-x{background:var(--card);border:1px solid var(--br);color:var(--tx2);width:38px;height:38px;border-radius:50%;font-size:15px;cursor:pointer}
+.pl-prog{flex:1;height:4px;background:var(--surface);border-radius:2px;overflow:hidden}
+.pl-fill{height:100%;background:var(--ac);border-radius:2px;transition:width .3s linear}
+.pl-hr{font-size:12px;color:var(--tx2);font-variant-numeric:tabular-nums;min-width:56px;text-align:right}
+.pl-mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.pl-cap{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:8px}
+.pl-name{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1.1;margin-bottom:6px}
+.pl-sub{color:var(--tx2);font-size:13.5px;margin-bottom:26px}
+.pl-time{font-size:66px;font-weight:200;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:6px}
+.pl-steps{text-align:left;width:100%;max-width:420px;margin-top:22px}
+.pl-steps li{display:flex;gap:10px;padding:5px 0;font-size:13.5px;color:#c4bab4;list-style:none}
+.pl-steps li b{color:var(--ac);flex-shrink:0;font-weight:600}
+.pl-btns{display:flex;gap:8px}
+.pl-rest{font-family:'Fraunces',serif;font-size:22px;color:var(--tx2)}
+/* modal */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:70;display:none;align-items:flex-end;justify-content:center}
+.mo.on{display:flex}
+.md{width:100%;max-width:600px;max-height:88vh;overflow-y:auto;background:var(--surface);border-radius:24px 24px 0 0;border-top:1px solid var(--br);padding:22px 20px max(28px,env(safe-area-inset-bottom));animation:up .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes up{from{transform:translateY(40px)}to{transform:none}}
+.mh{display:flex;align-items:center;justify-content:between;gap:12px;margin-bottom:14px}
+.mt{font-family:'Fraunces',serif;font-size:21px;font-weight:600;flex:1}
+.why{background:var(--card);border-left:3px solid var(--ac);border-radius:12px;padding:13px 15px;margin:14px 0}
+.why .wl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:5px}
+.why p{font-size:13.5px;color:#c4bab4}
+.tipbox{font-size:13px;color:var(--tx2);font-style:italic;border-top:1px solid var(--br);padding-top:12px;margin-top:14px}
+/* toggles */
+.setrow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 0;border-bottom:1px solid var(--br)}
+.setlbl{font-size:14px;font-weight:600}
+.sethint{font-size:11.5px;color:var(--tx2);margin-top:2px;max-width:220px;line-height:1.45}
+.tgl{flex-shrink:0;width:46px;height:27px;border-radius:999px;border:none;background:var(--br);cursor:pointer;padding:3px;display:flex;align-items:center;transition:background .2s}
+.tgl span{display:block;width:21px;height:21px;border-radius:50%;background:#fff;transition:transform .2s}
+.tgl.on{background:var(--ac)}.tgl.on span{transform:translateX(19px)}
+/* splash */
+#splash{position:fixed;inset:0;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:radial-gradient(120% 90% at 50% 40%,#241d19,#14110f 70%);transition:opacity .5s}
+#splash.hide{opacity:0;pointer-events:none}
+#splash .m{font-family:'Fraunces',serif;font-size:76px;font-weight:600;color:var(--ac);line-height:1;animation:br 2.4s ease-in-out infinite}
+#splash .w{font-size:13px;letter-spacing:.42em;color:#7d716a;text-transform:uppercase;padding-left:.42em}
+@keyframes br{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.06);opacity:1}}
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--br);color:var(--tx);padding:11px 18px;border-radius:999px;font-size:13px;z-index:80;opacity:0;transition:opacity .3s;pointer-events:none;max-width:90%}
+.toast.on{opacity:1}
+.pill{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid;margin-left:6px}
+</style>
+</head>
+<body>
+
+<div id="splash"><div class="m">M</div><div class="w">Motriz</div></div>
+
+<header>
+  <div class="eyebrow" id="hd-eyebrow">Fuerza · Movilidad · Control</div>
+  <h1 id="hd-title">MOTRIZ</h1>
+  <p class="sub" id="hd-sub">Tu cuerpo, el mínimo material</p>
+</header>
+
+<div class="wrap">
+
+  <!-- INICIO -->
+  <section class="sc on" id="sc-inicio">
+    <div class="stats">
+      <div class="stat hero"><div class="sv" id="st-streak">0</div><div class="sl">racha</div></div>
+      <div class="stat"><div class="sv" id="st-sess">0</div><div class="sl">sesiones</div></div>
+      <div class="stat"><div class="sv" id="st-min">0</div><div class="sl">minutos</div></div>
+    </div>
+
+    <button class="row" onclick="go('generar')" style="border-color:rgba(210,112,63,.4);background:linear-gradient(135deg,rgba(210,112,63,.14),rgba(210,112,63,.03))">
+      <span class="ic" style="background:rgba(210,112,63,.15)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20v-6M4 10V4M12 20v-9M12 7V4M20 20v-4M20 12V4M1 14h6M9 7h6M17 16h6"/></svg></span>
+      <span class="rb"><span class="rt">Generar sesión</span><span class="rs">A tu material, tiempo y objetivo. Nunca igual.</span></span>
+      <span class="chev">›</span>
+    </button>
+
+    <div class="lbl" style="margin-top:22px">Sesiones rápidas</div>
+    <div id="presets"></div>
+
+    <div class="lbl" style="margin-top:22px">Tu material</div>
+    <button class="row" onclick="go('ajustes')">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></span>
+      <span class="rb"><span class="rt" id="mat-summary">Sin material</span><span class="rs">Toca para cambiar lo que tienes</span></span>
+      <span class="chev">›</span>
+    </button>
+  </section>
+
+  <!-- GENERAR -->
+  <section class="sc" id="sc-generar">
+    <div class="lbl">¿Qué quieres trabajar?</div>
+    <div id="cap-list"></div>
+    <div class="lbl" style="margin-top:20px">¿Cuánto tiempo tienes?</div>
+    <div class="chips" id="dur-chips"></div>
+    <button class="btn" onclick="generate()">Generar sesión</button>
+    <p style="font-size:11.5px;color:#6b625c;text-align:center;margin-top:10px">Se adapta a tu material. Cada vez sale distinta.</p>
+    <div id="gen-preview"></div>
+  </section>
+
+  <!-- BIBLIOTECA -->
+  <section class="sc" id="sc-biblio">
+    <div class="chips" id="biblio-filter"></div>
+    <div id="biblio-list"></div>
+  </section>
+
+  <!-- AJUSTES -->
+  <section class="sc" id="sc-ajustes">
+    <div class="lbl">Material disponible</div>
+    <div id="mat-list"></div>
+
+    <div class="lbl" style="margin-top:24px">Pulsómetro</div>
+    <div class="card" style="margin-bottom:8px">
+      <div id="hr-status" style="font-size:13.5px;margin-bottom:10px;color:var(--tx2)">Sin conectar</div>
+      <button class="btn sm ghost" id="hr-btn" onclick="connectHR()">Conectar banda de pulso</button>
+      <p style="font-size:11.5px;color:#6b625c;margin-top:9px;line-height:1.5" id="hr-note"></p>
+    </div>
+
+    <div class="lbl" style="margin-top:24px">Durante la sesión</div>
+    <div class="setrow"><div><div class="setlbl">Voz guía</div><div class="sethint">Te dice el ejercicio sin mirar la pantalla</div></div><button class="tgl" id="tg-voice" onclick="tog('voice')"><span></span></button></div>
+    <div class="setrow"><div><div class="setlbl">Vibración</div><div class="sethint">Avisos al cambiar de ejercicio y al descansar</div></div><button class="tgl" id="tg-hap" onclick="tog('hap')"><span></span></button></div>
+    <div class="setrow" style="border:none"><div><div class="setlbl">Compatible con tu música</div><div class="sethint">Pon tu música y la app solo habla por encima</div></div><span style="font-size:11px;color:var(--ok);font-weight:600">SIEMPRE</span></div>
+
+    <div class="lbl" style="margin-top:24px">Más</div>
+    <a class="row" href="../" style="text-decoration:none"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M9 10h.01M15 10h.01M8.5 14.5c1.5 1.6 5.5 1.6 7 0"/></svg></span><span class="rb"><span class="rt">FACEO</span><span class="rs">Rostro y cadena miofascial</span></span><span class="chev">›</span></a>
+    <a class="row" href="https://danimij.github.io/Respirapp/" style="text-decoration:none"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h8a2.4 2.4 0 1 1-2.4 2.4"/></svg></span><span class="rb"><span class="rt">INSPIRAPP</span><span class="rs">Respiración y biohacking</span></span><span class="chev">›</span></a>
+  </section>
+</div>
+
+<nav>
+  <button class="on" data-s="inicio" onclick="go('inicio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Inicio</button>
+  <button data-s="generar" onclick="go('generar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20v-6M4 10V4M12 20v-9M12 7V4M20 20v-4M20 12V4M1 14h6M9 7h6M17 16h6"/></svg>Generar</button>
+  <button data-s="biblio" onclick="go('biblio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.04A9 9 0 006 3.75c-1.05 0-2.06.18-3 .51v14.25A9 9 0 016 18c2.3 0 4.4.87 6 2.29m0-14.25a9 9 0 016-2.29c1.05 0 2.06.18 3 .51v14.25A9 9 0 0018 18a9 9 0 00-6 2.29m0-14.25v14.25"/></svg>Ejercicios</button>
+  <button data-s="ajustes" onclick="go('ajustes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9v0a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Ajustes</button>
+</nav>
+
+<!-- PLAYER -->
+<div id="player">
+  <div class="pl-top">
+    <button class="pl-x" onclick="stopSession()">✕</button>
+    <div class="pl-prog"><div class="pl-fill" id="pl-fill"></div></div>
+    <div class="pl-hr" id="pl-hr"></div>
+  </div>
+  <div class="pl-mid" id="pl-mid"></div>
+  <div class="pl-btns">
+    <button class="btn ghost" id="pl-pause" onclick="togglePause()">Pausar</button>
+    <button class="btn ghost" onclick="skipEx()">Saltar</button>
+  </div>
+</div>
+
+<!-- MODALES -->
+<div class="mo" id="mo-ex"><div class="md" id="mo-ex-body"></div></div>
+<div class="mo" id="mo-done"><div class="md" id="mo-done-body"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script>
+/* ══ ESTADO ══ */
+var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
+try { Object.assign(S, JSON.parse(localStorage.getItem('motriz')||'{}')); } catch(e){}
+function save(){ try{ localStorage.setItem('motriz', JSON.stringify(S)); }catch(e){} }
+
+var PREF = { voice: localStorage.getItem('mz-voice')!=='0', hap: localStorage.getItem('mz-hap')!=='0' };
+function tog(k){
+  PREF[k]=!PREF[k];
+  localStorage.setItem('mz-'+k, PREF[k]?'1':'0');
+  document.getElementById(k==='voice'?'tg-voice':'tg-hap').classList.toggle('on',PREF[k]);
+  if(k==='hap'&&PREF.hap) vib(35);
+}
+
+/* ══ UTILIDADES ══ */
+function vib(p){ if(PREF.hap && navigator.vibrate) try{ navigator.vibrate(p); }catch(e){} }
+function say(t){
+  if(!PREF.voice || typeof speechSynthesis==='undefined') return;
+  try{ speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(t); u.lang='es-ES'; u.rate=1; speechSynthesis.speak(u); }catch(e){}
+}
+function toast(m){ var t=document.getElementById('toast'); t.textContent=m; t.classList.add('on'); setTimeout(function(){t.classList.remove('on');},2200); }
+function om(id){ document.getElementById(id).classList.add('on'); }
+function cm(id){ document.getElementById(id).classList.remove('on'); }
+
+/* ══ NAVEGACIÓN ══ */
+function go(s){
+  document.querySelectorAll('.sc').forEach(function(e){ e.classList.remove('on'); });
+  document.getElementById('sc-'+s).classList.add('on');
+  document.querySelectorAll('nav button').forEach(function(b){ b.classList.toggle('on', b.dataset.s===s); });
+  var H={ inicio:['Fuerza · Movilidad · Control','MOTRIZ','Tu cuerpo, el mínimo material'],
+          generar:['Generador','Sesión a medida','Se adapta a lo que tengas hoy'],
+          biblio:['Biblioteca','Ejercicios','Qué trabaja cada uno y por qué'],
+          ajustes:['Ajustes','Tu configuración','Material, pulsómetro y sesión'] }[s];
+  document.getElementById('hd-eyebrow').textContent=H[0];
+  document.getElementById('hd-title').textContent=H[1];
+  document.getElementById('hd-sub').textContent=H[2];
+  window.scrollTo(0,0);
+}
+
+/* ══ MATERIAL ══ */
+function renderMats(){
+  document.getElementById('mat-list').innerHTML = Object.keys(MAT).map(function(k){
+    var on = S.mats.indexOf(k)>=0;
+    return '<button class="row'+(on?' sel':'')+'" onclick="toggleMat(\''+k+'\')">'+
+      '<span class="ic">'+matIcon(k)+'</span>'+
+      '<span class="rb"><span class="rt">'+MAT[k].es+'</span><span class="rs">'+countFor(k)+' ejercicios</span></span>'+
+      '<span class="chev">'+(on?'✓':'')+'</span></button>';
+  }).join('');
+  var names = S.mats.map(function(k){return MAT[k].es;});
+  document.getElementById('mat-summary').textContent = names.length? names.join(' · ') : 'Sin material';
+}
+function countFor(k){ return EX.filter(function(e){return e.mat===k;}).length; }
+function toggleMat(k){
+  var i=S.mats.indexOf(k);
+  if(i>=0){ if(S.mats.length===1){ toast('Deja al menos un material'); return; } S.mats.splice(i,1); }
+  else S.mats.push(k);
+  save(); renderMats(); renderPresets(); vib(20);
+}
+function matIcon(k){
+  var p={ none:"<path d='M12 5a2 2 0 100-4 2 2 0 000 4zM9 22l1.5-8L8 12V8l4-1 4 1v4l-2.5 2L15 22'/>",
+    maza:"<path d='M7 21l7-7M14 3.5a3.5 3.5 0 105 5l-5-5zM12 8l4 4'/>",
+    goma:"<path d='M4 12a8 4 0 1016 0 8 4 0 10-16 0M4 12v4a8 4 0 0016 0v-4'/>",
+    peso:"<path d='M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12'/>" }[k];
+  return "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'>"+p+"</svg>";
+}
+
+/* ══ GENERADOR ══ */
+var GEN = { cap:'mixto', min:15 };
+var CAPLIST = [
+  { id:'mixto', n:'Sesión completa', s:'Fuerza, movilidad y control' },
+  { id:'fuerza', n:'Fuerza', s:'Los patrones básicos con tu material' },
+  { id:'movilidad', n:'Movilidad', s:'Rango y control articular' },
+  { id:'control', n:'Control y core', s:'Estabilidad y coordinación' },
+  { id:'resistencia', n:'Resistencia', s:'Pulso alto, poco material' },
+  { id:'potencia', n:'Potencia', s:'Fuerza rápida y explosiva' },
+];
+function renderGen(){
+  document.getElementById('cap-list').innerHTML = CAPLIST.map(function(c){
+    return '<button class="row'+(GEN.cap===c.id?' sel':'')+'" onclick="setCap(\''+c.id+'\')">'+
+      '<span class="rb"><span class="rt">'+c.n+'</span><span class="rs">'+c.s+'</span></span></button>';
+  }).join('');
+  document.getElementById('dur-chips').innerHTML = [8,15,25,40].map(function(m){
+    return '<div class="chip'+(GEN.min===m?' on':'')+'" onclick="setMin('+m+')">'+m+' min</div>';
+  }).join('');
+}
+function setCap(c){ GEN.cap=c; renderGen(); }
+function setMin(m){ GEN.min=m; renderGen(); }
+
+function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
+
+var SESSION = null;
+function buildSession(cap, mins){
+  var pool = EX.filter(function(e){ return S.mats.indexOf(e.mat)>=0; });
+  if(cap!=='mixto') pool = pool.filter(function(e){ return e.cap===cap; });
+  if(!pool.length) return null;
+
+  // Calentar con movilidad siempre que exista, y cerrar con movilidad si da tiempo.
+  var mob = shuffle(pool.filter(function(e){ return e.cap==='movilidad'; }));
+  var rest = shuffle(pool.filter(function(e){ return e.cap!=='movilidad'; }));
+  var budget = mins*60, picked = [], total = 0;
+  var REST = 20;
+
+  function add(e){ if(total + e.seg + REST > budget) return false; picked.push(e); total += e.seg + REST; return true; }
+
+  if(mob.length) add(mob[0]);                     // calentamiento
+  var main = cap==='movilidad' ? mob.slice(1) : rest;
+  var alt = cap==='movilidad' ? [] : mob.slice(1);
+  var i=0, j=0, turn=0;
+  while(total < budget && (i<main.length || j<alt.length)){
+    var e = null;
+    if(turn%3===2 && j<alt.length) e = alt[j++];   // intercala movilidad
+    else if(i<main.length) e = main[i++];
+    else if(j<alt.length) e = alt[j++];
+    if(!e) break;
+    if(!add(e)) break;
+    turn++;
+  }
+  if(!picked.length) picked.push(pool[0]);
+  return { cap:cap, mins:Math.round(total/60), list:picked };
+}
+
+function generate(){
+  var s = buildSession(GEN.cap, GEN.min);
+  if(!s){ toast('No hay ejercicios para ese material'); return; }
+  SESSION = s;
+  var capName = (CAPLIST.filter(function(c){return c.id===s.cap;})[0]||{}).n||'Sesión';
+  document.getElementById('gen-preview').innerHTML =
+    '<div style="margin-top:24px">'+
+    '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">'+
+    '<span class="lbl" style="margin:0">'+capName+' · '+s.mins+' min</span>'+
+    '<span style="font-size:12px;color:var(--tx2)">'+s.list.length+' ejercicios</span></div>'+
+    s.list.map(function(e,i){
+      return '<div class="row" style="cursor:default"><span class="ic" style="font-weight:700;font-size:13px">'+(i+1)+'</span>'+
+        '<span class="rb"><span class="rt">'+e.n+'</span><span class="rs">'+CAPS[e.cap].es+' · '+Math.round(e.seg)+'s</span></span></div>';
+    }).join('')+
+    '<button class="btn" style="margin-top:12px" onclick="startSession()">Empezar sesión →</button></div>';
+  vib(25);
+}
+
+/* ══ REPRODUCTOR ══ */
+var P = { i:0, phase:'work', left:0, timer:null, paused:false, done:0, secs:0 };
+function startSession(){
+  if(!SESSION) return;
+  P = { i:0, phase:'work', left:SESSION.list[0].seg, timer:null, paused:false, done:0, secs:0 };
+  document.getElementById('player').classList.add('on');
+  vib(40); wakeOn();
+  renderPlayer(); say('Empezamos con '+SESSION.list[0].n);
+  runTimer();
+}
+function runTimer(){
+  clearInterval(P.timer);
+  P.timer = setInterval(function(){
+    if(P.paused) return;
+    P.left--;
+    if(P.left<=0) nextPhase(); else updateTime();
+  },1000);
+  updateTime();
+}
+function updateTime(){
+  var t=document.getElementById('pl-time'); if(t) t.textContent = P.left;
+  var totalUnits = SESSION.list.length*2;
+  var doneUnits = P.i*2 + (P.phase==='rest'?1:0);
+  document.getElementById('pl-fill').style.width = Math.round(doneUnits/totalUnits*100)+'%';
+}
+function nextPhase(){
+  if(P.phase==='work'){
+    P.done++; P.secs += SESSION.list[P.i].seg;
+    if(P.i >= SESSION.list.length-1){ finishSession(); return; }
+    P.phase='rest'; P.left=20; vib([25,70,25]);
+    say('Descansa. Ahora, '+SESSION.list[P.i+1].n);
+  } else {
+    P.i++; P.phase='work'; P.left=SESSION.list[P.i].seg; vib(45);
+    say(SESSION.list[P.i].n);
+  }
+  renderPlayer(); updateTime();
+}
+function skipEx(){
+  vib(15);
+  if(P.phase==='rest'){ P.left=1; return; }
+  if(P.i >= SESSION.list.length-1){ finishSession(); return; }
+  P.phase='rest'; P.left=20; renderPlayer(); updateTime();
+}
+function togglePause(){
+  P.paused=!P.paused;
+  document.getElementById('pl-pause').textContent = P.paused?'Continuar':'Pausar';
+  if(P.paused && typeof speechSynthesis!=='undefined') try{speechSynthesis.cancel();}catch(e){}
+}
+function renderPlayer(){
+  var m=document.getElementById('pl-mid');
+  if(P.phase==='rest'){
+    var nx=SESSION.list[P.i+1];
+    m.innerHTML='<div class="pl-rest">Descanso</div>'+
+      '<div class="pl-time" id="pl-time">'+P.left+'</div>'+
+      '<div class="pl-sub" style="margin-top:14px">Ahora: <b style="color:var(--tx)">'+nx.n+'</b></div>';
+  } else {
+    var e=SESSION.list[P.i];
+    m.innerHTML='<div class="pl-cap" style="color:'+CAPS[e.cap].color+'">'+CAPS[e.cap].es+' · '+(P.i+1)+' de '+SESSION.list.length+'</div>'+
+      '<div class="pl-name">'+e.n+'</div><div class="pl-sub">'+e.s+'</div>'+
+      '<div class="pl-time" id="pl-time">'+P.left+'</div>'+
+      '<ul class="pl-steps">'+e.steps.map(function(s,i){return '<li><b>'+(i+1)+'</b>'+s+'</li>';}).join('')+'</ul>';
+  }
+}
+function stopSession(){
+  clearInterval(P.timer); wakeOff();
+  if(typeof speechSynthesis!=='undefined') try{speechSynthesis.cancel();}catch(e){}
+  document.getElementById('player').classList.remove('on');
+}
+function finishSession(){
+  clearInterval(P.timer); wakeOff();
+  document.getElementById('player').classList.remove('on');
+  // Solo cuenta el trabajo realmente hecho: saltar no acredita nada.
+  var mins = Math.max(1, Math.round(P.secs/60));
+  var credited = P.done > 0;
+  if(credited){
+    S.sessions=(S.sessions||0)+1; S.min=(S.min||0)+mins;
+    var today=new Date().toDateString();
+    if(S.lastDate!==today){
+      var yest=new Date(Date.now()-86400000).toDateString();
+      S.streak = (S.lastDate===yest) ? (S.streak||0)+1 : 1;
+      S.lastDate=today;
+    }
+    save();
+  }
+  renderStats();
+  vib([50,90,50,90,160]); say('Sesión completada. Muy bien.');
+  document.getElementById('mo-done-body').innerHTML =
+    '<div style="text-align:center">'+
+    '<div style="width:64px;height:64px;border-radius:50%;background:var(--ac);color:#14110f;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">'+
+    '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>'+
+    '<div class="mt" style="text-align:center">Sesión completada</div>'+
+    '<p style="font-size:13px;color:var(--tx2);margin:4px 0 18px">'+
+      (credited ? P.done+' ejercicio'+(P.done===1?'':'s')+' · '+mins+' min'
+                : 'Saltaste todos los ejercicios, así que esta no cuenta')+'</p>'+
+    '<div class="stats" style="margin-bottom:8px">'+
+      '<div class="stat hero"><div class="sv">'+S.streak+'</div><div class="sl">días seguidos</div></div>'+
+      '<div class="stat"><div class="sv">'+S.sessions+'</div><div class="sl">sesiones</div></div>'+
+      '<div class="stat"><div class="sv">'+Math.round(S.min)+'</div><div class="sl">minutos</div></div>'+
+    '</div>'+
+    '<p style="font-size:12.5px;color:var(--tx2);margin:14px 0 4px">'+
+      (!credited ? 'Sin problema: mejor una sesión corta de verdad que una larga a medias.'
+        : S.streak>1 ? 'Llevas '+S.streak+' días seguidos. Vuelve mañana y no rompas la cadena.'
+                     : 'Primer día de tu racha. Lo difícil no es empezar: es volver mañana.')+'</p>'+
+    '<button class="btn" style="margin-top:16px" onclick="cm(\'mo-done\')">Continuar</button></div>';
+  om('mo-done');
+}
+
+/* ══ WAKE LOCK ══ */
+var wl=null;
+function wakeOn(){ if('wakeLock' in navigator) navigator.wakeLock.request('screen').then(function(w){wl=w;}).catch(function(){}); }
+function wakeOff(){ if(wl){ try{wl.release();}catch(e){} wl=null; } }
+
+/* ══ PULSÓMETRO (Web Bluetooth) ══ */
+var hrDev=null;
+function hrSupported(){ return typeof navigator!=='undefined' && !!navigator.bluetooth; }
+function connectHR(){
+  if(!hrSupported()){
+    toast('Este navegador no permite Bluetooth');
+    return;
+  }
+  navigator.bluetooth.requestDevice({ filters:[{ services:['heart_rate'] }] })
+    .then(function(d){ hrDev=d; return d.gatt.connect(); })
+    .then(function(s){ return s.getPrimaryService('heart_rate'); })
+    .then(function(s){ return s.getCharacteristic('heart_rate_measurement'); })
+    .then(function(c){ return c.startNotifications(); })
+    .then(function(c){
+      c.addEventListener('characteristicvaluechanged', function(ev){
+        var v=ev.target.value, flags=v.getUint8(0);
+        var bpm = (flags & 1) ? v.getUint16(1,true) : v.getUint8(1);
+        document.getElementById('pl-hr').textContent = bpm+' ppm';
+        document.getElementById('hr-status').textContent = 'Conectado · '+bpm+' ppm';
+      });
+      document.getElementById('hr-status').textContent='Conectado';
+      document.getElementById('hr-btn').textContent='Reconectar';
+      toast('Banda conectada'); vib(40);
+    })
+    .catch(function(err){ toast('No se pudo conectar'); });
+}
+function initHR(){
+  var note=document.getElementById('hr-note');
+  if(hrSupported()){
+    note.textContent='Compatible con bandas de pulso Bluetooth estándar (Polar, Garmin, Coospo y similares).';
+  } else {
+    document.getElementById('hr-btn').style.display='none';
+    document.getElementById('hr-status').textContent='No disponible en este dispositivo';
+    note.textContent='Tu navegador no permite conectar sensores Bluetooth. En iPhone, Apple no lo soporta en apps web. Guíate por sensación: deberías poder hablar en frases cortas pero no mantener una conversación.';
+  }
+}
+
+/* ══ BIBLIOTECA ══ */
+var BF='todos';
+function renderBiblio(){
+  var caps=['todos'].concat(Object.keys(CAPS));
+  document.getElementById('biblio-filter').innerHTML = caps.map(function(c){
+    return '<div class="chip'+(BF===c?' on':'')+'" onclick="setBF(\''+c+'\')">'+(c==='todos'?'Todos':CAPS[c].es)+'</div>';
+  }).join('');
+  var list = EX.filter(function(e){ return BF==='todos'||e.cap===BF; });
+  document.getElementById('biblio-list').innerHTML = list.map(function(e){
+    var owned = S.mats.indexOf(e.mat)>=0;
+    return '<button class="row" onclick="openEx(\''+e.id+'\')">'+
+      '<span class="ic" style="color:'+CAPS[e.cap].color+'">'+matIcon(e.mat)+'</span>'+
+      '<span class="rb"><span class="rt">'+e.n+
+        (owned?'':'<span class="pill" style="color:var(--tx2);border-color:var(--br)">'+MAT[e.mat].es+'</span>')+
+        '</span><span class="rs">'+e.s+'</span></span>'+
+      '<span class="chev">›</span></button>';
+  }).join('');
+}
+function setBF(c){ BF=c; renderBiblio(); }
+function openEx(id){
+  var e=EX.filter(function(x){return x.id===id;})[0]; if(!e) return;
+  document.getElementById('mo-ex-body').innerHTML=
+    '<div class="mh"><div class="mt">'+e.n+'</div><button class="pl-x" onclick="cm(\'mo-ex\')">✕</button></div>'+
+    '<p style="font-size:13px;color:var(--tx2);margin-bottom:4px">'+e.s+'</p>'+
+    '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">'+
+      '<span class="pill" style="color:'+CAPS[e.cap].color+';border-color:'+CAPS[e.cap].color+'55">'+CAPS[e.cap].es+'</span>'+
+      '<span class="pill" style="color:var(--tx2);border-color:var(--br)">'+MAT[e.mat].es+'</span>'+
+      '<span class="pill" style="color:var(--tx2);border-color:var(--br)">Nivel '+e.lvl+'</span></div>'+
+    '<div class="why"><div class="wl">Qué trabaja y por qué</div><p>'+e.why+'</p></div>'+
+    '<div class="lbl">Cómo hacerlo</div>'+
+    '<ul class="pl-steps" style="margin:0">'+e.steps.map(function(s,i){return '<li><b>'+(i+1)+'</b>'+s+'</li>';}).join('')+'</ul>'+
+    '<div class="tipbox">'+e.tip+'</div>';
+  om('mo-ex');
+}
+
+/* ══ PRESETS ══ */
+function renderPresets(){
+  var av = PRESETS.filter(function(p){ return p.mat.some(function(m){ return S.mats.indexOf(m)>=0; }); });
+  document.getElementById('presets').innerHTML = av.map(function(p){
+    return '<button class="row" onclick="quick(\''+p.cap+'\','+p.min+')">'+
+      '<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 9-14 9V3z"/></svg></span>'+
+      '<span class="rb"><span class="rt">'+p.n+'</span><span class="rs">'+p.s+' · '+p.min+' min</span></span>'+
+      '<span class="chev">›</span></button>';
+  }).join('') || '<p style="font-size:12.5px;color:var(--tx2)">Añade material para ver más sesiones.</p>';
+}
+function quick(cap,min){ GEN.cap=cap; GEN.min=min; var s=buildSession(cap,min); if(!s){toast('Sin ejercicios para tu material');return;} SESSION=s; startSession(); }
+
+/* ══ ESTADÍSTICAS ══ */
+function renderStats(){
+  document.getElementById('st-streak').textContent=S.streak||0;
+  document.getElementById('st-sess').textContent=S.sessions||0;
+  document.getElementById('st-min').textContent=Math.round(S.min||0);
+}
+
+/* ══ INIT ══ */
+document.getElementById('tg-voice').classList.toggle('on',PREF.voice);
+document.getElementById('tg-hap').classList.toggle('on',PREF.hap);
+renderMats(); renderGen(); renderBiblio(); renderPresets(); renderStats(); initHR();
+document.querySelectorAll('.mo').forEach(function(o){ o.addEventListener('click',function(e){ if(e.target===o) o.classList.remove('on'); }); });
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    var s=document.getElementById('splash');
+    if(s){ s.classList.add('hide'); setTimeout(function(){ if(s.parentNode) s.parentNode.removeChild(s); },600); }
+  }, 700);
+});
+</script>
+</body>
+</html>
