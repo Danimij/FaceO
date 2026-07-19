@@ -3,20 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>MOTRIZ — Fuerza y movilidad</title>
+<title>FLUO — Fuerza y movilidad</title>
 <meta name="description" content="Entrena fuerza, movilidad y control con el mínimo material. Sesiones que nunca se repiten, adaptadas a lo que tengas en casa.">
-<meta name="theme-color" content="#14110f">
+<meta name="theme-color" content="#0b0d0e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="MOTRIZ">
+<meta name="apple-mobile-web-app-title" content="FLUO">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#14110f; --surface:#1c1917; --card:#232020; --br:#332e2b;
-  --tx:#f2ede8; --tx2:#9a908a; --ac:#d2703f; --ac2:#e08a5c; --ok:#4ac98a;
+  --bg:#0b0d0e; --surface:#131719; --card:#191e20; --br:#283033;
+  --tx:#eef5f5; --tx2:#87979a; --ac:#2ee6c8; --ac2:#ff6a1f;
+  --lime:#c9f24d; --violet:#b07cff; --ok:#2ee6c8;
 }
 html{-webkit-text-size-adjust:100%}
 body{background:var(--bg);color:var(--tx);font-family:'Inter',-apple-system,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100svh;overscroll-behavior:none}
@@ -33,32 +34,32 @@ h1{font-size:30px;font-weight:600;line-height:1.1;margin:6px 0 4px}
 .card{background:var(--card);border:1px solid var(--br);border-radius:18px;padding:16px}
 .row{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);border:1px solid var(--br);border-radius:18px;padding:15px;margin-bottom:9px;cursor:pointer;color:inherit;font:inherit;transition:transform .12s,border-color .15s}
 .row:active{transform:scale(.985)}
-.row.sel{border-color:var(--ac);background:rgba(210,112,63,.1)}
+.row.sel{border-color:var(--ac);background:rgba(46,230,200,.1)}
 .ic{width:40px;height:40px;border-radius:12px;background:var(--surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--ac)}
 .ic svg{width:21px;height:21px}
 .rb{flex:1;min-width:0}
 .rt{font-size:14.5px;font-weight:600}
 .rs{font-size:12px;color:var(--tx2);margin-top:1px}
-.chev{color:#5c534e;flex-shrink:0}
+.chev{color:#46585b;flex-shrink:0}
 /* chips */
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
 .chip{flex:1;min-width:70px;text-align:center;padding:12px 8px;border-radius:13px;border:1px solid var(--br);background:var(--card);color:var(--tx2);font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s}
-.chip.on{border-color:var(--ac);background:rgba(210,112,63,.12);color:var(--ac)}
+.chip.on{border-color:var(--ac);background:rgba(46,230,200,.12);color:var(--ac)}
 .lbl{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx2);margin-bottom:10px;font-weight:600}
 /* buttons */
-.btn{width:100%;background:var(--ac);color:#14110f;border:none;border-radius:16px;padding:16px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform .12s}
+.btn{width:100%;background:var(--ac);color:#0b0d0e;border:none;border-radius:16px;padding:16px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform .12s}
 .btn:active{transform:scale(.97)}
 .btn.ghost{background:transparent;color:var(--tx);border:1px solid var(--br);font-weight:600}
 .btn.sm{padding:12px;font-size:13px}
 /* nav */
-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(20,17,15,.95);backdrop-filter:blur(12px);border-top:1px solid var(--br);display:flex;padding:8px 0 max(8px,env(safe-area-inset-bottom));z-index:40}
-nav button{flex:1;background:none;border:none;color:#6b625c;font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px}
+nav{position:fixed;bottom:0;left:0;right:0;background:rgba(11,13,14,.95);backdrop-filter:blur(12px);border-top:1px solid var(--br);display:flex;padding:8px 0 max(8px,env(safe-area-inset-bottom));z-index:40}
+nav button{flex:1;background:none;border:none;color:#5f7276;font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px}
 nav button svg{width:21px;height:21px}
 nav button.on{color:var(--ac)}
 /* stats */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
 .stat{background:var(--card);border:1px solid var(--br);border-radius:15px;padding:14px 6px;text-align:center}
-.stat.hero{background:rgba(210,112,63,.12);border-color:rgba(210,112,63,.4)}
+.stat.hero{background:rgba(46,230,200,.12);border-color:rgba(46,230,200,.4)}
 .sv{font-size:21px;font-weight:700}.stat.hero .sv{color:var(--ac)}
 .sl{font-size:9px;color:var(--tx2);text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
 /* player */
@@ -75,7 +76,7 @@ nav button.on{color:var(--ac)}
 .pl-sub{color:var(--tx2);font-size:13.5px;margin-bottom:26px}
 .pl-time{font-size:66px;font-weight:200;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:6px}
 .pl-steps{text-align:left;width:100%;max-width:420px;margin-top:22px}
-.pl-steps li{display:flex;gap:10px;padding:5px 0;font-size:13.5px;color:#c4bab4;list-style:none}
+.pl-steps li{display:flex;gap:10px;padding:5px 0;font-size:13.5px;color:#b9c8c9;list-style:none}
 .pl-steps li b{color:var(--ac);flex-shrink:0;font-weight:600}
 .pl-btns{display:flex;gap:8px}
 .pl-rest{font-family:'Fraunces',serif;font-size:22px;color:var(--tx2)}
@@ -88,7 +89,7 @@ nav button.on{color:var(--ac)}
 .mt{font-family:'Fraunces',serif;font-size:21px;font-weight:600;flex:1}
 .why{background:var(--card);border-left:3px solid var(--ac);border-radius:12px;padding:13px 15px;margin:14px 0}
 .why .wl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:5px}
-.why p{font-size:13.5px;color:#c4bab4}
+.why p{font-size:13.5px;color:#b9c8c9}
 .tipbox{font-size:13px;color:var(--tx2);font-style:italic;border-top:1px solid var(--br);padding-top:12px;margin-top:14px}
 /* toggles */
 .setrow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 0;border-bottom:1px solid var(--br)}
@@ -98,10 +99,10 @@ nav button.on{color:var(--ac)}
 .tgl span{display:block;width:21px;height:21px;border-radius:50%;background:#fff;transition:transform .2s}
 .tgl.on{background:var(--ac)}.tgl.on span{transform:translateX(19px)}
 /* splash */
-#splash{position:fixed;inset:0;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:radial-gradient(120% 90% at 50% 40%,#241d19,#14110f 70%);transition:opacity .5s}
+#splash{position:fixed;inset:0;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:radial-gradient(120% 90% at 50% 40%,#12262a,#0b0d0e 70%);transition:opacity .5s}
 #splash.hide{opacity:0;pointer-events:none}
 #splash .m{font-family:'Fraunces',serif;font-size:76px;font-weight:600;color:var(--ac);line-height:1;animation:br 2.4s ease-in-out infinite}
-#splash .w{font-size:13px;letter-spacing:.42em;color:#7d716a;text-transform:uppercase;padding-left:.42em}
+#splash .w{font-size:13px;letter-spacing:.42em;color:#5f7276;text-transform:uppercase;padding-left:.42em}
 @keyframes br{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.06);opacity:1}}
 .toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--br);color:var(--tx);padding:11px 18px;border-radius:999px;font-size:13px;z-index:80;opacity:0;transition:opacity .3s;pointer-events:none;max-width:90%}
 .toast.on{opacity:1}
@@ -110,11 +111,11 @@ nav button.on{color:var(--ac)}
 </head>
 <body>
 
-<div id="splash"><div class="m">M</div><div class="w">Motriz</div></div>
+<div id="splash"><div class="m">F</div><div class="w">Fluo</div></div>
 
 <header>
   <div class="eyebrow" id="hd-eyebrow">Fuerza · Movilidad · Control</div>
-  <h1 id="hd-title">MOTRIZ</h1>
+  <h1 id="hd-title">FLUO</h1>
   <p class="sub" id="hd-sub">Tu cuerpo, el mínimo material</p>
 </header>
 
@@ -128,8 +129,8 @@ nav button.on{color:var(--ac)}
       <div class="stat"><div class="sv" id="st-min">0</div><div class="sl">minutos</div></div>
     </div>
 
-    <button class="row" onclick="go('generar')" style="border-color:rgba(210,112,63,.4);background:linear-gradient(135deg,rgba(210,112,63,.14),rgba(210,112,63,.03))">
-      <span class="ic" style="background:rgba(210,112,63,.15)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20v-6M4 10V4M12 20v-9M12 7V4M20 20v-4M20 12V4M1 14h6M9 7h6M17 16h6"/></svg></span>
+    <button class="row" onclick="go('generar')" style="border-color:rgba(46,230,200,.4);background:linear-gradient(135deg,rgba(46,230,200,.14),rgba(46,230,200,.03))">
+      <span class="ic" style="background:rgba(46,230,200,.15)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20v-6M4 10V4M12 20v-9M12 7V4M20 20v-4M20 12V4M1 14h6M9 7h6M17 16h6"/></svg></span>
       <span class="rb"><span class="rt">Generar sesión</span><span class="rs">A tu material, tiempo y objetivo. Nunca igual.</span></span>
       <span class="chev">›</span>
     </button>
@@ -152,7 +153,7 @@ nav button.on{color:var(--ac)}
     <div class="lbl" style="margin-top:20px">¿Cuánto tiempo tienes?</div>
     <div class="chips" id="dur-chips"></div>
     <button class="btn" onclick="generate()">Generar sesión</button>
-    <p style="font-size:11.5px;color:#6b625c;text-align:center;margin-top:10px">Se adapta a tu material. Cada vez sale distinta.</p>
+    <p style="font-size:11.5px;color:#5f7276;text-align:center;margin-top:10px">Se adapta a tu material. Cada vez sale distinta.</p>
     <div id="gen-preview"></div>
   </section>
 
@@ -160,6 +161,11 @@ nav button.on{color:var(--ac)}
   <section class="sc" id="sc-biblio">
     <div class="chips" id="biblio-filter"></div>
     <div id="biblio-list"></div>
+  </section>
+
+  <!-- PLAN -->
+  <section class="sc" id="sc-plan">
+    <div id="plan-body"></div>
   </section>
 
   <!-- AJUSTES -->
@@ -171,7 +177,7 @@ nav button.on{color:var(--ac)}
     <div class="card" style="margin-bottom:8px">
       <div id="hr-status" style="font-size:13.5px;margin-bottom:10px;color:var(--tx2)">Sin conectar</div>
       <button class="btn sm ghost" id="hr-btn" onclick="connectHR()">Conectar banda de pulso</button>
-      <p style="font-size:11.5px;color:#6b625c;margin-top:9px;line-height:1.5" id="hr-note"></p>
+      <p style="font-size:11.5px;color:#5f7276;margin-top:9px;line-height:1.5" id="hr-note"></p>
     </div>
 
     <div class="lbl" style="margin-top:24px">Durante la sesión</div>
@@ -188,6 +194,7 @@ nav button.on{color:var(--ac)}
 <nav>
   <button class="on" data-s="inicio" onclick="go('inicio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Inicio</button>
   <button data-s="generar" onclick="go('generar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20v-6M4 10V4M12 20v-9M12 7V4M20 20v-4M20 12V4M1 14h6M9 7h6M17 16h6"/></svg>Generar</button>
+  <button data-s="plan" onclick="go('plan')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Plan</button>
   <button data-s="biblio" onclick="go('biblio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.04A9 9 0 006 3.75c-1.05 0-2.06.18-3 .51v14.25A9 9 0 016 18c2.3 0 4.4.87 6 2.29m0-14.25a9 9 0 016-2.29c1.05 0 2.06.18 3 .51v14.25A9 9 0 0018 18a9 9 0 00-6 2.29m0-14.25v14.25"/></svg>Ejercicios</button>
   <button data-s="ajustes" onclick="go('ajustes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9v0a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Ajustes</button>
 </nav>
@@ -215,13 +222,13 @@ nav button.on{color:var(--ac)}
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
-try { Object.assign(S, JSON.parse(localStorage.getItem('motriz')||'{}')); } catch(e){}
-function save(){ try{ localStorage.setItem('motriz', JSON.stringify(S)); }catch(e){} }
+try { Object.assign(S, JSON.parse(localStorage.getItem('fluo')||'{}')); } catch(e){}
+function save(){ try{ localStorage.setItem('fluo', JSON.stringify(S)); }catch(e){} }
 
-var PREF = { voice: localStorage.getItem('mz-voice')!=='0', hap: localStorage.getItem('mz-hap')!=='0' };
+var PREF = { voice: localStorage.getItem('fl-voice')!=='0', hap: localStorage.getItem('fl-hap')!=='0' };
 function tog(k){
   PREF[k]=!PREF[k];
-  localStorage.setItem('mz-'+k, PREF[k]?'1':'0');
+  localStorage.setItem('fl-'+k, PREF[k]?'1':'0');
   document.getElementById(k==='voice'?'tg-voice':'tg-hap').classList.toggle('on',PREF[k]);
   if(k==='hap'&&PREF.hap) vib(35);
 }
@@ -241,8 +248,9 @@ function go(s){
   document.querySelectorAll('.sc').forEach(function(e){ e.classList.remove('on'); });
   document.getElementById('sc-'+s).classList.add('on');
   document.querySelectorAll('nav button').forEach(function(b){ b.classList.toggle('on', b.dataset.s===s); });
-  var H={ inicio:['Fuerza · Movilidad · Control','MOTRIZ','Tu cuerpo, el mínimo material'],
+  var H={ inicio:['Fuerza · Movilidad · Control','FLUO','Tu cuerpo, el mínimo material'],
           generar:['Generador','Sesión a medida','Se adapta a lo que tengas hoy'],
+          plan:['12 semanas','Plan de 3 meses','Progresiones que sí llevan a algún sitio'],
           biblio:['Biblioteca','Ejercicios','Qué trabaja cada uno y por qué'],
           ajustes:['Ajustes','Tu configuración','Material, pulsómetro y sesión'] }[s];
   document.getElementById('hd-eyebrow').textContent=H[0];
@@ -439,7 +447,7 @@ function finishSession(){
   vib([50,90,50,90,160]); say('Sesión completada. Muy bien.');
   document.getElementById('mo-done-body').innerHTML =
     '<div style="text-align:center">'+
-    '<div style="width:64px;height:64px;border-radius:50%;background:var(--ac);color:#14110f;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">'+
+    '<div style="width:64px;height:64px;border-radius:50%;background:var(--ac);color:#0b0d0e;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">'+
     '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>'+
     '<div class="mt" style="text-align:center">Sesión completada</div>'+
     '<p style="font-size:13px;color:var(--tx2);margin:4px 0 18px">'+
@@ -547,6 +555,67 @@ function renderPresets(){
 }
 function quick(cap,min){ GEN.cap=cap; GEN.min=min; var s=buildSession(cap,min); if(!s){toast('Sin ejercicios para tu material');return;} SESSION=s; startSession(); }
 
+/* ══ PREMIUM ══ */
+var CODES=['FLUO-7K2M-XQ4P','FLUO-B3N8-LT9V','FLUO-D5R1-WY6C','FLUO-H9F4-ZP2S','FLUO-J2T7-MK5A',
+'FLUO-L6X0-QN8E','FLUO-N4C3-VB1G','FLUO-P8W5-RD7H','FLUO-S1Y9-JF3K','FLUO-U7A2-GH6L',
+'FLUO-V3E6-NC9M','FLUO-X5I8-BQ4R','FLUO-Z9O1-TP2W','FLUO-A4U7-DK5Y','FLUO-C6M2-XS8B',
+'FLUO-E8Q4-HL1N','FLUO-G2S9-YV6P','FLUO-I5W3-FA7T','FLUO-K7Z6-MJ2D','FLUO-M1B8-QG9X'];
+function isPro(){ return localStorage.getItem('fluo-pro')==='1'; }
+function redeem(){
+  var el=document.getElementById('code-in'); var c=(el.value||'').trim().toUpperCase();
+  if(CODES.indexOf(c)<0){ document.getElementById('code-msg').textContent='Código no válido.'; return; }
+  localStorage.setItem('fluo-pro','1'); vib(40); toast('Plan desbloqueado'); renderPlan();
+}
+
+/* ══ PLAN 3 MESES ══ */
+function renderPlan(){
+  var pro=isPro();
+  var h='';
+  if(!pro){
+    h+='<div class="card" style="background:linear-gradient(135deg,rgba(46,230,200,.12),rgba(255,106,31,.06));border-color:rgba(46,230,200,.35);text-align:center;margin-bottom:18px">'+
+      '<div style="font-family:\'Fraunces\',serif;font-size:24px;font-weight:600;margin-bottom:6px">12 semanas, un plan de verdad</div>'+
+      '<p style="font-size:13px;color:var(--tx2);margin-bottom:14px">Tres bloques con progresiones por nivel y criterios claros para subir de escalón. No sesiones sueltas: un camino.</p>'+
+      '<div style="font-family:\'Fraunces\',serif;font-size:34px;font-weight:600;color:var(--ac)">9,99€ <span style="font-size:13px;color:var(--tx2);font-family:Inter">pago único</span></div>'+
+      '<a class="btn" style="display:block;text-decoration:none;margin-top:14px" href="https://danimij.gumroad.com/l/fluo" target="_blank" rel="noopener">Desbloquear el plan →</a>'+
+      '<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--br)">'+
+      '<div style="font-size:11.5px;color:var(--tx2);margin-bottom:8px">¿Ya tienes código?</div>'+
+      '<div style="display:flex;gap:8px"><input id="code-in" placeholder="FLUO-XXXX-XXXX" maxlength="14" style="flex:1;background:var(--surface);border:1px solid var(--br);border-radius:12px;padding:11px;color:var(--tx);text-align:center;font-family:inherit;text-transform:uppercase">'+
+      '<button class="btn" style="width:auto;padding:11px 18px" onclick="redeem()">Entrar</button></div>'+
+      '<div id="code-msg" style="font-size:12px;color:var(--ac2);margin-top:8px;min-height:14px"></div></div></div>';
+  }
+  PLAN.blocks.forEach(function(b){
+    h+='<div class="lbl" style="margin-top:20px">Bloque '+b.n+' · semanas '+b.weeks[0]+'-'+b.weeks[3]+'</div>'+
+      '<div class="card" style="margin-bottom:10px">'+
+      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">'+
+      '<div style="font-size:16px;font-weight:700">'+b.name+'</div>'+
+      '<div style="font-size:11.5px;color:var(--tx2);flex-shrink:0">'+b.sessions+'×/sem · '+b.minutes+' min</div></div>'+
+      '<p style="font-size:13px;color:var(--tx2);margin-top:4px">'+b.goal+'</p>'+
+      (pro? '<div class="why" style="margin:12px 0 0"><div class="wl">Por qué este orden</div><p>'+b.why+'</p></div>'
+          : '')+
+      '</div>';
+  });
+  h+='<div class="lbl" style="margin-top:24px">Progresiones</div>';
+  if(!pro){
+    h+='<p style="font-size:12.5px;color:var(--tx2);margin-bottom:12px">Cada patrón tiene 5 niveles con un criterio claro para subir. Desbloquea para verlos todos.</p>';
+  }
+  PLAN.progressions.forEach(function(pr, pi){
+    h+='<div class="card" style="margin-bottom:9px">'+
+      '<div style="font-size:14.5px;font-weight:700;margin-bottom:10px">'+pr.pat+'</div>';
+    pr.levels.forEach(function(lv,i){
+      var locked = !pro && i>0;
+      h+='<div style="display:flex;gap:11px;align-items:flex-start;padding:7px 0'+(i?';border-top:1px solid var(--br)':'')+'">'+
+        '<span style="width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;'+
+        (locked?'background:var(--surface);color:var(--tx2)':'background:rgba(46,230,200,.15);color:var(--ac)')+'">'+(i+1)+'</span>'+
+        '<span style="flex:1;min-width:0">'+
+        '<span style="display:block;font-size:13.5px;font-weight:600;'+(locked?'color:var(--tx2)':'')+'">'+(locked?'Nivel '+(i+1):lv.n)+'</span>'+
+        '<span style="display:block;font-size:11.5px;color:var(--tx2)">'+(locked?'Desbloquea para verlo':'Subes cuando: '+lv.crit)+'</span>'+
+        '</span></div>';
+    });
+    h+='</div>';
+  });
+  document.getElementById('plan-body').innerHTML=h;
+}
+
 /* ══ ESTADÍSTICAS ══ */
 function renderStats(){
   document.getElementById('st-streak').textContent=S.streak||0;
@@ -557,7 +626,7 @@ function renderStats(){
 /* ══ INIT ══ */
 document.getElementById('tg-voice').classList.toggle('on',PREF.voice);
 document.getElementById('tg-hap').classList.toggle('on',PREF.hap);
-renderMats(); renderGen(); renderBiblio(); renderPresets(); renderStats(); initHR();
+renderMats(); renderGen(); renderBiblio(); renderPresets(); renderStats(); initHR(); renderPlan();
 document.querySelectorAll('.mo').forEach(function(o){ o.addEventListener('click',function(e){ if(e.target===o) o.classList.remove('on'); }); });
 window.addEventListener('load', function(){
   setTimeout(function(){

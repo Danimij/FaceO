@@ -21,11 +21,11 @@ const MAT = {
 }
 
 const CAPS = {
-  fuerza:      { es: 'Fuerza',      color: '#c96a4a' },
-  movilidad:   { es: 'Movilidad',   color: '#4a9ac9' },
-  resistencia: { es: 'Resistencia', color: '#c9a54a' },
-  potencia:    { es: 'Potencia',    color: '#a44ac9' },
-  control:     { es: 'Control',     color: '#4ac98a' },
+  fuerza:      { es: 'Fuerza',      color: '#ff6a1f' },
+  movilidad:   { es: 'Movilidad',   color: '#2ee6c8' },
+  resistencia: { es: 'Resistencia', color: '#c9f24d' },
+  potencia:    { es: 'Potencia',    color: '#b07cff' },
+  control:     { es: 'Control',     color: '#5ad2ff' },
 }
 
 const EX = [
@@ -255,3 +255,100 @@ const PRESETS = [
   { id: 'maza-flow', n: 'Flujo de mazas', s: 'Hombro y rotación bajo carga', cap: 'fuerza', min: 12, mat: ['maza'] },
   { id: 'full', n: 'Cuerpo completo', s: 'Todas las capacidades', cap: 'mixto', min: 20, mat: ['none', 'goma'] },
 ]
+
+/* ── PLAN DE 3 MESES ─────────────────────────────────────────────
+ * 12 semanas en tres bloques. Cada bloque tiene un objetivo distinto
+ * porque el cuerpo no mejora haciendo siempre lo mismo: primero se
+ * aprende el patrón, luego se carga, y al final se integra.
+ * Premium.
+ */
+
+const PLAN = {
+  weeks: 12,
+  blocks: [
+    {
+      n: 1, name: 'Fundamentos', weeks: [1, 2, 3, 4],
+      goal: 'Aprender los patrones y ganar rango',
+      why: 'Antes de añadir carga hay que saber moverse. Este bloque prioriza técnica, rango articular y control. Si te saltas esta fase, cargarás sobre un patrón malo y ahí es donde aparecen las lesiones.',
+      focus: ['movilidad', 'control'],
+      sessions: 3, minutes: 20,
+    },
+    {
+      n: 2, name: 'Fuerza y rango', weeks: [5, 6, 7, 8],
+      goal: 'Cargar lo aprendido y ampliar el rango bajo tensión',
+      why: 'Ahora sí se carga. La clave: el rango que ganaste en el bloque 1 hay que cargarlo para conservarlo. El estiramiento pasivo da rango temporal; la fuerza en rango largo lo hace permanente.',
+      focus: ['fuerza', 'movilidad'],
+      sessions: 4, minutes: 25,
+    },
+    {
+      n: 3, name: 'Integración', weeks: [9, 10, 11, 12],
+      goal: 'Juntarlo todo: fuerza, potencia y resistencia',
+      why: 'El último bloque mezcla capacidades como lo hace la vida real: fuerza con potencia, movilidad bajo fatiga. Aquí es donde compruebas que lo de los dos bloques anteriores se ha convertido en capacidad de verdad.',
+      focus: ['fuerza', 'potencia', 'resistencia'],
+      sessions: 4, minutes: 30,
+    },
+  ],
+  // Progresiones: cada patrón tiene niveles. Se avanza cuando el criterio se cumple.
+  progressions: [
+    {
+      pat: 'Empuje', icon: 'push',
+      levels: [
+        { n: 'Flexión en pared', crit: '3 series de 15 limpias' },
+        { n: 'Flexión inclinada (banco)', crit: '3 series de 12' },
+        { n: 'Flexión en suelo', crit: '3 series de 10 con cuerpo en línea' },
+        { n: 'Flexión con pies elevados', crit: '3 series de 8' },
+        { n: 'Flexión arquera / a una mano asistida', crit: '3 de 5 por lado' },
+      ],
+    },
+    {
+      pat: 'Tracción', icon: 'pull',
+      levels: [
+        { n: 'Remo con goma', crit: '3 series de 15 con omóplatos activos' },
+        { n: 'Remo invertido (mesa o barra baja)', crit: '3 series de 12' },
+        { n: 'Negativas de dominada', crit: '3 series de 5 bajadas de 5 s' },
+        { n: 'Dominada completa', crit: '3 series de 5' },
+        { n: 'Dominada lastrada o arquera', crit: '3 series de 5' },
+      ],
+    },
+    {
+      pat: 'Sentadilla', icon: 'squat',
+      levels: [
+        { n: 'Sentadilla a un banco', crit: '3 series de 15 sin impulso' },
+        { n: 'Sentadilla completa', crit: '3 series de 15 con talones en el suelo' },
+        { n: 'Sentadilla búlgara', crit: '3 series de 10 por pierna' },
+        { n: 'Sentadilla a una pierna asistida', crit: '3 series de 6 por pierna' },
+        { n: 'Pistol squat', crit: '3 series de 5 por pierna' },
+      ],
+    },
+    {
+      pat: 'Bisagra', icon: 'hinge',
+      levels: [
+        { n: 'Bisagra sin peso frente a pared', crit: '3 series de 15 sin tocar la pared con la espalda' },
+        { n: 'Peso muerto con peso ligero', crit: '3 series de 12 con espalda neutra' },
+        { n: 'Peso muerto a una pierna', crit: '3 series de 8 por lado' },
+        { n: 'Swing', crit: '3 series de 15 con cadera explosiva' },
+        { n: 'Swing a una mano', crit: '3 series de 10 por lado' },
+      ],
+    },
+    {
+      pat: 'Core', icon: 'core',
+      levels: [
+        { n: 'Dead bug', crit: '3 series de 10 con lumbar pegada' },
+        { n: 'Plancha', crit: '3 series de 40 s bien apretada' },
+        { n: 'Hollow body', crit: '3 series de 30 s' },
+        { n: 'Rueda / rollout parcial', crit: '3 series de 8' },
+        { n: 'L-sit', crit: '3 series de 15 s' },
+      ],
+    },
+    {
+      pat: 'Movilidad', icon: 'mob',
+      levels: [
+        { n: 'Sentadilla profunda con apoyo', crit: '2 min acumulados' },
+        { n: 'Sentadilla profunda libre', crit: '2 min seguidos cómodo' },
+        { n: 'Cadera 90-90 con tronco erguido', crit: 'cambio de lado sin manos' },
+        { n: 'Enrollado de columna con peso ligero', crit: '3 series de 6 controladas' },
+        { n: 'Puente completo / arco', crit: '3 series de 20 s' },
+      ],
+    },
+  ],
+}
