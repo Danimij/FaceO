@@ -135,6 +135,12 @@ nav button.on{color:var(--ac)}
       <span class="chev">›</span>
     </button>
 
+    <button class="row" onclick="openEnergy()" style="border-color:rgba(255,106,31,.4);background:linear-gradient(135deg,rgba(255,106,31,.12),rgba(255,106,31,.03))">
+      <span class="ic" style="background:rgba(255,106,31,.15);color:var(--ac2)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span>
+      <span class="rb"><span class="rt">Entrenar según mi energía</span><span class="rs">Se adapta a cómo vengas hoy</span></span>
+      <span class="chev">›</span>
+    </button>
+
     <div id="today-card"></div>
 
     <div class="lbl" style="margin-top:22px">Sesiones rápidas</div>
@@ -174,6 +180,10 @@ nav button.on{color:var(--ac)}
   <section class="sc" id="sc-ajustes">
     <div class="lbl">Material disponible</div>
     <div id="mat-list"></div>
+
+    <div class="lbl" style="margin-top:24px">Molestias</div>
+    <p style="font-size:11.5px;color:var(--tx2);margin-bottom:10px;line-height:1.5">Si marcas una zona, la app evita los ejercicios que la cargan y mete trabajo preventivo en cada sesión.</p>
+    <div id="nig-list"></div>
 
     <div class="lbl" style="margin-top:24px">Pulsómetro</div>
     <div class="card" style="margin-bottom:8px">
@@ -217,11 +227,12 @@ nav button.on{color:var(--ac)}
 
 <!-- MODALES -->
 <div class="mo" id="mo-ex"><div class="md" id="mo-ex-body"></div></div>
+<div class="mo" id="mo-energy"><div class="md" id="mo-energy-body"></div></div>
 <div class="mo" id="mo-done"><div class="md" id="mo-done-body"></div></div>
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=5"></script>
+<script src="data.js?v=6"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -289,6 +300,55 @@ function matIcon(k){
   return "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'>"+p+"</svg>";
 }
 
+/* ══ PERFIL: molestias ══ */
+function niggles(){ S.niggles=S.niggles||[]; return S.niggles; }
+function toggleNiggle(k){
+  var a=niggles(), i=a.indexOf(k);
+  if(i>=0) a.splice(i,1); else a.push(k);
+  S.niggles=a; save(); renderNiggles(); vib(20);
+}
+var NIGGLES = { cintilla:'Cintilla / rodilla', hombro:'Hombro' };
+function renderNiggles(){
+  var el=document.getElementById('nig-list'); if(!el) return;
+  el.innerHTML = Object.keys(NIGGLES).map(function(k){
+    var on = niggles().indexOf(k)>=0;
+    return '<button class="row'+(on?' sel':'')+'" onclick="toggleNiggle(\''+k+'\')">'+
+      '<span class="rb"><span class="rt">'+NIGGLES[k]+'</span>'+
+      '<span class="rs">'+(on?'Evito lo que carga la zona y priorizo prevención':'Sin molestias')+'</span></span>'+
+      '<span class="chev">'+(on?'✓':'')+'</span></button>';
+  }).join('');
+}
+
+/* ══ ENERGÍA ══ */
+// Con vida real (o un bebé que no duerme) el plan rígido no sobrevive.
+// Esto adapta la sesión a la energía que traigas hoy.
+var ENERGY = [
+  { id:'alta',  n:'Con energía',   s:'Sesión completa',            mult:1,    caps:null },
+  { id:'media', n:'Regular',       s:'Versión corta, sin machaque', mult:0.6,  caps:['fuerza','control','movilidad'] },
+  { id:'baja',  n:'Fundido',       s:'Movilidad y prevención',      mult:0.45, caps:['movilidad','control'] },
+];
+function pickEnergy(id){
+  var e = ENERGY.filter(function(x){return x.id===id;})[0];
+  var base = S.planStart ? blockFor(planWeek()) : { focus:'mixto', minutes:20 };
+  var caps = e.caps || base.focus;
+  var mins = Math.max(6, Math.round(base.minutes * e.mult));
+  var sess = buildSession(caps, mins);
+  if(!sess){ toast('Revisa tu material'); return; }
+  SESSION = sess; FROM_PLAN = (e.id!=='baja');   // la mínima no cuenta como sesión del plan
+  cm('mo-energy'); startSession();
+}
+function openEnergy(){
+  document.getElementById('mo-energy-body').innerHTML =
+    '<div class="mh"><div class="mt">¿Cómo vienes hoy?</div><button class="pl-x" onclick="cm(\'mo-energy\')">✕</button></div>'+
+    '<p style="font-size:13px;color:var(--tx2);margin-bottom:14px">La sesión se adapta. Hacer poco es infinitamente mejor que no hacer nada.</p>'+
+    ENERGY.map(function(e){
+      return '<button class="row" onclick="pickEnergy(\''+e.id+'\')">'+
+        '<span class="rb"><span class="rt">'+e.n+'</span><span class="rs">'+e.s+'</span></span>'+
+        '<span class="chev">›</span></button>';
+    }).join('');
+  om('mo-energy');
+}
+
 /* ══ GENERADOR ══ */
 var GEN = { cap:'mixto', min:15 };
 var CAPLIST = [
@@ -320,6 +380,11 @@ function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floo
 var SESSION = null;
 function buildSession(cap, mins){
   var pool = EX.filter(function(e){ return S.mats.indexOf(e.mat)>=0; });
+  // Molestias: fuera lo que carga la zona, y prioridad a lo que la previene.
+  var nig = niggles();
+  if(nig.length){
+    pool = pool.filter(function(e){ return !e.risk || !e.risk.some(function(r){ return nig.indexOf(r)>=0; }); });
+  }
   if(Array.isArray(cap)) pool = pool.filter(function(e){ return cap.indexOf(e.cap)>=0; });
   else if(cap!=='mixto') pool = pool.filter(function(e){ return e.cap===cap; });
   if(!pool.length) return null;
@@ -334,6 +399,9 @@ function buildSession(cap, mins){
   function add(e){ var d=exSeconds(e); if(total + d + REST > budget) return false; picked.push(e); total += d + REST; return true; }
 
   if(mob.length) add(mob[0]);                     // calentamiento
+  // Prehab primero: si marcaste molestias, entra sí o sí.
+  shuffle(pool.filter(function(e){ return e.fix && e.fix.some(function(f){ return nig.indexOf(f)>=0; }); }))
+    .slice(0,2).forEach(function(e){ if(picked.indexOf(e)<0) add(e); });
   var main = isMobOnly ? mob.slice(1) : rest;
   var alt = isMobOnly ? [] : mob.slice(1);
   var i=0, j=0, turn=0;
@@ -785,7 +853,7 @@ function renderStats(){
 /* ══ INIT ══ */
 document.getElementById('tg-voice').classList.toggle('on',PREF.voice);
 document.getElementById('tg-hap').classList.toggle('on',PREF.hap);
-renderMats(); renderGen(); renderBiblio(); renderPresets(); renderStats(); initHR(); renderPlan(); renderToday();
+renderMats(); renderGen(); renderBiblio(); renderPresets(); renderStats(); initHR(); renderPlan(); renderToday(); renderNiggles();
 document.querySelectorAll('.mo').forEach(function(o){ o.addEventListener('click',function(e){ if(e.target===o) o.classList.remove('on'); }); });
 window.addEventListener('load', function(){
   setTimeout(function(){

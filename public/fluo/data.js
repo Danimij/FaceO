@@ -335,6 +335,57 @@ EX.push(
  tip:'Si solo notas la lumbar, te falta hombro y dorsal. Trabaja primero movilidad torácica y de hombro.'}
 )
 
+/* ── PREHAB · lo que evita las lesiones típicas de triatlón ──────
+ * risk: marca ejercicios que cargan una zona sensible, para poder filtrarlos.
+ * fix:  marca ejercicios que TRATAN esa zona (se priorizan si la marcas).
+ */
+EX.push(
+{id:'clamshell',cap:'control',pat:'cadera',mat:'goma',lvl:1,seg:60,sets:3,reps:15,fix:['cintilla'],
+ n:'Almeja con goma',s:'Glúteo medio, el que falla en la cintilla',
+ why:'El síndrome de la cintilla casi nunca es un problema de la cintilla: es que el glúteo medio no estabiliza la cadera y el fémur rota hacia dentro en cada zancada. Fortalecerlo ataca la causa, no el síntoma.',
+ steps:['Tumbado de lado, rodillas dobladas a 90°','Goma por encima de las rodillas','Abre la rodilla de arriba sin girar la pelvis','Baja despacio y repite'],
+ tip:'Si la cadera rota hacia atrás, estás usando la lumbar. Apoya la espalda en una pared para no hacer trampa.'},
+{id:'monster-walk',cap:'control',pat:'cadera',mat:'goma',lvl:1,seg:60,sets:3,reps:12,fix:['cintilla'],
+ n:'Paso lateral con goma',s:'Estabilidad de cadera en movimiento',
+ why:'Entrena el glúteo medio en el gesto que importa: sostener la pelvis mientras el peso pasa de una pierna a otra. Es lo que ocurre en cada paso al correr.',
+ steps:['Goma por encima de las rodillas o tobillos','Semiflexión de rodillas, pecho alto','Da pasos laterales sin juntar los pies','Mantén tensión en la goma todo el rato'],
+ tip:'Que las rodillas no se metan hacia dentro. Si lo hacen, la goma es demasiado dura.'},
+{id:'side-plank-lift',cap:'control',pat:'core',mat:'none',lvl:2,seg:45,fix:['cintilla'],
+ n:'Plancha lateral con elevación',s:'Costado y glúteo medio a la vez',
+ why:'Combina la estabilidad lateral del tronco con el trabajo del glúteo medio. Dos de los déficits que más se asocian a dolor de cintilla y de rodilla en corredores.',
+ steps:['Plancha lateral sobre el antebrazo','Cadera alta, cuerpo en línea','Eleva la pierna de arriba sin dejar caer la cadera','Baja controlado'],
+ tip:'La cadera no debe hundirse al elevar la pierna. Si se hunde, haz la plancha sin elevación hasta ganar fuerza.'},
+{id:'scap-pull',cap:'control',pat:'traccion',mat:'none',lvl:1,seg:45,sets:3,reps:10,fix:['hombro'],
+ n:'Retracción escapular colgado',s:'La base del hombro sano',
+ why:'Enseña a mover el omóplato de forma independiente del brazo. Es el eslabón que falla en casi todo hombro dolorido: el brazo tira y la escápula no acompaña, y la articulación se pinza.',
+ steps:['Cuelga de una barra con los brazos rectos','Sin doblar los codos, baja los hombros','Nota cómo el cuerpo sube unos centímetros','Aguanta 2 s y suelta'],
+ tip:'Los codos no se doblan. Si se doblan, es una dominada y te has saltado el ejercicio.'},
+{id:'ext-rotation',cap:'control',pat:'rotacion',mat:'goma',lvl:1,seg:50,sets:3,reps:15,fix:['hombro'],
+ n:'Rotación externa con goma',s:'Manguito rotador',
+ why:'Nadar y empujar trabajan sobre todo los rotadores internos. Sin equilibrar con rotación externa, la cabeza del húmero se desplaza y aparece el pinzamiento: el dolor de hombro típico del nadador.',
+ steps:['Codo pegado al costado, doblado 90°','Goma en la mano, tensión hacia dentro','Gira el antebrazo hacia fuera sin separar el codo','Vuelve despacio resistiendo'],
+ tip:'Pon una toalla enrollada entre el codo y el costado. Si se cae, estás separando el codo y usando el hombro entero.'},
+{id:'wall-slide',cap:'movilidad',pat:'empuje',mat:'none',lvl:1,seg:50,fix:['hombro'],
+ n:'Deslizamiento en pared',s:'Ritmo escápulo-humeral',
+ why:'Reeduca la coordinación entre brazo y omóplato al elevar. Es de los mejores ejercicios para recuperar elevación sin dolor, y prepara el hombro para el volumen de natación.',
+ steps:['De espaldas a la pared, lumbar pegada','Antebrazos y dorso de las manos en la pared','Desliza los brazos hacia arriba sin despegar nada','Baja lento hasta la posición inicial'],
+ tip:'Si la lumbar se despega o las manos se separan, ese es tu tope real. Trabaja ahí, no más arriba.'},
+{id:'calf-soleus',cap:'fuerza',pat:'rodilla',mat:'none',lvl:1,seg:60,sets:3,reps:15,fix:['cintilla'],
+ n:'Elevación de talón con rodilla doblada',s:'Sóleo, el olvidado del corredor',
+ why:'El sóleo absorbe hasta varias veces tu peso en cada zancada y es el que más se sobrecarga al correr. Se trabaja con la rodilla doblada, no recta: así se aísla del gemelo.',
+ steps:['De pie, rodillas ligeramente dobladas','Sube el talón manteniendo la flexión de rodilla','Aguanta 1 s arriba','Baja despacio, controlando'],
+ tip:'Con la rodilla recta trabajas el gemelo. Con ella doblada, el sóleo. La diferencia importa para correr.'}
+)
+
+// Ejercicios que cargan zonas sensibles (se filtran si marcas la molestia)
+;(function(){
+  var risky = { 'club-mill':['hombro'], 'club-swing':['hombro'], 'club-shield':['hombro'],
+    'turkish':['hombro'], 'pushup-archer':['hombro'], 'pullup':['hombro'], 'pullup-negative':['hombro'],
+    'jump-squat':['cintilla'], 'burpee':['cintilla'], 'lunge':['cintilla'], 'pistol':['cintilla'],
+    'pistol-assisted':['cintilla'], 'squat-bulgarian':['cintilla'] };
+  EX.forEach(function(e){ if(risky[e.id]) e.risk = risky[e.id]; });
+})()
+
 /* ── PLAN DE 3 MESES ─────────────────────────────────────────────
  * 12 semanas en tres bloques. Cada bloque tiene un objetivo distinto
  * porque el cuerpo no mejora haciendo siempre lo mismo: primero se
