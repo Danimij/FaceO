@@ -221,7 +221,7 @@ nav button.on{color:var(--ac)}
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=2"></script>
+<script src="data.js?v=3"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -311,6 +311,10 @@ function renderGen(){
 function setCap(c){ GEN.cap=c; renderGen(); }
 function setMin(m){ GEN.min=m; renderGen(); }
 
+function exSeconds(e){
+  if(!e.sets) return e.seg;
+  return e.sets*e.reps*3 + (e.sets-1)*30;   // trabajo + descanso entre series
+}
 function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
 
 var SESSION = null;
@@ -327,7 +331,7 @@ function buildSession(cap, mins){
   var budget = mins*60, picked = [], total = 0;
   var REST = 20;
 
-  function add(e){ if(total + e.seg + REST > budget) return false; picked.push(e); total += e.seg + REST; return true; }
+  function add(e){ var d=exSeconds(e); if(total + d + REST > budget) return false; picked.push(e); total += d + REST; return true; }
 
   if(mob.length) add(mob[0]);                     // calentamiento
   var main = isMobOnly ? mob.slice(1) : rest;
@@ -358,7 +362,7 @@ function generate(){
     '<span style="font-size:12px;color:var(--tx2)">'+s.list.length+' ejercicios</span></div>'+
     s.list.map(function(e,i){
       return '<div class="row" style="cursor:default"><span class="ic" style="font-weight:700;font-size:13px">'+(i+1)+'</span>'+
-        '<span class="rb"><span class="rt">'+e.n+'</span><span class="rs">'+CAPS[e.cap].es+' · '+Math.round(e.seg)+'s</span></span></div>';
+        '<span class="rb"><span class="rt">'+e.n+'</span><span class="rs">'+CAPS[e.cap].es+' · '+(e.sets? e.sets+'×'+e.reps : Math.round(e.seg)+'s')+'</span></span></div>';
     }).join('')+
     '<button class="btn" style="margin-top:12px" onclick="startSession()">Empezar sesión →</button></div>';
   vib(25);
@@ -368,14 +372,16 @@ function generate(){
 var P = { i:0, phase:'work', left:0, timer:null, paused:false, done:0, secs:0 };
 function startSession(){
   if(!SESSION) return;
-  P = { i:0, phase:'work', left:SESSION.list[0].seg, timer:null, paused:false, done:0, secs:0 };
+  P = { i:0, phase:'work', set:1, left:SESSION.list[0].seg||0, timer:null, paused:false, done:0, secs:0 };
   document.getElementById('player').classList.add('on');
   vib(40); wakeOn();
   renderPlayer(); say('Empezamos con '+SESSION.list[0].n);
   runTimer();
 }
+function isReps(){ return !!SESSION.list[P.i].sets; }
 function runTimer(){
   clearInterval(P.timer);
+  if(P.phase==='work' && isReps()) return;   // las series avanzan al pulsar, no por reloj
   P.timer = setInterval(function(){
     if(P.paused) return;
     P.left--;
@@ -385,27 +391,53 @@ function runTimer(){
 }
 function updateTime(){
   var t=document.getElementById('pl-time'); if(t) t.textContent = P.left;
+  var pb=document.getElementById('pl-pause'); if(pb) pb.style.display = (P.phase==='work' && isReps()) ? 'none' : '';
   var totalUnits = SESSION.list.length*2;
   var doneUnits = P.i*2 + (P.phase==='rest'?1:0);
   document.getElementById('pl-fill').style.width = Math.round(doneUnits/totalUnits*100)+'%';
 }
+function doneSet(){
+  var e=SESSION.list[P.i];
+  P.secs += e.reps*3;
+  if(P.set < e.sets){
+    P.set++; P.phase='setrest'; P.left=30; vib([25,60,25]);
+    say('Descansa. Serie '+P.set+' de '+e.sets);
+    renderPlayer(); runTimer(); updateTime(); return;
+  }
+  P.done++;
+  if(P.i >= SESSION.list.length-1){ finishSession(); return; }
+  P.phase='rest'; P.left=20; P.set=1; vib([25,70,25]);
+  say('Descansa. Ahora, '+SESSION.list[P.i+1].n);
+  renderPlayer(); runTimer(); updateTime();
+}
 function nextPhase(){
+  if(P.phase==='setrest'){
+    P.phase='work'; vib(45); say('Serie '+P.set);
+    renderPlayer(); runTimer(); updateTime(); return;
+  }
   if(P.phase==='work'){
     P.done++; P.secs += SESSION.list[P.i].seg;
     if(P.i >= SESSION.list.length-1){ finishSession(); return; }
     P.phase='rest'; P.left=20; vib([25,70,25]);
     say('Descansa. Ahora, '+SESSION.list[P.i+1].n);
   } else {
-    P.i++; P.phase='work'; P.left=SESSION.list[P.i].seg; vib(45);
+    P.i++; P.phase='work'; P.set=1; P.left=SESSION.list[P.i].seg||0; vib(45);
     say(SESSION.list[P.i].n);
   }
-  renderPlayer(); updateTime();
+  renderPlayer(); runTimer(); updateTime();
 }
 function skipEx(){
   vib(15);
+  if(P.phase==='setrest'){
+    var ce=SESSION.list[P.i];
+    m.innerHTML='<div class="pl-rest">Entre series</div>'+
+      '<div class="pl-time" id="pl-time">'+P.left+'</div>'+
+      '<div class="pl-sub" style="margin-top:14px">Siguiente: <b style="color:var(--tx)">serie '+P.set+' de '+ce.sets+'</b> · '+ce.reps+' reps</div>';
+    return;
+  }
   if(P.phase==='rest'){ P.left=1; return; }
   if(P.i >= SESSION.list.length-1){ finishSession(); return; }
-  P.phase='rest'; P.left=20; renderPlayer(); updateTime();
+  P.phase='rest'; P.left=20; P.set=1; renderPlayer(); runTimer(); updateTime();
 }
 function togglePause(){
   P.paused=!P.paused;
@@ -414,6 +446,13 @@ function togglePause(){
 }
 function renderPlayer(){
   var m=document.getElementById('pl-mid');
+  if(P.phase==='setrest'){
+    var ce=SESSION.list[P.i];
+    m.innerHTML='<div class="pl-rest">Entre series</div>'+
+      '<div class="pl-time" id="pl-time">'+P.left+'</div>'+
+      '<div class="pl-sub" style="margin-top:14px">Siguiente: <b style="color:var(--tx)">serie '+P.set+' de '+ce.sets+'</b> · '+ce.reps+' reps</div>';
+    return;
+  }
   if(P.phase==='rest'){
     var nx=SESSION.list[P.i+1];
     m.innerHTML='<div class="pl-rest">Descanso</div>'+
@@ -421,9 +460,15 @@ function renderPlayer(){
       '<div class="pl-sub" style="margin-top:14px">Ahora: <b style="color:var(--tx)">'+nx.n+'</b></div>';
   } else {
     var e=SESSION.list[P.i];
-    m.innerHTML='<div class="pl-cap" style="color:'+CAPS[e.cap].color+'">'+CAPS[e.cap].es+' · '+(P.i+1)+' de '+SESSION.list.length+'</div>'+
+    var mid = e.sets
+      ? '<div class="pl-time" style="font-size:44px">'+e.reps+'<span style="font-size:18px;color:var(--tx2);font-weight:400"> reps</span></div>'+
+        '<div class="pl-sub" style="margin-bottom:8px">Serie '+P.set+' de '+e.sets+'</div>'+
+        '<button class="btn" style="max-width:260px;margin:6px auto 0" onclick="doneSet()">Serie hecha ✓</button>'
+      : '<div class="pl-time" id="pl-time">'+P.left+'</div>';
+    m.innerHTML='<div style="margin-bottom:6px;opacity:.9">'+figFor(e)+'</div>'+
+      '<div class="pl-cap" style="color:'+CAPS[e.cap].color+'">'+CAPS[e.cap].es+' · '+(P.i+1)+' de '+SESSION.list.length+'</div>'+
       '<div class="pl-name">'+e.n+'</div><div class="pl-sub">'+e.s+'</div>'+
-      '<div class="pl-time" id="pl-time">'+P.left+'</div>'+
+      mid+
       '<ul class="pl-steps">'+e.steps.map(function(s,i){return '<li><b>'+(i+1)+'</b>'+s+'</li>';}).join('')+'</ul>';
   }
 }
@@ -513,6 +558,48 @@ function initHR(){
   }
 }
 
+
+/* ══ FIGURAS ══
+ * Ilustraciones esquemáticas de la posición clave. No sustituyen a un vídeo:
+ * sirven para reconocer la postura de un vistazo mientras entrenas.
+ */
+function FIG(kind){
+  var C="var(--ac)", D="var(--tx2)";
+  var head='<circle cx="%HX%" cy="%HY%" r="7" stroke="'+C+'" stroke-width="3" fill="none"/>';
+  function S(body,hx,hy){
+    return '<svg viewBox="0 0 200 120" style="width:100%;max-width:260px;height:auto" fill="none" stroke-linecap="round" stroke-linejoin="round">'+
+      '<line x1="10" y1="110" x2="190" y2="110" stroke="'+D+'" stroke-width="2" opacity=".35"/>'+
+      body + head.replace('%HX%',hx).replace('%HY%',hy) + '</svg>';
+  }
+  var P={
+    plank:  ['<path d="M40 100 L150 62" stroke="'+C+'" stroke-width="4"/><path d="M45 100 L45 78 M60 100 L58 78" stroke="'+C+'" stroke-width="3"/><path d="M150 62 L165 72" stroke="'+C+'" stroke-width="3"/>',158,55],
+    push:   ['<path d="M45 102 L145 68" stroke="'+C+'" stroke-width="4"/><path d="M60 102 L58 76 M75 100 L72 78" stroke="'+C+'" stroke-width="3"/><path d="M145 68 L150 100" stroke="'+C+'" stroke-width="3"/>',152,58],
+    pull:   ['<path d="M100 20 L100 44" stroke="'+C+'" stroke-width="3"/><path d="M70 20 L130 20" stroke="'+D+'" stroke-width="4"/><path d="M100 52 L100 92 M100 92 L88 110 M100 92 L112 110" stroke="'+C+'" stroke-width="4"/><path d="M100 44 L78 24 M100 44 L122 24" stroke="'+C+'" stroke-width="3"/>',100,44],
+    squat:  ['<path d="M100 46 L100 70 M100 70 L80 88 L80 108 M100 70 L120 88 L120 108" stroke="'+C+'" stroke-width="4"/><path d="M100 54 L128 46" stroke="'+C+'" stroke-width="3"/>',100,36],
+    hinge:  ['<path d="M118 44 L92 60 M92 60 L92 90 L92 108" stroke="'+C+'" stroke-width="4"/><path d="M92 60 L120 76" stroke="'+C+'" stroke-width="3"/>',126,40],
+    core:   ['<path d="M52 92 L150 92" stroke="'+C+'" stroke-width="4"/><path d="M78 92 L70 66 M110 92 L118 66" stroke="'+C+'" stroke-width="3"/>',46,92],
+    mob:    ['<path d="M100 40 L100 66 M100 66 C80 78 76 96 84 108 M100 66 C120 78 124 96 116 108" stroke="'+C+'" stroke-width="4"/><path d="M100 48 C82 44 74 56 76 66" stroke="'+C+'" stroke-width="3"/>',100,30],
+    club:   ['<path d="M100 40 L100 88 M100 88 L88 108 M100 88 L112 108" stroke="'+C+'" stroke-width="4"/><path d="M100 52 L136 30" stroke="'+C+'" stroke-width="3"/><path d="M136 30 L152 18" stroke="var(--ac2)" stroke-width="6"/>',100,30],
+    weight: ['<path d="M100 40 L100 86 M100 86 L86 108 M100 86 L114 108" stroke="'+C+'" stroke-width="4"/><path d="M100 54 L74 66 M100 54 L126 66" stroke="'+C+'" stroke-width="3"/><path d="M68 66 L80 66 M120 66 L132 66" stroke="var(--ac2)" stroke-width="7"/>',100,30],
+    band:   ['<path d="M100 40 L100 86 M100 86 L88 108 M100 86 L112 108" stroke="'+C+'" stroke-width="4"/><path d="M100 54 L62 54 M100 54 L138 54" stroke="'+C+'" stroke-width="3"/><path d="M40 46 C52 54 52 54 40 62" stroke="var(--ac2)" stroke-width="3"/>',100,30],
+    hang:   ['<path d="M60 22 L140 22" stroke="'+D+'" stroke-width="4"/><path d="M100 40 L100 96 M100 96 L92 112 M100 96 L108 112" stroke="'+C+'" stroke-width="4"/><path d="M100 44 L84 24 M100 44 L116 24" stroke="'+C+'" stroke-width="3"/>',100,32],
+    lunge:  ['<path d="M96 40 L96 68 M96 68 L70 92 L70 108 M96 68 L124 88 L124 108 M124 88 L112 108" stroke="'+C+'" stroke-width="4"/>',96,30],
+  };
+  var f=P[kind]||P.mob;
+  return S(f[0],f[1],f[2]);
+}
+function figFor(e){
+  if(e.mat==='maza') return FIG('club');
+  if(e.mat==='goma') return FIG('band');
+  if(e.mat==='peso') return FIG(e.pat==='cadera'?'hinge':'weight');
+  var m={empuje:'push',traccion:'pull',rodilla:'squat',cadera:'hinge',core:'core',rotacion:'mob',locomocion:'plank'};
+  if(e.id==='hang'||e.id==='pullup'||e.id==='pullup-negative') return FIG('hang');
+  if(e.id==='lunge'||e.id==='squat-bulgarian') return FIG('lunge');
+  if(e.id==='plank'||e.id==='bear-crawl') return FIG('plank');
+  if(e.cap==='movilidad') return FIG('mob');
+  return FIG(m[e.pat]||'mob');
+}
+
 /* ══ BIBLIOTECA ══ */
 var BF='todos';
 function renderBiblio(){
@@ -537,6 +624,7 @@ function openEx(id){
   document.getElementById('mo-ex-body').innerHTML=
     '<div class="mh"><div class="mt">'+e.n+'</div><button class="pl-x" onclick="cm(\'mo-ex\')">✕</button></div>'+
     '<p style="font-size:13px;color:var(--tx2);margin-bottom:4px">'+e.s+'</p>'+
+    '<div style="display:flex;justify-content:center;padding:14px 0 4px">'+figFor(e)+'</div>'+
     '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">'+
       '<span class="pill" style="color:'+CAPS[e.cap].color+';border-color:'+CAPS[e.cap].color+'55">'+CAPS[e.cap].es+'</span>'+
       '<span class="pill" style="color:var(--tx2);border-color:var(--br)">'+MAT[e.mat].es+'</span>'+
@@ -573,6 +661,13 @@ function redeem(){
 }
 
 /* ══ PLAN 3 MESES ══ */
+function weekKey(){ return 'w'+planWeek(); }
+function weekDone(){ S.planDone=S.planDone||{}; return S.planDone[weekKey()]||0; }
+function markWeekSession(){
+  if(!S.planStart) return;
+  S.planDone=S.planDone||{};
+  var k=weekKey(); S.planDone[k]=(S.planDone[k]||0)+1; save();
+}
 function planWeek(){
   if(!S.planStart) return 0;
   var days = Math.floor((Date.now() - new Date(S.planStart).getTime())/86400000);
@@ -591,10 +686,11 @@ function todaySession(){
   var b = blockFor(w);
   return buildSession(b.focus, b.minutes);
 }
+var FROM_PLAN=false;
 function startToday(){
   var s = todaySession();
   if(!s){ toast('Revisa tu material'); return; }
-  SESSION = s; startSession();
+  SESSION = s; FROM_PLAN=true; startSession();
 }
 function renderToday(){
   var el = document.getElementById('today-card'); if(!el) return;
@@ -604,7 +700,7 @@ function renderToday(){
   el.innerHTML = '<div class="lbl" style="margin-top:22px">Tu plan</div>'+
     '<button class="row" onclick="startToday()" style="border-color:rgba(46,230,200,.4)">'+
     '<span class="ic" style="background:rgba(46,230,200,.15)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 9-14 9V3z"/></svg></span>'+
-    '<span class="rb"><span class="rt">Sesión de hoy</span><span class="rs">Semana '+w+' de 12 · '+b.name+' · '+b.minutes+' min</span></span>'+
+    '<span class="rb"><span class="rt">Sesión de hoy</span><span class="rs">Semana '+w+' de 12 · '+b.name+' · '+weekDone()+'/'+b.sessions+' hechas</span></span>'+
     '<span class="chev">›</span></button>';
 }
 function renderPlan(){
@@ -632,8 +728,14 @@ function renderPlan(){
         '<div style="display:flex;justify-content:space-between;align-items:baseline">'+
         '<span style="font-size:15px;font-weight:700">Semana '+w+' de 12</span>'+
         '<span style="font-size:11.5px;color:var(--ac)">'+b0.name+'</span></div>'+
-        '<div class="xpbar" style="height:6px;background:var(--surface);border-radius:3px;overflow:hidden;margin:10px 0 4px">'+
+        '<div class="xpbar" style="height:6px;background:var(--surface);border-radius:3px;overflow:hidden;margin:10px 0 6px">'+
         '<div style="height:100%;width:'+Math.round(w/12*100)+'%;background:var(--ac);border-radius:3px"></div></div>'+
+        '<div style="display:flex;gap:5px;align-items:center;margin-top:8px">'+
+          Array.from({length:b0.sessions}).map(function(_,i){
+            return '<span style="flex:1;height:7px;border-radius:4px;background:'+(i<weekDone()?'var(--ac)':'var(--surface)')+'"></span>';
+          }).join('')+
+          '<span style="font-size:11px;color:var(--tx2);margin-left:6px;flex-shrink:0">'+weekDone()+'/'+b0.sessions+' esta semana</span>'+
+        '</div>'+
         '<button class="btn" style="margin-top:12px" onclick="startToday()">Sesión de hoy →</button></div>';
     }
   }
