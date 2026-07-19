@@ -220,7 +220,8 @@ nav button.on{color:var(--ac)}
 <div class="mo" id="mo-done"><div class="md" id="mo-done-body"></div></div>
 <div class="toast" id="toast"></div>
 
-<script src="data.js"></script>
+<!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
+<script src="data.js?v=2"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
