@@ -141,6 +141,8 @@ nav button.on{color:var(--ac)}
       <span class="chev">›</span>
     </button>
 
+    <div id="week-card"></div>
+
     <div id="today-card"></div>
 
     <div class="lbl" style="margin-top:22px">Sesiones rápidas</div>
@@ -174,6 +176,8 @@ nav button.on{color:var(--ac)}
   <!-- PLAN -->
   <section class="sc" id="sc-plan">
     <div id="plan-body"></div>
+    <div class="lbl" style="margin-top:24px">Historial</div>
+    <div id="log-list"></div>
   </section>
 
   <!-- AJUSTES -->
@@ -228,11 +232,12 @@ nav button.on{color:var(--ac)}
 <!-- MODALES -->
 <div class="mo" id="mo-ex"><div class="md" id="mo-ex-body"></div></div>
 <div class="mo" id="mo-energy"><div class="md" id="mo-energy-body"></div></div>
+<div class="mo" id="mo-log"><div class="md" id="mo-log-body"></div></div>
 <div class="mo" id="mo-done"><div class="md" id="mo-done-body"></div></div>
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=6"></script>
+<script src="data.js?v=7"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -305,7 +310,7 @@ function niggles(){ S.niggles=S.niggles||[]; return S.niggles; }
 function toggleNiggle(k){
   var a=niggles(), i=a.indexOf(k);
   if(i>=0) a.splice(i,1); else a.push(k);
-  S.niggles=a; save(); renderNiggles(); vib(20);
+  S.niggles=a; save(); renderNiggles(); renderWeek(); renderLog(); vib(20);
 }
 var NIGGLES = { cintilla:'Cintilla / rodilla', hombro:'Hombro' };
 function renderNiggles(){
@@ -562,6 +567,7 @@ function finishSession(){
     }
     save();
     if(FROM_PLAN) markWeekSession();
+    addLog('fuerza', mins, 0, 0, '');
   }
   FROM_PLAN=false;                 // solo cuenta la sesión que vino del plan
   renderStats(); renderToday(); renderPlan();
@@ -843,6 +849,107 @@ function renderPlan(){
   document.getElementById('plan-body').innerHTML=h;
 }
 
+/* ══ REGISTRO DE DISCIPLINAS ══
+ * La fuerza se registra sola al terminar una sesión. Nado, bici y carrera
+ * los apuntas tú: así ves la semana entera en un solo sitio.
+ */
+var DISC = {
+  nado:    { n:'Natación', c:'#2ee6c8', ic:"<path d='M2 18c2 0 2-1.5 4-1.5S8 18 10 18s2-1.5 4-1.5S16 18 18 18s2-1.5 4-1.5'/><path d='M6 12l5-3 4 3'/><circle cx='17' cy='7' r='1.6'/>" },
+  bici:    { n:'Bici',     c:'#c9f24d', ic:"<circle cx='6' cy='17' r='3.4'/><circle cx='18' cy='17' r='3.4'/><path d='M6 17l4-8h5l3 8M9 9h4'/>" },
+  carrera: { n:'Carrera',  c:'#ff6a1f', ic:"<circle cx='14' cy='5' r='1.8'/><path d='M6 20l3-5 3 2 2-4M9 15l-1-4 5-1 2 3 3 1'/>" },
+  fuerza:  { n:'Fuerza',   c:'#b07cff', ic:"<path d='M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12'/>" },
+};
+function svgD(k,sz){ return "<svg viewBox='0 0 24 24' width='"+(sz||20)+"' height='"+(sz||20)+"' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'>"+DISC[k].ic+"</svg>"; }
+
+function logList(){ S.log=S.log||[]; return S.log; }
+function addLog(type,min,km,rpe,note){
+  logList().unshift({ t:type, min:+min||0, km:+km||0, rpe:+rpe||0, note:note||'', d:new Date().toISOString() });
+  if(S.log.length>200) S.log.pop();
+  save(); renderWeek(); renderLog();
+}
+function delLog(i){ logList().splice(i,1); save(); renderWeek(); renderLog(); }
+
+function weekStart(){
+  var d=new Date(); var day=(d.getDay()+6)%7;          // lunes = 0
+  d.setHours(0,0,0,0); d.setDate(d.getDate()-day); return d.getTime();
+}
+function weekEntries(){
+  var ws=weekStart();
+  return logList().filter(function(e){ return new Date(e.d).getTime()>=ws; });
+}
+function weekTally(){
+  var t={nado:0,bici:0,carrera:0,fuerza:0}, mins=0;
+  weekEntries().forEach(function(e){ if(t[e.t]!==undefined){ t[e.t]++; mins+=e.min; } });
+  return { t:t, mins:mins };
+}
+
+function openLog(pre){
+  var types=Object.keys(DISC).filter(function(k){return k!=='fuerza';});
+  document.getElementById('mo-log-body').innerHTML=
+    '<div class="mh"><div class="mt">Registrar sesión</div><button class="pl-x" onclick="cm(\'mo-log\')">✕</button></div>'+
+    '<div class="chips" id="log-type">'+types.map(function(k,i){
+      return '<div class="chip'+((pre?pre===k:i===0)?' on':'')+'" data-t="'+k+'" onclick="pickLogType(\''+k+'\')">'+DISC[k].n+'</div>';
+    }).join('')+'</div>'+
+    '<div style="display:flex;gap:8px;margin-bottom:10px">'+
+      '<div style="flex:1"><label class="lbl" style="display:block">Minutos</label><input id="log-min" type="number" min="0" value="45" style="width:100%;background:var(--surface);border:1px solid var(--br);border-radius:12px;padding:12px;color:var(--tx);text-align:center;font-family:inherit;font-size:15px"></div>'+
+      '<div style="flex:1"><label class="lbl" style="display:block">Km (opcional)</label><input id="log-km" type="number" min="0" step="0.1" placeholder="—" style="width:100%;background:var(--surface);border:1px solid var(--br);border-radius:12px;padding:12px;color:var(--tx);text-align:center;font-family:inherit;font-size:15px"></div>'+
+    '</div>'+
+    '<label class="lbl" style="display:block">Esfuerzo percibido</label>'+
+    '<div class="chips" id="log-rpe">'+[1,2,3,4,5].map(function(n){
+      return '<div class="chip'+(n===3?' on':'')+'" data-r="'+n+'" onclick="pickRpe('+n+')">'+n+'</div>';
+    }).join('')+'</div>'+
+    '<p style="font-size:11px;color:var(--tx2);margin:-8px 0 14px">1 muy suave · 3 moderado · 5 al límite</p>'+
+    '<button class="btn" onclick="saveLog()">Guardar</button>';
+  LOGT = pre || types[0]; LOGR = 3;
+  om('mo-log');
+}
+var LOGT='nado', LOGR=3;
+function pickLogType(k){ LOGT=k; document.querySelectorAll('#log-type .chip').forEach(function(c){ c.classList.toggle('on', c.dataset.t===k); }); }
+function pickRpe(n){ LOGR=n; document.querySelectorAll('#log-rpe .chip').forEach(function(c){ c.classList.toggle('on', +c.dataset.r===n); }); }
+function saveLog(){
+  addLog(LOGT, document.getElementById('log-min').value, document.getElementById('log-km').value, LOGR, '');
+  cm('mo-log'); vib(35); toast('Sesión registrada');
+}
+
+function renderWeek(){
+  var el=document.getElementById('week-card'); if(!el) return;
+  var w=weekTally();
+  var goals={nado:2,bici:2,carrera:1,fuerza:2};
+  el.innerHTML='<div class="lbl" style="margin-top:22px">Tu semana</div>'+
+    '<div class="card" style="margin-bottom:9px">'+
+    '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">'+
+    '<span style="font-size:14px;font-weight:700">'+Object.values(w.t).reduce(function(a,b){return a+b;},0)+' sesiones</span>'+
+    '<span style="font-size:11.5px;color:var(--tx2)">'+Math.round(w.mins)+' min</span></div>'+
+    Object.keys(DISC).map(function(k){
+      var done=w.t[k], goal=goals[k];
+      return '<div style="display:flex;align-items:center;gap:10px;padding:6px 0">'+
+        '<span style="color:'+DISC[k].c+';flex-shrink:0;display:flex">'+svgD(k,18)+'</span>'+
+        '<span style="font-size:13px;flex:1">'+DISC[k].n+'</span>'+
+        '<span style="display:flex;gap:3px">'+Array.from({length:goal}).map(function(_,i){
+          return '<span style="width:16px;height:6px;border-radius:3px;background:'+(i<done?DISC[k].c:'var(--surface)')+'"></span>';
+        }).join('')+'</span>'+
+        '<span style="font-size:11.5px;color:var(--tx2);width:26px;text-align:right">'+done+'/'+goal+'</span>'+
+      '</div>';
+    }).join('')+
+    '<button class="btn ghost sm" style="margin-top:12px" onclick="openLog()">Registrar nado / bici / carrera</button>'+
+    '</div>';
+}
+
+function renderLog(){
+  var el=document.getElementById('log-list'); if(!el) return;
+  var l=logList();
+  if(!l.length){ el.innerHTML='<p style="font-size:12.5px;color:var(--tx2)">Aún no has registrado nada.</p>'; return; }
+  el.innerHTML=l.slice(0,40).map(function(e,i){
+    var d=new Date(e.d), f=d.toLocaleDateString('es-ES',{day:'numeric',month:'short'});
+    var D=DISC[e.t]||DISC.fuerza;
+    return '<div class="row" style="cursor:default">'+
+      '<span class="ic" style="color:'+D.c+'">'+svgD(e.t,20)+'</span>'+
+      '<span class="rb"><span class="rt">'+D.n+(e.km?' · '+e.km+' km':'')+'</span>'+
+      '<span class="rs">'+f+' · '+e.min+' min'+(e.rpe?' · esfuerzo '+e.rpe:'')+'</span></span>'+
+      '<button onclick="delLog('+i+')" style="background:none;border:none;color:var(--tx2);font-size:15px;cursor:pointer;padding:4px 8px">✕</button></div>';
+  }).join('');
+}
+
 /* ══ ESTADÍSTICAS ══ */
 function renderStats(){
   document.getElementById('st-streak').textContent=S.streak||0;
@@ -853,7 +960,7 @@ function renderStats(){
 /* ══ INIT ══ */
 document.getElementById('tg-voice').classList.toggle('on',PREF.voice);
 document.getElementById('tg-hap').classList.toggle('on',PREF.hap);
-renderMats(); renderGen(); renderBiblio(); renderPresets(); renderStats(); initHR(); renderPlan(); renderToday(); renderNiggles();
+renderMats(); renderGen(); renderBiblio(); renderPresets(); renderStats(); initHR(); renderPlan(); renderToday(); renderNiggles(); renderWeek(); renderLog();
 document.querySelectorAll('.mo').forEach(function(o){ o.addEventListener('click',function(e){ if(e.target===o) o.classList.remove('on'); }); });
 window.addEventListener('load', function(){
   setTimeout(function(){
