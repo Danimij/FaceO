@@ -221,7 +221,7 @@ nav button.on{color:var(--ac)}
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=4"></script>
+<script src="data.js?v=5"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -495,6 +495,7 @@ function finishSession(){
     save();
     if(FROM_PLAN) markWeekSession();
   }
+  FROM_PLAN=false;                 // solo cuenta la sesión que vino del plan
   renderStats(); renderToday(); renderPlan();
   vib([50,90,50,90,160]); say('Sesión completada. Muy bien.');
   document.getElementById('mo-done-body').innerHTML =
