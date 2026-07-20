@@ -250,11 +250,12 @@ nav button.on{color:var(--ac)}
 <div class="mo" id="mo-ex"><div class="md" id="mo-ex-body"></div></div>
 <div class="mo" id="mo-energy"><div class="md" id="mo-energy-body"></div></div>
 <div class="mo" id="mo-log"><div class="md" id="mo-log-body"></div></div>
+<div class="mo" id="mo-welcome"><div class="md" id="mo-welcome-body"></div></div>
 <div class="mo" id="mo-done"><div class="md" id="mo-done-body"></div></div>
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=11"></script>
+<script src="data.js?v=12"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -1198,11 +1199,67 @@ function renderStats(){
   document.getElementById('st-min').textContent=Math.round(S.min||0);
 }
 
+/* ══ BIENVENIDA ══ */
+var OBS=0;
+function renderWelcome(){
+  var b=document.getElementById('mo-welcome-body'), h='';
+  var dots='<div style="display:flex;gap:6px;justify-content:center;margin-bottom:22px">'+
+    [0,1,2].map(function(i){ return '<span style="height:5px;border-radius:3px;transition:all .2s;width:'+(i===OBS?'26px':'7px')+';background:'+(i===OBS?'var(--ac)':'var(--br)')+'"></span>'; }).join('')+'</div>';
+
+  if(OBS===0){
+    h=dots+'<div style="text-align:center">'+
+      '<svg viewBox="0 0 120 120" style="width:96px;height:96px;margin-bottom:20px" fill="none">'+
+        '<circle cx="60" cy="60" r="46" stroke="var(--ac)" stroke-width="1.5" opacity=".25"/>'+
+        '<path d="M60 96 C60 76 60 76 60 60 C60 44 60 40 60 24" stroke="var(--ac)" stroke-width="2" stroke-dasharray="3 6" opacity=".6"/>'+
+        '<circle cx="60" cy="24" r="9" fill="var(--ac)"/>'+
+        '<circle cx="60" cy="52" r="5" stroke="var(--ac)" stroke-width="2"/>'+
+        '<circle cx="60" cy="96" r="7" stroke="var(--ac2)" stroke-width="2.5"/>'+
+      '</svg>'+
+      '<div style="font-family:\'Fraunces\',serif;font-size:27px;font-weight:600;margin-bottom:12px;line-height:1.15">Fuerte de verdad,<br>no solo fuerte</div>'+
+      '<p style="font-size:14px;color:var(--tx2);line-height:1.6">Fuerza, movilidad y control con el mínimo material. Las sesiones se generan solas y nunca se repiten, así que no te aburres ni te estancas.</p>'+
+      '</div><button class="btn" style="margin-top:24px" onclick="obNext()">Continuar</button>';
+  }
+  if(OBS===1){
+    h=dots+'<div style="font-family:\'Fraunces\',serif;font-size:24px;font-weight:600;margin-bottom:5px">¿Qué tienes en casa?</div>'+
+      '<p style="font-size:13px;color:var(--tx2);margin-bottom:16px">Solo se te propondrán ejercicios que puedas hacer de verdad. Puedes cambiarlo cuando quieras.</p>'+
+      Object.keys(MAT).map(function(k){
+        var on=S.mats.indexOf(k)>=0;
+        return '<button class="row'+(on?' sel':'')+'" onclick="obMat(\''+k+'\')">'+
+          '<span class="ic">'+matIcon(k)+'</span>'+
+          '<span class="rb"><span class="rt">'+MAT[k].es+'</span><span class="rs">'+countFor(k)+' ejercicios</span></span>'+
+          '<span class="chev">'+(on?'✓':'')+'</span></button>';
+      }).join('')+
+      '<button class="btn" style="margin-top:14px" onclick="obNext()">Continuar</button>';
+  }
+  if(OBS===2){
+    h=dots+'<div style="font-family:\'Fraunces\',serif;font-size:24px;font-weight:600;margin-bottom:5px">¿Alguna molestia?</div>'+
+      '<p style="font-size:13px;color:var(--tx2);margin-bottom:16px">Si marcas una zona, evitaremos lo que la carga y meteremos trabajo preventivo en cada sesión. Puedes dejarlo en blanco.</p>'+
+      Object.keys(NIGGLES).map(function(k){
+        var on=niggles().indexOf(k)>=0;
+        return '<button class="row'+(on?' sel':'')+'" onclick="obNig(\''+k+'\')">'+
+          '<span class="rb"><span class="rt">'+NIGGLES[k]+'</span></span>'+
+          '<span class="chev">'+(on?'✓':'')+'</span></button>';
+      }).join('')+
+      '<button class="btn" style="margin-top:14px" onclick="obDone()">Empezar</button>'+
+      '<p style="font-size:11px;color:var(--tx2);text-align:center;margin-top:12px;line-height:1.5">Esto orienta el entrenamiento. No sustituye a un profesional.</p>';
+  }
+  b.innerHTML=h;
+}
+function obNext(){ OBS++; renderWelcome(); vib(15); }
+function obMat(k){ toggleMat(k); renderWelcome(); }
+function obNig(k){ toggleNiggle(k); renderWelcome(); }
+function obDone(){
+  S.onboarded=true; save(); cm('mo-welcome'); vib(40);
+  renderMats(); renderPresets(); renderCare(); renderBiblio();
+  toast('Todo listo. A entrenar.');
+}
+
 /* ══ INIT ══ */
 document.getElementById('tg-voice').classList.toggle('on',PREF.voice);
 document.getElementById('tg-hap').classList.toggle('on',PREF.hap);
 renderMats(); renderGen(); renderBiblio(); renderPresets(); renderStats(); initHR(); renderPlan(); renderToday(); renderNiggles(); renderWeek(); renderLog(); renderCardio(); renderCare();
 document.querySelectorAll('.mo').forEach(function(o){ o.addEventListener('click',function(e){ if(e.target===o) o.classList.remove('on'); }); });
+if(!S.onboarded){ setTimeout(function(){ renderWelcome(); om('mo-welcome'); }, 1400); }
 window.addEventListener('load', function(){
   setTimeout(function(){
     var s=document.getElementById('splash');
