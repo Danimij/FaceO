@@ -186,6 +186,15 @@ nav button.on{color:var(--ac)}
     <div id="log-list"></div>
   </section>
 
+  <!-- CUIDADO: readaptación + barefoot -->
+  <section class="sc" id="sc-cuidado">
+    <div class="chips" id="care-tabs">
+      <div class="chip on" onclick="setCare('rehab')">Readaptación</div>
+      <div class="chip" onclick="setCare('pies')">Pies / Barefoot</div>
+    </div>
+    <div id="care-body"></div>
+  </section>
+
   <!-- AJUSTES -->
   <section class="sc" id="sc-ajustes">
     <div class="lbl">Material disponible</div>
@@ -219,6 +228,7 @@ nav button.on{color:var(--ac)}
   <button data-s="plan" onclick="go('plan')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Plan</button>
   <button data-s="cardio" onclick="go('cardio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>Resistencia</button>
   <button data-s="biblio" onclick="go('biblio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.04A9 9 0 006 3.75c-1.05 0-2.06.18-3 .51v14.25A9 9 0 016 18c2.3 0 4.4.87 6 2.29m0-14.25a9 9 0 016-2.29c1.05 0 2.06.18 3 .51v14.25A9 9 0 0018 18a9 9 0 00-6 2.29m0-14.25v14.25"/></svg>Ejercicios</button>
+  <button data-s="cuidado" onclick="go('cuidado')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-9-9a5 5 0 019-3 5 5 0 019 3c-2 4.5-9 9-9 9z"/></svg>Cuidado</button>
   <button data-s="ajustes" onclick="go('ajustes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9v0a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Ajustes</button>
 </nav>
 
@@ -244,7 +254,7 @@ nav button.on{color:var(--ac)}
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=9"></script>
+<script src="data.js?v=10"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -278,6 +288,7 @@ function go(s){
           generar:['Generador','Sesión a medida','Se adapta a lo que tengas hoy'],
           plan:['12 semanas','Plan de 3 meses','Progresiones que sí llevan a algún sitio'],
           cardio:['Resistencia','Nado · Bici · Carrera','Sesiones con estructura y evidencia'],
+          cuidado:['Cuidado','Readaptación y pies','Volver bien, y desde el suelo'],
           biblio:['Biblioteca','Ejercicios','Qué trabaja cada uno y por qué'],
           ajustes:['Ajustes','Tu configuración','Material, pulsómetro y sesión'] }[s];
   document.getElementById('hd-eyebrow').textContent=H[0];
@@ -318,7 +329,7 @@ function niggles(){ S.niggles=S.niggles||[]; return S.niggles; }
 function toggleNiggle(k){
   var a=niggles(), i=a.indexOf(k);
   if(i>=0) a.splice(i,1); else a.push(k);
-  S.niggles=a; save(); renderNiggles(); renderWeek(); renderLog(); renderCardio(); vib(20);
+  S.niggles=a; save(); renderNiggles(); renderWeek(); renderLog(); renderCardio(); renderCare(); vib(20);
 }
 var NIGGLES = { cintilla:'Cintilla / rodilla', hombro:'Hombro' };
 function renderNiggles(){
@@ -873,9 +884,9 @@ function logList(){ S.log=S.log||[]; return S.log; }
 function addLog(type,min,km,rpe,note){
   logList().unshift({ t:type, min:+min||0, km:+km||0, rpe:+rpe||0, note:note||'', d:new Date().toISOString() });
   if(S.log.length>200) S.log.pop();
-  save(); renderWeek(); renderLog(); renderCardio();
+  save(); renderWeek(); renderLog(); renderCardio(); renderCare();
 }
-function delLog(i){ logList().splice(i,1); save(); renderWeek(); renderLog(); renderCardio(); }
+function delLog(i){ logList().splice(i,1); save(); renderWeek(); renderLog(); renderCardio(); renderCare(); }
 
 function weekStart(){
   var d=new Date(); var day=(d.getDay()+6)%7;          // lunes = 0
@@ -973,7 +984,7 @@ function triPhase(){
   return TRIFASE[n-1];
 }
 var CF='todas';
-function setCF(f){ CF=f; renderCardio(); }
+function setCF(f){ CF=f; renderCardio(); renderCare(); }
 function renderCardio(){
   var tf = triPhase();
   var opts=[['todas','Todas'],['nado','Natación'],['bici','Bici'],['carrera','Carrera']];
@@ -1017,6 +1028,99 @@ function logEndur(id){
   cm('mo-ex'); vib(35); toast('Registrada: '+e.n);
 }
 
+/* ══ READAPTACIÓN Y PIES ══ */
+var CARE='rehab', CAREA=null, FCA={};
+function setCare(t){ CARE=t; CAREA=null; renderCare(); }
+function openArea(id){ CAREA=id; renderCare(); window.scrollTo(0,0); }
+function exName(id){ var e=EX.filter(function(x){return x.id===id;})[0]; return e?e.n:id; }
+
+function renderCare(){
+  document.querySelectorAll('#care-tabs .chip').forEach(function(c,i){ c.classList.toggle('on', (i===0)===(CARE==='rehab')); });
+  var h='';
+  if(CARE==='rehab'){
+    h+='<div class="card" style="border-left:3px solid var(--ac2);margin-bottom:14px">'+
+      '<p style="font-size:12.5px;color:var(--tx2);line-height:1.55">Orientación educativa para volver de forma progresiva. <b style="color:var(--tx)">No es un diagnóstico</b> ni sustituye a un fisioterapeuta. Si el dolor es intenso, no mejora en 2-3 semanas o aparece alguna señal de alarma, consulta.</p></div>';
+    if(!CAREA){
+      h+=REHAB.map(function(r){
+        return '<button class="row" onclick="openArea(\''+r.id+'\')">'+
+          '<span class="rb"><span class="rt">'+r.n+'</span><span class="rs">'+r.s+'</span></span>'+
+          '<span class="chev">›</span></button>';
+      }).join('');
+    } else {
+      var r=REHAB.filter(function(x){return x.id===CAREA;})[0];
+      h+='<button class="btn ghost sm" style="margin-bottom:14px" onclick="openArea(null)">← Todas las zonas</button>'+
+        '<div style="font-family:\'Fraunces\',serif;font-size:24px;font-weight:600;margin-bottom:4px">'+r.n+'</div>'+
+        '<p style="font-size:13px;color:var(--tx2);margin-bottom:12px">'+r.s+'</p>'+
+        '<div class="why"><div class="wl">Qué suele haber detrás</div><p>'+r.causa+'</p></div>'+
+        '<div class="card" style="border-left:3px solid var(--ac2);margin-bottom:16px">'+
+        '<div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ac2);font-weight:700;margin-bottom:5px">Señales de alarma · ve al médico</div>'+
+        '<p style="font-size:12.5px;color:var(--tx2)">'+r.red+'</p></div>'+
+        r.fases.map(function(f,i){
+          return '<div class="card" style="margin-bottom:9px">'+
+            '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">'+
+            '<span style="font-size:14.5px;font-weight:700">Fase '+f.n+'</span>'+
+            '<span style="font-size:11px;color:var(--tx2);flex-shrink:0">'+f.dur+'</span></div>'+
+            '<p style="font-size:12.5px;color:var(--tx2);margin:6px 0 10px">'+f.hacer+'</p>'+
+            '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">'+
+              f.ex.map(function(x){ return '<button class="pill" style="color:var(--ac);border-color:rgba(46,230,200,.4);cursor:pointer;background:none" onclick="openEx(\''+x+'\')">'+exName(x)+'</button>'; }).join('')+
+            '</div>'+
+            '<div style="font-size:11.5px;color:var(--tx2);border-top:1px solid var(--br);padding-top:9px">'+
+            '<b style="color:var(--ac)">Pasas de fase cuando:</b> '+f.crit+'</div>'+
+            '<button class="btn sm" style="margin-top:10px" onclick="runPhase([\''+f.ex.join("','")+'\'])">Hacer esta fase</button>'+
+          '</div>';
+        }).join('');
+    }
+  } else {
+    h+='<div class="card" style="border-left:3px solid var(--ac2);margin-bottom:14px">'+
+      '<p style="font-size:12.5px;color:var(--tx2);line-height:1.55">Autoevaluación <b style="color:var(--tx)">observacional</b>: la haces tú y la app te orienta. No diagnostica patologías. Si tienes dolor ahora mismo, ve antes a Readaptación.</p></div>';
+    h+='<div class="lbl">Podocheck</div>';
+    FOOTCHECK.forEach(function(q,qi){
+      h+='<div class="card" style="margin-bottom:9px">'+
+        '<div style="font-size:13.5px;font-weight:600;margin-bottom:9px">'+(qi+1)+'. '+q.q+'</div>'+
+        '<div class="chips" style="margin-bottom:0">'+q.a.map(function(a,ai){
+          return '<div class="chip'+(FCA[qi]===ai?' on':'')+'" style="font-size:12px" onclick="ansFC('+qi+','+ai+')">'+a+'</div>';
+        }).join('')+'</div>'+
+        (FCA[qi]!==undefined? '<p style="font-size:12px;color:var(--ac);margin-top:9px;line-height:1.5">'+q.read[FCA[qi]]+'</p>' : '')+
+      '</div>';
+    });
+    var answered=Object.keys(FCA).length;
+    if(answered===FOOTCHECK.length){
+      h+='<div class="card" style="border-color:rgba(46,230,200,.4);margin:14px 0"><div style="font-size:14px;font-weight:700;margin-bottom:6px">Tu punto de partida</div>'+
+        '<p style="font-size:12.5px;color:var(--tx2);line-height:1.55">'+footAdvice()+'</p></div>';
+    }
+    h+='<div class="lbl" style="margin-top:20px">Transición en 4 fases</div>';
+    h+=BAREFOOT.map(function(b){
+      return '<div class="card" style="margin-bottom:9px">'+
+        '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">'+
+        '<span style="font-size:14.5px;font-weight:700">'+b.n+'</span>'+
+        '<span style="font-size:11px;color:var(--tx2);flex-shrink:0">'+b.sem+'</span></div>'+
+        '<p style="font-size:12.5px;color:var(--tx2);margin:5px 0 9px">'+b.obj+'</p>'+
+        '<p style="font-size:12.5px;color:var(--tx);margin-bottom:10px">'+b.hacer+'</p>'+
+        '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">'+
+          b.ex.map(function(x){ return '<button class="pill" style="color:var(--ac);border-color:rgba(46,230,200,.4);cursor:pointer;background:none" onclick="openEx(\''+x+'\')">'+exName(x)+'</button>'; }).join('')+
+        '</div>'+
+        '<div style="font-size:11.5px;color:var(--tx2);border-top:1px solid var(--br);padding-top:9px"><b style="color:var(--ac)">Pasas cuando:</b> '+b.crit+'</div>'+
+        '<button class="btn sm" style="margin-top:10px" onclick="runPhase([\''+b.ex.join("','")+'\'])">Hacer esta fase</button>'+
+      '</div>';
+    }).join('');
+    h+='<p style="font-size:11.5px;color:var(--tx2);margin-top:14px;line-height:1.55">Lectura recomendada: <b style="color:var(--tx)">«La salud a tus pies»</b>, de Jesús Serrano (HarperCollins, 2024). Fisioterapeuta y licenciado en Ciencias de la Actividad Física, con enfoque en entrenar el pie y calzado respetuoso.</p>';
+  }
+  document.getElementById('care-body').innerHTML=h;
+}
+function ansFC(q,a){ FCA[q]=a; renderCare(); vib(15); }
+function footAdvice(){
+  var risk = (FCA[7]===2) ? 'alto' : (FCA[7]===1 || FCA[6]===2) ? 'medio' : 'bajo';
+  if(risk==='alto') return 'Tienes dolor activo. No es momento de transicionar: primero resuelve eso en Readaptación y, si no mejora, con un profesional.';
+  if(risk==='medio') return 'Empieza por la Fase 1 y quédate en cada fase el doble de tiempo del indicado. Con antecedentes o pies poco acostumbrados, la prisa es el único error grave.';
+  return 'Puedes seguir las fases al ritmo indicado. Aun así, la regla no cambia: progresa despacio y no subas más de un 10% semanal cuando empieces a correr.';
+}
+function runPhase(ids){
+  var list = ids.map(function(i){ return EX.filter(function(x){return x.id===i;})[0]; }).filter(Boolean);
+  if(!list.length){ toast('Sin ejercicios'); return; }
+  SESSION = { cap:'movilidad', mins: Math.round(list.reduce(function(a,e){return a+exSeconds(e);},0)/60), list:list };
+  FROM_PLAN=false; startSession();
+}
+
 /* ══ ESTADÍSTICAS ══ */
 function renderStats(){
   document.getElementById('st-streak').textContent=S.streak||0;
@@ -1027,7 +1131,7 @@ function renderStats(){
 /* ══ INIT ══ */
 document.getElementById('tg-voice').classList.toggle('on',PREF.voice);
 document.getElementById('tg-hap').classList.toggle('on',PREF.hap);
-renderMats(); renderGen(); renderBiblio(); renderPresets(); renderStats(); initHR(); renderPlan(); renderToday(); renderNiggles(); renderWeek(); renderLog(); renderCardio();
+renderMats(); renderGen(); renderBiblio(); renderPresets(); renderStats(); initHR(); renderPlan(); renderToday(); renderNiggles(); renderWeek(); renderLog(); renderCardio(); renderCare();
 document.querySelectorAll('.mo').forEach(function(o){ o.addEventListener('click',function(e){ if(e.target===o) o.classList.remove('on'); }); });
 window.addEventListener('load', function(){
   setTimeout(function(){
