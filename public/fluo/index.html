@@ -254,7 +254,7 @@ nav button.on{color:var(--ac)}
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=10"></script>
+<script src="data.js?v=11"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -1103,6 +1103,7 @@ function renderCare(){
         '<button class="btn sm" style="margin-top:10px" onclick="runPhase([\''+b.ex.join("','")+'\'])">Hacer esta fase</button>'+
       '</div>';
     }).join('');
+    h+=renderFotos();
     h+='<p style="font-size:11.5px;color:var(--tx2);margin-top:14px;line-height:1.55">Lectura recomendada: <b style="color:var(--tx)">«La salud a tus pies»</b>, de Jesús Serrano (HarperCollins, 2024). Fisioterapeuta y licenciado en Ciencias de la Actividad Física, con enfoque en entrenar el pie y calzado respetuoso.</p>';
   }
   document.getElementById('care-body').innerHTML=h;
@@ -1119,6 +1120,75 @@ function runPhase(ids){
   if(!list.length){ toast('Sin ejercicios'); return; }
   SESSION = { cap:'movilidad', mins: Math.round(list.reduce(function(a,e){return a+exSeconds(e);},0)/60), list:list };
   FROM_PLAN=false; startSession();
+}
+
+/* ══ FOTOS DE PROGRESO DEL PIE ══
+ * Registro personal, no diagnóstico. Se guardan comprimidas y SOLO en
+ * este dispositivo: nunca salen del móvil.
+ */
+function footPhotos(){ S.fotos=S.fotos||[]; return S.fotos; }
+function compressImg(file, max, q){
+  return new Promise(function(res,rej){
+    var r=new FileReader();
+    r.onload=function(e){
+      var img=new Image();
+      img.onload=function(){
+        var w=img.width,h=img.height;
+        if(w>h && w>max){ h=h*max/w; w=max; } else if(h>max){ w=w*max/h; h=max; }
+        var c=document.createElement('canvas'); c.width=w; c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        res(c.toDataURL('image/jpeg', q||0.7));
+      };
+      img.onerror=rej; img.src=e.target.result;
+    };
+    r.onerror=rej; r.readAsDataURL(file);
+  });
+}
+function onFootPhoto(input){
+  var f=input.files && input.files[0]; if(!f) return;
+  compressImg(f, 560, 0.7).then(function(data){
+    footPhotos().unshift({ d:new Date().toISOString(), img:data });
+    if(S.fotos.length>24) S.fotos.pop();
+    save(); renderCare(); vib(30); toast('Foto guardada en tu dispositivo');
+  }).catch(function(){ toast('No se pudo procesar la foto'); });
+  input.value='';
+}
+function delFootPhoto(i){ footPhotos().splice(i,1); save(); renderCare(); }
+function fotoFecha(iso){ return new Date(iso).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'2-digit'}); }
+function renderFotos(){
+  var ph=footPhotos();
+  var h='<div class="lbl" style="margin-top:22px">Tus pies en el tiempo</div>'+
+    '<div class="card" style="margin-bottom:9px">'+
+    '<p style="font-size:12.5px;color:var(--tx2);line-height:1.55;margin-bottom:12px">'+
+    'Una foto de tus pies de pie, desde arriba y con luz natural. Repítela cada 4-8 semanas. '+
+    '<b style="color:var(--tx)">Se guardan solo en este móvil</b> y no se envían a ningún sitio.<br><br>'+
+    'Sirve para ver tu evolución: apertura de dedos, aspecto del arco, postura del dedo gordo. '+
+    'No es un diagnóstico — para eso, un podólogo.</p>';
+  if(ph.length>=2){
+    h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">'+
+      [{p:ph[ph.length-1],l:'Primera'},{p:ph[0],l:'Última'}].map(function(o){
+        return '<div style="border:1px solid var(--br);border-radius:14px;overflow:hidden">'+
+          '<img src="'+o.p.img+'" style="width:100%;aspect-ratio:3/4;object-fit:cover;display:block">'+
+          '<div style="padding:7px 9px;display:flex;justify-content:space-between;background:var(--card)">'+
+          '<span style="font-size:11.5px;font-weight:600">'+o.l+'</span>'+
+          '<span style="font-size:10.5px;color:var(--tx2)">'+fotoFecha(o.p.d)+'</span></div></div>';
+      }).join('')+'</div>';
+  }
+  if(ph.length){
+    h+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px">'+
+      ph.map(function(p,i){
+        return '<div style="position:relative;border:1px solid var(--br);border-radius:10px;overflow:hidden">'+
+          '<img src="'+p.img+'" style="width:100%;aspect-ratio:3/4;object-fit:cover;display:block">'+
+          '<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));padding:12px 5px 3px">'+
+          '<span style="font-size:9.5px;color:#fff">'+fotoFecha(p.d)+'</span></div>'+
+          '<button onclick="delFootPhoto('+i+')" style="position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.6);border:none;color:#fff;font-size:10px;cursor:pointer">✕</button>'+
+        '</div>';
+      }).join('')+'</div>';
+  }
+  h+='<input type="file" accept="image/*" capture="environment" id="foot-input" style="display:none" onchange="onFootPhoto(this)">'+
+    '<button class="btn ghost sm" onclick="document.getElementById(\'foot-input\').click()">'+
+    (ph.length?'Añadir foto de seguimiento':'Hacer mi primera foto')+'</button></div>';
+  return h;
 }
 
 /* ══ ESTADÍSTICAS ══ */
