@@ -167,6 +167,12 @@ nav button.on{color:var(--ac)}
     <div id="gen-preview"></div>
   </section>
 
+  <!-- RESISTENCIA -->
+  <section class="sc" id="sc-cardio">
+    <div class="chips" id="cardio-filter"></div>
+    <div id="cardio-list"></div>
+  </section>
+
   <!-- BIBLIOTECA -->
   <section class="sc" id="sc-biblio">
     <div class="chips" id="biblio-filter"></div>
@@ -211,6 +217,7 @@ nav button.on{color:var(--ac)}
   <button class="on" data-s="inicio" onclick="go('inicio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Inicio</button>
   <button data-s="generar" onclick="go('generar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20v-6M4 10V4M12 20v-9M12 7V4M20 20v-4M20 12V4M1 14h6M9 7h6M17 16h6"/></svg>Generar</button>
   <button data-s="plan" onclick="go('plan')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Plan</button>
+  <button data-s="cardio" onclick="go('cardio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>Resistencia</button>
   <button data-s="biblio" onclick="go('biblio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.04A9 9 0 006 3.75c-1.05 0-2.06.18-3 .51v14.25A9 9 0 016 18c2.3 0 4.4.87 6 2.29m0-14.25a9 9 0 016-2.29c1.05 0 2.06.18 3 .51v14.25A9 9 0 0018 18a9 9 0 00-6 2.29m0-14.25v14.25"/></svg>Ejercicios</button>
   <button data-s="ajustes" onclick="go('ajustes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9v0a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Ajustes</button>
 </nav>
@@ -237,7 +244,7 @@ nav button.on{color:var(--ac)}
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=7"></script>
+<script src="data.js?v=9"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -270,6 +277,7 @@ function go(s){
   var H={ inicio:['Fuerza · Movilidad · Control','FLUO','Tu cuerpo, el mínimo material'],
           generar:['Generador','Sesión a medida','Se adapta a lo que tengas hoy'],
           plan:['12 semanas','Plan de 3 meses','Progresiones que sí llevan a algún sitio'],
+          cardio:['Resistencia','Nado · Bici · Carrera','Sesiones con estructura y evidencia'],
           biblio:['Biblioteca','Ejercicios','Qué trabaja cada uno y por qué'],
           ajustes:['Ajustes','Tu configuración','Material, pulsómetro y sesión'] }[s];
   document.getElementById('hd-eyebrow').textContent=H[0];
@@ -310,7 +318,7 @@ function niggles(){ S.niggles=S.niggles||[]; return S.niggles; }
 function toggleNiggle(k){
   var a=niggles(), i=a.indexOf(k);
   if(i>=0) a.splice(i,1); else a.push(k);
-  S.niggles=a; save(); renderNiggles(); renderWeek(); renderLog(); vib(20);
+  S.niggles=a; save(); renderNiggles(); renderWeek(); renderLog(); renderCardio(); vib(20);
 }
 var NIGGLES = { cintilla:'Cintilla / rodilla', hombro:'Hombro' };
 function renderNiggles(){
@@ -865,9 +873,9 @@ function logList(){ S.log=S.log||[]; return S.log; }
 function addLog(type,min,km,rpe,note){
   logList().unshift({ t:type, min:+min||0, km:+km||0, rpe:+rpe||0, note:note||'', d:new Date().toISOString() });
   if(S.log.length>200) S.log.pop();
-  save(); renderWeek(); renderLog();
+  save(); renderWeek(); renderLog(); renderCardio();
 }
-function delLog(i){ logList().splice(i,1); save(); renderWeek(); renderLog(); }
+function delLog(i){ logList().splice(i,1); save(); renderWeek(); renderLog(); renderCardio(); }
 
 function weekStart(){
   var d=new Date(); var day=(d.getDay()+6)%7;          // lunes = 0
@@ -950,6 +958,65 @@ function renderLog(){
   }).join('');
 }
 
+/* ══ SESIONES DE RESISTENCIA ══ */
+// Fase del plan de triatlón (meses), distinta del bloque de fuerza (semanas).
+var TRIFASE = [
+  {n:1, name:'Cimientos',    meses:'1-3'},
+  {n:2, name:'Construcción', meses:'4-6'},
+  {n:3, name:'Específico',   meses:'7-9'},
+  {n:4, name:'Afinar',       meses:'10-11'},
+];
+function triPhase(){
+  if(!S.planStart) return null;
+  var meses = (Date.now() - new Date(S.planStart).getTime()) / (30.44*86400000);
+  var n = meses < 3 ? 1 : meses < 6 ? 2 : meses < 9 ? 3 : 4;
+  return TRIFASE[n-1];
+}
+var CF='todas';
+function setCF(f){ CF=f; renderCardio(); }
+function renderCardio(){
+  var tf = triPhase();
+  var opts=[['todas','Todas'],['nado','Natación'],['bici','Bici'],['carrera','Carrera']];
+  document.getElementById('cardio-filter').innerHTML = opts.map(function(o){
+    return '<div class="chip'+(CF===o[0]?' on':'')+'" onclick="setCF(\''+o[0]+'\')">'+o[1]+'</div>';
+  }).join('');
+  var list = ENDUR.filter(function(e){ return CF==='todas' || e.d===CF; });
+  var INT={ baja:['Suave','var(--ac)'], media:['Medio','var(--lime)'], alta:['Fuerte','var(--ac2)'] };
+  document.getElementById('cardio-list').innerHTML =
+    (tf? '<p style="font-size:11.5px;color:var(--tx2);margin-bottom:12px">Fase '+tf.n+' · <b style="color:var(--ac)">'+tf.name+'</b> (meses '+tf.meses+'). Las marcadas encajan con tu fase.</p>':'')+
+    list.map(function(e){
+      var ok = tf ? e.fase.indexOf(tf.n)>=0 : false;
+      return '<button class="row" onclick="openEndur(\''+e.id+'\')">'+
+        '<span class="ic" style="color:'+DISC[e.d].c+'">'+svgD(e.d,20)+'</span>'+
+        '<span class="rb"><span class="rt">'+e.n+
+          (ok?'<span class="pill" style="color:var(--ac);border-color:rgba(46,230,200,.4)">tu fase</span>':'')+
+          '</span><span class="rs">'+e.s+' · '+e.min+' min</span></span>'+
+        '<span class="pill" style="color:'+INT[e.int][1]+';border-color:'+INT[e.int][1]+'55">'+INT[e.int][0]+'</span>'+
+        '</button>';
+    }).join('');
+}
+function openEndur(id){
+  var e=ENDUR.filter(function(x){return x.id===id;})[0]; if(!e) return;
+  document.getElementById('mo-ex-body').innerHTML=
+    '<div class="mh"><div class="mt">'+e.n+'</div><button class="pl-x" onclick="cm(\'mo-ex\')">✕</button></div>'+
+    '<p style="font-size:13px;color:var(--tx2)">'+e.s+'</p>'+
+    '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">'+
+      '<span class="pill" style="color:'+DISC[e.d].c+';border-color:'+DISC[e.d].c+'55">'+DISC[e.d].n+'</span>'+
+      '<span class="pill" style="color:var(--tx2);border-color:var(--br)">'+e.min+' min</span>'+
+      '<span class="pill" style="color:var(--tx2);border-color:var(--br)">Fases '+e.fase.join(', ')+'</span></div>'+
+    '<div class="why"><div class="wl">Por qué esta sesión</div><p>'+e.why+'</p></div>'+
+    '<div class="lbl">La sesión</div>'+
+    '<ul class="pl-steps" style="margin:0">'+e.steps.map(function(x,i){return '<li><b>'+(i+1)+'</b>'+x+'</li>';}).join('')+'</ul>'+
+    '<div class="tipbox">'+e.tip+'</div>'+
+    '<button class="btn" style="margin-top:16px" onclick="logEndur(\''+e.id+'\')">Hecha · registrar</button>';
+  om('mo-ex');
+}
+function logEndur(id){
+  var e=ENDUR.filter(function(x){return x.id===id;})[0]; if(!e) return;
+  addLog(e.d, e.min, 0, e.int==='alta'?4:(e.int==='media'?3:2), e.n);
+  cm('mo-ex'); vib(35); toast('Registrada: '+e.n);
+}
+
 /* ══ ESTADÍSTICAS ══ */
 function renderStats(){
   document.getElementById('st-streak').textContent=S.streak||0;
@@ -960,7 +1027,7 @@ function renderStats(){
 /* ══ INIT ══ */
 document.getElementById('tg-voice').classList.toggle('on',PREF.voice);
 document.getElementById('tg-hap').classList.toggle('on',PREF.hap);
-renderMats(); renderGen(); renderBiblio(); renderPresets(); renderStats(); initHR(); renderPlan(); renderToday(); renderNiggles(); renderWeek(); renderLog();
+renderMats(); renderGen(); renderBiblio(); renderPresets(); renderStats(); initHR(); renderPlan(); renderToday(); renderNiggles(); renderWeek(); renderLog(); renderCardio();
 document.querySelectorAll('.mo').forEach(function(o){ o.addEventListener('click',function(e){ if(e.target===o) o.classList.remove('on'); }); });
 window.addEventListener('load', function(){
   setTimeout(function(){
