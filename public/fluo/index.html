@@ -255,7 +255,7 @@ nav button.on{color:var(--ac)}
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=13"></script>
+<script src="data.js?v=14"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -757,6 +757,32 @@ function redeem(){
   localStorage.setItem('fluo-pro','1'); vib(40); toast('Plan desbloqueado'); renderPlan(); renderToday();
 }
 
+/* ══ OBJETIVOS ══ */
+function myGoal(){ return GOALS.filter(function(g){return g.id===S.goal;})[0]||null; }
+function goalMonth(){
+  if(!S.planStart) return 0;
+  return (Date.now()-new Date(S.planStart).getTime())/(30.44*86400000);
+}
+function goalPhase(){
+  var g=myGoal(); if(!g||!S.planStart) return null;
+  var m=goalMonth(), acc=0;
+  for(var i=0;i<g.fases.length;i++){
+    var r=g.fases[i].meses.split('-'); var fin=parseFloat(r[r.length-1]);
+    if(m<fin) return g.fases[i];
+  }
+  return g.fases[g.fases.length-1];
+}
+function goalProgress(){
+  var g=myGoal(); if(!g||!S.planStart) return 0;
+  return Math.min(100, Math.round(goalMonth()/g.meses*100));
+}
+function startGoal(id){
+  if(!isPro()){ toast('Los planes son premium'); return; }
+  S.goal=id; S.planStart=new Date().toISOString(); S.planDone={}; save();
+  vib(40); toast('Plan iniciado'); renderPlan(); renderToday(); renderCardio();
+}
+function resetGoal(){ S.goal=null; delete S.planStart; S.planDone={}; save(); renderPlan(); renderToday(); }
+
 /* ══ PLAN 3 MESES ══ */
 function weekKey(){ return 'w'+planWeek(); }
 function weekDone(){ S.planDone=S.planDone||{}; return S.planDone[weekKey()]||0; }
@@ -768,10 +794,13 @@ function markWeekSession(){
 function planWeek(){
   if(!S.planStart) return 0;
   var days = Math.floor((Date.now() - new Date(S.planStart).getTime())/86400000);
-  return Math.min(12, Math.max(1, Math.floor(days/7)+1));
+  var g=myGoal(); var maxW = g ? g.meses*4.35 : 12;
+  return Math.min(Math.round(maxW), Math.max(1, Math.floor(days/7)+1));
 }
 function blockFor(w){
-  return PLAN.blocks.filter(function(b){ return b.weeks.indexOf(w)>=0; })[0] || PLAN.blocks[0];
+  var f=goalPhase();
+  if(f) return { n:f.n, name:f.name, focus:f.focus, minutes:f.min, sessions:f.ses, why:f.why, meses:f.meses };
+  return { n:1, name:'Sin plan', focus:'mixto', minutes:20, sessions:3, why:'' };
 }
 function startPlan(){
   if(!isPro()){ toast('El plan es premium'); return; }
@@ -801,77 +830,97 @@ function renderToday(){
     '<span class="chev">›</span></button>';
 }
 function renderPlan(){
-  var pro=isPro();
-  var h='';
+  var pro=isPro(), g=myGoal(), h='';
+
   if(!pro){
     h+='<div class="card" style="background:linear-gradient(135deg,rgba(46,230,200,.12),rgba(255,106,31,.06));border-color:rgba(46,230,200,.35);text-align:center;margin-bottom:18px">'+
-      '<div style="font-family:\'Fraunces\',serif;font-size:24px;font-weight:600;margin-bottom:6px">12 semanas, un plan de verdad</div>'+
-      '<p style="font-size:13px;color:var(--tx2);margin-bottom:14px">Tres bloques con progresiones por nivel y criterios claros para subir de escalón. No sesiones sueltas: un camino.</p>'+
+      '<div style="font-family:\'Fraunces\',serif;font-size:24px;font-weight:600;margin-bottom:6px">Elige tu objetivo</div>'+
+      '<p style="font-size:13px;color:var(--tx2);margin-bottom:14px">Seis planes con fases, progresiones y criterios claros para avanzar. La sesión de cada día se genera sola.</p>'+
       '<div style="font-family:\'Fraunces\',serif;font-size:34px;font-weight:600;color:var(--ac)">9,99€ <span style="font-size:13px;color:var(--tx2);font-family:Inter">pago único</span></div>'+
-      '<a class="btn" style="display:block;text-decoration:none;margin-top:14px" href="https://danimij.gumroad.com/l/fluo" target="_blank" rel="noopener">Desbloquear el plan →</a>'+
+      '<a class="btn" style="display:block;text-decoration:none;margin-top:14px" href="https://danimij.gumroad.com/l/fluo" target="_blank" rel="noopener">Desbloquear los planes →</a>'+
       '<a href="https://danimij.gumroad.com/l/pack" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:12px;background:var(--surface);border:1.5px solid var(--ac);border-radius:14px;padding:13px 15px;text-decoration:none;margin-top:10px;text-align:left">'+
-        '<span style="flex:1">'+
-        '<span style="display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:2px">Las tres apps</span>'+
-        '<span style="display:block;font-weight:700;font-size:14px;color:var(--tx)">Pack completo — 14,99€</span>'+
-        '<span style="display:block;font-size:11.5px;color:var(--tx2)">FLUO + FACEO + INSPIRAPP · ahorras 5€</span></span>'+
-        '<span style="flex-shrink:0;color:var(--ac);font-size:18px">›</span></a>'+
+      '<span style="flex:1"><span style="display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:2px">Las tres apps</span>'+
+      '<span style="display:block;font-weight:700;font-size:14px;color:var(--tx)">Pack completo — 14,99€</span>'+
+      '<span style="display:block;font-size:11.5px;color:var(--tx2)">FLUO + FACEO + INSPIRAPP · ahorras 5€</span></span>'+
+      '<span style="flex-shrink:0;color:var(--ac);font-size:18px">›</span></a>'+
       '<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--br)">'+
       '<div style="font-size:11.5px;color:var(--tx2);margin-bottom:8px">¿Ya tienes código?</div>'+
       '<div style="display:flex;gap:8px"><input id="code-in" placeholder="FLUO-XXXX-XXXX" maxlength="14" style="flex:1;background:var(--surface);border:1px solid var(--br);border-radius:12px;padding:11px;color:var(--tx);text-align:center;font-family:inherit;text-transform:uppercase">'+
       '<button class="btn" style="width:auto;padding:11px 18px" onclick="redeem()">Entrar</button></div>'+
       '<div id="code-msg" style="font-size:12px;color:var(--ac2);margin-top:8px;min-height:14px"></div></div></div>';
   }
-  if(pro){
-    var w=planWeek();
-    if(!w){
-      h+='<button class="btn" style="margin-bottom:16px" onclick="startPlan()">Empezar el plan · Semana 1</button>';
-    } else {
-      var b0=blockFor(w);
-      h+='<div class="card" style="margin-bottom:16px;border-color:rgba(46,230,200,.4)">'+
-        '<div style="display:flex;justify-content:space-between;align-items:baseline">'+
-        '<span style="font-size:15px;font-weight:700">Semana '+w+' de 12</span>'+
-        '<span style="font-size:11.5px;color:var(--ac)">'+b0.name+'</span></div>'+
-        '<div class="xpbar" style="height:6px;background:var(--surface);border-radius:3px;overflow:hidden;margin:10px 0 6px">'+
-        '<div style="height:100%;width:'+Math.round(w/12*100)+'%;background:var(--ac);border-radius:3px"></div></div>'+
-        '<div style="display:flex;gap:5px;align-items:center;margin-top:8px">'+
-          Array.from({length:b0.sessions}).map(function(_,i){
-            return '<span style="flex:1;height:7px;border-radius:4px;background:'+(i<weekDone()?'var(--ac)':'var(--surface)')+'"></span>';
-          }).join('')+
-          '<span style="font-size:11px;color:var(--tx2);margin-left:6px;flex-shrink:0">'+weekDone()+'/'+b0.sessions+' esta semana</span>'+
+
+  if(!g || !S.planStart){
+    h+='<div class="lbl">'+(pro?'Elige tu objetivo':'Los seis planes')+'</div>';
+    h+=GOALS.map(function(x){
+      return '<div class="card" style="margin-bottom:9px">'+
+        '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">'+
+        '<span style="font-size:15px;font-weight:700">'+x.n+'</span>'+
+        '<span style="font-size:11px;color:var(--tx2);flex-shrink:0">'+x.meses+' meses</span></div>'+
+        '<p style="font-size:12.5px;color:var(--tx2);margin:4px 0 8px">'+x.s+'</p>'+
+        '<p style="font-size:12.5px;color:var(--tx);margin-bottom:10px">'+x.intro+'</p>'+
+        '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">'+
+          x.fases.map(function(f){ return '<span class="pill" style="color:var(--tx2);border-color:var(--br)">'+f.name+'</span>'; }).join('')+
         '</div>'+
-        '<button class="btn" style="margin-top:12px" onclick="startToday()">Sesión de hoy →</button></div>';
-    }
-  }
-  PLAN.blocks.forEach(function(b){
-    h+='<div class="lbl" style="margin-top:20px">Bloque '+b.n+' · semanas '+b.weeks[0]+'-'+b.weeks[3]+'</div>'+
-      '<div class="card" style="margin-bottom:10px">'+
-      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">'+
-      '<div style="font-size:16px;font-weight:700">'+b.name+'</div>'+
-      '<div style="font-size:11.5px;color:var(--tx2);flex-shrink:0">'+b.sessions+'×/sem · '+b.minutes+' min</div></div>'+
-      '<p style="font-size:13px;color:var(--tx2);margin-top:4px">'+b.goal+'</p>'+
-      (pro? '<div class="why" style="margin:12px 0 0"><div class="wl">Por qué este orden</div><p>'+b.why+'</p></div>'
-          : '')+
+        (pro? '<button class="btn sm" onclick="startGoal(\''+x.id+'\')">Empezar este plan</button>'
+            : '<div style="font-size:11.5px;color:var(--tx2);border-top:1px solid var(--br);padding-top:9px">Premium</div>')+
       '</div>';
-  });
-  h+='<div class="lbl" style="margin-top:24px">Progresiones</div>';
-  if(!pro){
-    h+='<p style="font-size:12.5px;color:var(--tx2);margin-bottom:12px">Cada patrón tiene 5 niveles con un criterio claro para subir. Desbloquea para verlos todos.</p>';
+    }).join('');
+    document.getElementById('plan-body').innerHTML=h;
+    return;
   }
-  PLAN.progressions.forEach(function(pr, pi){
-    h+='<div class="card" style="margin-bottom:9px">'+
-      '<div style="font-size:14.5px;font-weight:700;margin-bottom:10px">'+pr.pat+'</div>';
+
+  // Con plan activo
+  var f=goalPhase(), w=planWeek(), prog=goalProgress();
+  h+='<div class="card" style="margin-bottom:14px;border-color:rgba(46,230,200,.4)">'+
+    '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">'+
+    '<span style="font-size:16px;font-weight:700">'+g.n+'</span>'+
+    '<button onclick="resetGoal()" style="background:none;border:none;color:var(--tx2);font-size:11.5px;cursor:pointer;text-decoration:underline">Cambiar</button></div>'+
+    '<div style="font-size:12px;color:var(--ac);margin-top:2px">Fase '+f.n+' · '+f.name+' (meses '+f.meses+')</div>'+
+    '<div style="height:6px;background:var(--surface);border-radius:3px;overflow:hidden;margin:10px 0 4px">'+
+    '<div style="height:100%;width:'+prog+'%;background:var(--ac);border-radius:3px"></div></div>'+
+    '<div style="font-size:11px;color:var(--tx2)">Semana '+w+' · '+prog+'% del plan</div>'+
+    '<div style="display:flex;gap:5px;align-items:center;margin-top:10px">'+
+      Array.from({length:f.ses}).map(function(_,i){
+        return '<span style="flex:1;height:7px;border-radius:4px;background:'+(i<weekDone()?'var(--ac)':'var(--surface)')+'"></span>';
+      }).join('')+
+      '<span style="font-size:11px;color:var(--tx2);margin-left:6px;flex-shrink:0">'+weekDone()+'/'+f.ses+' esta semana</span>'+
+    '</div>'+
+    '<button class="btn" style="margin-top:12px" onclick="startToday()">Sesión de hoy →</button></div>';
+
+  h+='<div class="why"><div class="wl">Por qué esta fase</div><p>'+f.why+'</p></div>';
+
+  h+='<div class="lbl" style="margin-top:20px">Prioridades de este plan</div><div class="card" style="margin-bottom:14px">'+
+    g.prior.map(function(x,i){
+      return '<div style="display:flex;gap:10px;padding:7px 0'+(i?';border-top:1px solid var(--br)':'')+'">'+
+        '<span style="color:var(--ac);flex-shrink:0;font-weight:700;font-size:12px">'+(i+1)+'</span>'+
+        '<span style="font-size:13px;color:var(--tx2)">'+x+'</span></div>';
+    }).join('')+'</div>';
+
+  h+='<div class="lbl">Las fases</div>';
+  h+=g.fases.map(function(x){
+    var act=(x.n===f.n);
+    return '<div class="card" style="margin-bottom:9px'+(act?';border-color:rgba(46,230,200,.4)':'')+'">'+
+      '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">'+
+      '<span style="font-size:14.5px;font-weight:700'+(act?';color:var(--ac)':'')+'">Fase '+x.n+' · '+x.name+'</span>'+
+      '<span style="font-size:11px;color:var(--tx2);flex-shrink:0">meses '+x.meses+'</span></div>'+
+      '<p style="font-size:12.5px;color:var(--tx2);margin:6px 0 0">'+x.why+'</p>'+
+      '<div style="font-size:11.5px;color:var(--tx2);border-top:1px solid var(--br);padding-top:9px;margin-top:9px">'+
+      x.ses+' sesiones/semana · '+x.min+' min</div></div>';
+  }).join('');
+
+  h+='<div class="lbl" style="margin-top:22px">Progresiones</div>';
+  PLAN.progressions.forEach(function(pr){
+    h+='<div class="card" style="margin-bottom:9px"><div style="font-size:14.5px;font-weight:700;margin-bottom:10px">'+pr.pat+'</div>';
     pr.levels.forEach(function(lv,i){
-      var locked = !pro && i>0;
       h+='<div style="display:flex;gap:11px;align-items:flex-start;padding:7px 0'+(i?';border-top:1px solid var(--br)':'')+'">'+
-        '<span style="width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;'+
-        (locked?'background:var(--surface);color:var(--tx2)':'background:rgba(46,230,200,.15);color:var(--ac)')+'">'+(i+1)+'</span>'+
-        '<span style="flex:1;min-width:0">'+
-        '<span style="display:block;font-size:13.5px;font-weight:600;'+(locked?'color:var(--tx2)':'')+'">'+(locked?'Nivel '+(i+1):lv.n)+'</span>'+
-        '<span style="display:block;font-size:11.5px;color:var(--tx2)">'+(locked?'Desbloquea para verlo':'Subes cuando: '+lv.crit)+'</span>'+
-        '</span></div>';
+        '<span style="width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;background:rgba(46,230,200,.15);color:var(--ac)">'+(i+1)+'</span>'+
+        '<span style="flex:1;min-width:0"><span style="display:block;font-size:13.5px;font-weight:600">'+lv.n+'</span>'+
+        '<span style="display:block;font-size:11.5px;color:var(--tx2)">Subes cuando: '+lv.crit+'</span></span></div>';
     });
     h+='</div>';
   });
+
   document.getElementById('plan-body').innerHTML=h;
 }
 
@@ -985,10 +1034,8 @@ var TRIFASE = [
   {n:4, name:'Afinar',       meses:'10-11'},
 ];
 function triPhase(){
-  if(!S.planStart) return null;
-  var meses = (Date.now() - new Date(S.planStart).getTime()) / (30.44*86400000);
-  var n = meses < 3 ? 1 : meses < 6 ? 2 : meses < 9 ? 3 : 4;
-  return TRIFASE[n-1];
+  var f=goalPhase(); if(!f) return null;
+  return { n:f.n, name:f.name, meses:f.meses };
 }
 var CF='todas';
 function setCF(f){ CF=f; renderCardio(); renderCare(); }
