@@ -217,7 +217,7 @@ nav button.on{color:var(--ac)}
     <div class="setrow" style="border:none"><div><div class="setlbl">Compatible con tu música</div><div class="sethint">Pon tu música y la app solo habla por encima</div></div><span style="font-size:11px;color:var(--ok);font-weight:600">SIEMPRE</span></div>
 
     <div class="lbl" style="margin-top:24px">Más</div>
-    <a class="row" href="../" style="text-decoration:none"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M9 10h.01M15 10h.01M8.5 14.5c1.5 1.6 5.5 1.6 7 0"/></svg></span><span class="rb"><span class="rt">FACEO</span><span class="rs">Rostro y cadena miofascial</span></span><span class="chev">›</span></a>
+    <a class="row" href="https://danimij.github.io/FaceO/" target="_blank" rel="noopener" style="text-decoration:none"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M9 10h.01M15 10h.01M8.5 14.5c1.5 1.6 5.5 1.6 7 0"/></svg></span><span class="rb"><span class="rt">FACEO</span><span class="rs">Rostro y cadena miofascial</span></span><span class="chev">›</span></a>
     <a class="row" href="https://danimij.github.io/Respirapp/" style="text-decoration:none"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h8a2.4 2.4 0 1 1-2.4 2.4"/></svg></span><span class="rb"><span class="rt">INSPIRAPP</span><span class="rs">Respiración y biohacking</span></span><span class="chev">›</span></a>
   </section>
 </div>
@@ -255,7 +255,7 @@ nav button.on{color:var(--ac)}
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=12"></script>
+<script src="data.js?v=13"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -809,6 +809,12 @@ function renderPlan(){
       '<p style="font-size:13px;color:var(--tx2);margin-bottom:14px">Tres bloques con progresiones por nivel y criterios claros para subir de escalón. No sesiones sueltas: un camino.</p>'+
       '<div style="font-family:\'Fraunces\',serif;font-size:34px;font-weight:600;color:var(--ac)">9,99€ <span style="font-size:13px;color:var(--tx2);font-family:Inter">pago único</span></div>'+
       '<a class="btn" style="display:block;text-decoration:none;margin-top:14px" href="https://danimij.gumroad.com/l/fluo" target="_blank" rel="noopener">Desbloquear el plan →</a>'+
+      '<a href="https://danimij.gumroad.com/l/pack" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:12px;background:var(--surface);border:1.5px solid var(--ac);border-radius:14px;padding:13px 15px;text-decoration:none;margin-top:10px;text-align:left">'+
+        '<span style="flex:1">'+
+        '<span style="display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:2px">Las tres apps</span>'+
+        '<span style="display:block;font-weight:700;font-size:14px;color:var(--tx)">Pack completo — 14,99€</span>'+
+        '<span style="display:block;font-size:11.5px;color:var(--tx2)">FLUO + FACEO + INSPIRAPP · ahorras 5€</span></span>'+
+        '<span style="flex-shrink:0;color:var(--ac);font-size:18px">›</span></a>'+
       '<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--br)">'+
       '<div style="font-size:11.5px;color:var(--tx2);margin-bottom:8px">¿Ya tienes código?</div>'+
       '<div style="display:flex;gap:8px"><input id="code-in" placeholder="FLUO-XXXX-XXXX" maxlength="14" style="flex:1;background:var(--surface);border:1px solid var(--br);border-radius:12px;padding:11px;color:var(--tx);text-align:center;font-family:inherit;text-transform:uppercase">'+

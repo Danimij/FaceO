@@ -109,9 +109,26 @@ export default function ProModal({ onClose }) {
             </div>
 
             <a href={GUMROAD_URL} target="_blank" rel="noopener noreferrer"
-              className="block w-full bg-accent font-semibold py-4 rounded-2xl text-sm tracking-wide text-center mb-3 active:scale-95 transition-transform"
+              className="block w-full bg-accent font-semibold py-4 rounded-2xl text-sm tracking-wide text-center mb-2.5 active:scale-95 transition-transform"
               style={{ color: '#080706' }}>
               {tx.cta}
+            </a>
+
+            {/* Pack de las tres apps: mejor oferta y decisión más simple */}
+            <a href="https://danimij.gumroad.com/l/pack" target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-3 w-full border border-accent/50 bg-accent/10 rounded-2xl px-4 py-3 mb-3 active:scale-[0.98] transition-transform">
+              <div className="flex-1 text-left">
+                <div className="text-[10px] uppercase tracking-widest text-accent font-semibold mb-0.5">
+                  {lang === 'es' ? 'Las tres apps' : 'All three apps'}
+                </div>
+                <div className="text-warm font-semibold text-sm">
+                  {lang === 'es' ? 'Pack completo — 14,99 €' : 'Full bundle — €14.99'}
+                </div>
+                <div className="text-muted text-[11px]">
+                  {lang === 'es' ? 'FACEO + INSPIRAPP + FLUO · ahorras 5 €' : 'FACEO + INSPIRAPP + FLUO · save €5'}
+                </div>
+              </div>
+              <span className="text-accent flex-shrink-0">›</span>
             </a>
 
             <button onClick={() => setStep('code')}
