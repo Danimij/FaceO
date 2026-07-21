@@ -278,6 +278,27 @@ export default function Home() {
             </div>
           </div>
         </a>
+
+        {/* Cross-promo FLUO */}
+        <a href="https://danimij.github.io/fluo/" target="_blank" rel="noopener noreferrer"
+          className="block rounded-2xl overflow-hidden border border-border active:scale-[0.98] transition-transform">
+          <div className="relative h-24">
+            <img src="https://picsum.photos/id/1058/700/300" alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover"/>
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(11,13,14,0.92), rgba(11,13,14,0.6), transparent)' }}/>
+            <div className="absolute inset-0 flex items-center px-5 gap-4">
+              <div className="flex-1">
+                <div className="text-[10px] uppercase tracking-widest mb-1" style={{ color: '#2ee6c8' }}>{lang === 'es' ? 'Del mismo equipo' : 'From the same team'}</div>
+                <div className="text-warm font-semibold text-sm">FLUO</div>
+                <div className="text-stone-400 text-xs">{lang === 'es' ? 'Fuerza · Movilidad · Control' : 'Strength · Mobility · Control'}</div>
+              </div>
+              <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'rgba(46,230,200,0.15)', border: '1px solid rgba(46,230,200,0.4)' }}>
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4" style={{ color: '#2ee6c8' }}>
+                  <path fillRule="evenodd" d="M12.97 3.97a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06l6.22-6.22H3a.75.75 0 010-1.5h16.19l-6.22-6.22a.75.75 0 010-1.06z" clipRule="evenodd"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </a>
       </div>
       {showProtocol && <ProtocolModal onClose={() => setShowProtocol(false)} />}
       {showPro && <ProModal onClose={() => setShowPro(false)} />}
