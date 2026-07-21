@@ -265,7 +265,7 @@ nav button.on{color:var(--ac)}
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=18"></script>
+<script src="data.js?v=19"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -332,7 +332,8 @@ function matIcon(k){
   var p={ none:"<path d='M12 5a2 2 0 100-4 2 2 0 000 4zM9 22l1.5-8L8 12V8l4-1 4 1v4l-2.5 2L15 22'/>",
     maza:"<path d='M7 21l7-7M14 3.5a3.5 3.5 0 105 5l-5-5zM12 8l4 4'/>",
     goma:"<path d='M4 12a8 4 0 1016 0 8 4 0 10-16 0M4 12v4a8 4 0 0016 0v-4'/>",
-    peso:"<path d='M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12'/>" }[k];
+    peso:"<path d='M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12'/>",
+    inercial:"<circle cx='7' cy='12' r='4'/><path d='M11 12h6M17 9v6'/><circle cx='7' cy='12' r='1' fill='currentColor'/>" }[k];
   return "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'>"+p+"</svg>";
 }
 
@@ -693,41 +694,173 @@ function initHR(){
  * sirven para reconocer la postura de un vistazo mientras entrenas.
  */
 function FIG(kind){
-  var C="var(--ac)", D="var(--tx2)";
-  var head='<circle cx="%HX%" cy="%HY%" r="7" stroke="'+C+'" stroke-width="3" fill="none"/>';
-  function S(body,hx,hy){
-    return '<svg viewBox="0 0 200 120" style="width:100%;max-width:260px;height:auto" fill="none" stroke-linecap="round" stroke-linejoin="round">'+
-      '<line x1="10" y1="110" x2="190" y2="110" stroke="'+D+'" stroke-width="2" opacity=".35"/>'+
-      body + head.replace('%HX%',hx).replace('%HY%',hy) + '</svg>';
+  // Figura humana esquemática pero reconocible: cabeza, tronco, brazos y
+  // piernas en la posición real del ejercicio. Vista lateral salvo indicado.
+  var C='var(--ac)', A='var(--ac2)', G='var(--tx2)';
+  function svg(inner){
+    return '<svg viewBox="0 0 220 150" style="width:100%;max-width:280px;height:auto" fill="none" '+
+      'stroke-linecap="round" stroke-linejoin="round">'+
+      '<line x1="12" y1="138" x2="208" y2="138" stroke="'+G+'" stroke-width="2.5" opacity=".3"/>'+
+      inner+'</svg>';
+  }
+  function fig(head, body, opts){
+    opts=opts||{};
+    return '<circle cx="'+head[0]+'" cy="'+head[1]+'" r="'+(opts.r||11)+'" stroke="'+C+'" stroke-width="4" fill="none"/>'+body;
   }
   var P={
-    plank:  ['<path d="M40 100 L150 62" stroke="'+C+'" stroke-width="4"/><path d="M45 100 L45 78 M60 100 L58 78" stroke="'+C+'" stroke-width="3"/><path d="M150 62 L165 72" stroke="'+C+'" stroke-width="3"/>',158,55],
-    push:   ['<path d="M45 102 L145 68" stroke="'+C+'" stroke-width="4"/><path d="M60 102 L58 76 M75 100 L72 78" stroke="'+C+'" stroke-width="3"/><path d="M145 68 L150 100" stroke="'+C+'" stroke-width="3"/>',152,58],
-    pull:   ['<path d="M100 20 L100 44" stroke="'+C+'" stroke-width="3"/><path d="M70 20 L130 20" stroke="'+D+'" stroke-width="4"/><path d="M100 52 L100 92 M100 92 L88 110 M100 92 L112 110" stroke="'+C+'" stroke-width="4"/><path d="M100 44 L78 24 M100 44 L122 24" stroke="'+C+'" stroke-width="3"/>',100,44],
-    squat:  ['<path d="M100 46 L100 70 M100 70 L80 88 L80 108 M100 70 L120 88 L120 108" stroke="'+C+'" stroke-width="4"/><path d="M100 54 L128 46" stroke="'+C+'" stroke-width="3"/>',100,36],
-    hinge:  ['<path d="M118 44 L92 60 M92 60 L92 90 L92 108" stroke="'+C+'" stroke-width="4"/><path d="M92 60 L120 76" stroke="'+C+'" stroke-width="3"/>',126,40],
-    core:   ['<path d="M52 92 L150 92" stroke="'+C+'" stroke-width="4"/><path d="M78 92 L70 66 M110 92 L118 66" stroke="'+C+'" stroke-width="3"/>',46,92],
-    mob:    ['<path d="M100 40 L100 66 M100 66 C80 78 76 96 84 108 M100 66 C120 78 124 96 116 108" stroke="'+C+'" stroke-width="4"/><path d="M100 48 C82 44 74 56 76 66" stroke="'+C+'" stroke-width="3"/>',100,30],
-    club:   ['<path d="M100 40 L100 88 M100 88 L88 108 M100 88 L112 108" stroke="'+C+'" stroke-width="4"/><path d="M100 52 L136 30" stroke="'+C+'" stroke-width="3"/><path d="M136 30 L152 18" stroke="var(--ac2)" stroke-width="6"/>',100,30],
-    weight: ['<path d="M100 40 L100 86 M100 86 L86 108 M100 86 L114 108" stroke="'+C+'" stroke-width="4"/><path d="M100 54 L74 66 M100 54 L126 66" stroke="'+C+'" stroke-width="3"/><path d="M68 66 L80 66 M120 66 L132 66" stroke="var(--ac2)" stroke-width="7"/>',100,30],
-    band:   ['<path d="M100 40 L100 86 M100 86 L88 108 M100 86 L112 108" stroke="'+C+'" stroke-width="4"/><path d="M100 54 L62 54 M100 54 L138 54" stroke="'+C+'" stroke-width="3"/><path d="M40 46 C52 54 52 54 40 62" stroke="var(--ac2)" stroke-width="3"/>',100,30],
-    hang:   ['<path d="M60 22 L140 22" stroke="'+D+'" stroke-width="4"/><path d="M100 40 L100 96 M100 96 L92 112 M100 96 L108 112" stroke="'+C+'" stroke-width="4"/><path d="M100 44 L84 24 M100 44 L116 24" stroke="'+C+'" stroke-width="3"/>',100,32],
-    lunge:  ['<path d="M96 40 L96 68 M96 68 L70 92 L70 108 M96 68 L124 88 L124 108 M124 88 L112 108" stroke="'+C+'" stroke-width="4"/>',96,30],
+    /* ── PLANCHA ── */
+    plank: fig([46,64],
+      '<path d="M57 70 L150 96" stroke="'+C+'" stroke-width="6"/>'+          // tronco
+      '<path d="M62 72 L58 104 M62 72 L74 104" stroke="'+C+'" stroke-width="5"/>'+ // brazos al suelo
+      '<path d="M150 96 L178 120 L196 136" stroke="'+C+'" stroke-width="5"/>'),   // piernas
+
+    /* ── FLEXIÓN ── */
+    push: fig([46,74],
+      '<path d="M57 80 L152 100" stroke="'+C+'" stroke-width="6"/>'+
+      '<path d="M64 82 L56 106 M64 82 L78 106" stroke="'+C+'" stroke-width="5"/>'+
+      '<path d="M152 100 L186 132" stroke="'+C+'" stroke-width="5"/>'+
+      '<path d="M40 106 L92 106" stroke="'+A+'" stroke-width="2.5" opacity=".6"/>'), // suelo bajo manos
+
+    /* ── DOMINADA / COLGARSE ── */
+    hang: '<path d="M50 20 L170 20" stroke="'+G+'" stroke-width="5"/>'+
+      '<path d="M92 26 L104 48 M128 26 L116 48" stroke="'+C+'" stroke-width="5"/>'+
+      fig([110,58]) +
+      '<path d="M110 69 L110 108" stroke="'+C+'" stroke-width="6"/>'+
+      '<path d="M110 108 L100 136 M110 108 L122 136" stroke="'+C+'" stroke-width="5"/>',
+
+    /* ── SENTADILLA ── */
+    squat: fig([104,34],
+      '<path d="M104 45 L100 78" stroke="'+C+'" stroke-width="6"/>'+          // tronco inclinado
+      '<path d="M100 78 L74 96 L78 136" stroke="'+C+'" stroke-width="5"/>'+   // pierna izq
+      '<path d="M100 78 L128 96 L124 136" stroke="'+C+'" stroke-width="5"/>'+ // pierna der
+      '<path d="M104 50 L142 40" stroke="'+C+'" stroke-width="4.5"/>'),       // brazos al frente
+
+    /* ── BISAGRA DE CADERA ── */
+    hinge: fig([148,44],
+      '<path d="M139 50 L104 74" stroke="'+C+'" stroke-width="6"/>'+          // tronco hacia delante
+      '<path d="M104 74 L100 106 L100 136" stroke="'+C+'" stroke-width="5"/>'+
+      '<path d="M134 56 L128 92" stroke="'+C+'" stroke-width="4.5"/>'+        // brazos colgando
+      '<path d="M104 74 L86 70" stroke="'+A+'" stroke-width="3" opacity=".7"/>'), // flecha cadera atrás
+
+    /* ── ZANCADA ── */
+    lunge: fig([100,32],
+      '<path d="M100 43 L100 78" stroke="'+C+'" stroke-width="6"/>'+
+      '<path d="M100 78 L66 100 L66 136" stroke="'+C+'" stroke-width="5"/>'+   // delantera
+      '<path d="M100 78 L136 104 L156 136" stroke="'+C+'" stroke-width="5"/>'+ // trasera
+      '<path d="M136 104 L128 130" stroke="'+C+'" stroke-width="4"/>'),
+
+    /* ── CORE tumbado ── */
+    core: fig([40,96],
+      '<path d="M52 96 L146 96" stroke="'+C+'" stroke-width="6"/>'+
+      '<path d="M92 96 L88 66 M120 96 L126 66" stroke="'+C+'" stroke-width="4.5"/>'+ // brazo y pierna arriba
+      '<path d="M146 96 L172 116" stroke="'+C+'" stroke-width="5"/>'),
+
+    /* ── MOVILIDAD / estiramiento sentado ── */
+    mob: fig([88,40],
+      '<path d="M88 51 L92 86" stroke="'+C+'" stroke-width="6"/>'+
+      '<path d="M92 86 L142 100 M92 86 L60 108" stroke="'+C+'" stroke-width="5"/>'+
+      '<path d="M88 56 L124 76" stroke="'+C+'" stroke-width="4.5"/>'),
+
+    /* ── ROTACIÓN (vista frontal) ── */
+    rot: fig([110,34],
+      '<path d="M110 45 L110 88" stroke="'+C+'" stroke-width="6"/>'+
+      '<path d="M110 54 L148 44 M110 54 L74 66" stroke="'+C+'" stroke-width="4.5"/>'+
+      '<path d="M110 88 L94 124 M110 88 L128 124" stroke="'+C+'" stroke-width="5"/>'+
+      '<path d="M150 30 A34 34 0 0 1 158 58" stroke="'+A+'" stroke-width="3"/>'),  // arco de giro
+
+    /* ── MAZA ── */
+    club: fig([100,34],
+      '<path d="M100 45 L100 88" stroke="'+C+'" stroke-width="6"/>'+
+      '<path d="M100 88 L86 124 M100 88 L116 124" stroke="'+C+'" stroke-width="5"/>'+
+      '<path d="M100 54 L136 34" stroke="'+C+'" stroke-width="4.5"/>'+
+      '<path d="M136 34 L164 16" stroke="'+A+'" stroke-width="8"/>'+          // mango
+      '<circle cx="168" cy="13" r="7" fill="'+A+'"/>'),                       // cabeza de maza
+
+    /* ── PESO / kettlebell ── */
+    weight: fig([100,32],
+      '<path d="M100 43 L100 86" stroke="'+C+'" stroke-width="6"/>'+
+      '<path d="M100 86 L86 124 M100 86 L116 124" stroke="'+C+'" stroke-width="5"/>'+
+      '<path d="M100 52 L72 72 M100 52 L128 72" stroke="'+C+'" stroke-width="4.5"/>'+
+      '<rect x="58" y="68" width="16" height="12" rx="3" fill="'+A+'"/>'+
+      '<rect x="126" y="68" width="16" height="12" rx="3" fill="'+A+'"/>'),
+
+    /* ── GOMA ── */
+    band: fig([100,34],
+      '<path d="M100 45 L100 88" stroke="'+C+'" stroke-width="6"/>'+
+      '<path d="M100 88 L86 124 M100 88 L116 124" stroke="'+C+'" stroke-width="5"/>'+
+      '<path d="M100 56 L142 56" stroke="'+C+'" stroke-width="4.5"/>'+
+      '<path d="M32 46 C48 56 48 56 32 66" stroke="'+A+'" stroke-width="3.5"/>'+
+      '<path d="M36 56 L100 56" stroke="'+A+'" stroke-width="3" stroke-dasharray="5 4"/>'),
+
+    /* ── POLEA ISOINERCIAL ── */
+    flywheel: fig([118,34],
+      '<path d="M118 45 L118 88" stroke="'+C+'" stroke-width="6"/>'+
+      '<path d="M118 88 L104 124 M118 88 L132 124" stroke="'+C+'" stroke-width="5"/>'+
+      '<path d="M118 56 L82 62" stroke="'+C+'" stroke-width="4.5"/>'+
+      '<path d="M82 62 L44 74" stroke="'+A+'" stroke-width="3" stroke-dasharray="4 3"/>'+  // cable
+      '<circle cx="34" cy="78" r="14" stroke="'+A+'" stroke-width="4"/>'+                   // volante
+      '<circle cx="34" cy="78" r="4" fill="'+A+'"/>'),
+
+    /* ── PIE ── */
+    foot: '<path d="M64 118 C64 96 72 78 96 78 C120 78 132 92 132 110 C132 126 118 132 100 132 L70 132 Z" stroke="'+C+'" stroke-width="4"/>'+
+      '<circle cx="82" cy="70" r="6" stroke="'+C+'" stroke-width="3"/>'+
+      '<circle cx="98" cy="64" r="6" stroke="'+C+'" stroke-width="3"/>'+
+      '<circle cx="114" cy="66" r="5.5" stroke="'+C+'" stroke-width="3"/>'+
+      '<circle cx="127" cy="72" r="5" stroke="'+C+'" stroke-width="3"/>'+
+      '<circle cx="137" cy="80" r="4.5" stroke="'+C+'" stroke-width="3"/>',
+
+    /* ── EQUILIBRIO a una pierna ── */
+    balance: fig([104,30],
+      '<path d="M104 41 L104 82" stroke="'+C+'" stroke-width="6"/>'+
+      '<path d="M104 82 L102 136" stroke="'+C+'" stroke-width="5"/>'+          // pierna apoyo
+      '<path d="M104 82 L134 100 L128 122" stroke="'+C+'" stroke-width="5"/>'+ // pierna elevada
+      '<path d="M104 50 L70 40 M104 50 L138 40" stroke="'+C+'" stroke-width="4"/>'),
+
+    /* ── CUELLO ── */
+    /* ── CUELLO: perfil con la mano en la frente ── */
+    neck: '<circle cx="96" cy="46" r="17" stroke="'+C+'" stroke-width="4"/>'+
+      '<path d="M96 63 L96 84" stroke="'+C+'" stroke-width="6"/>'+          // cuello
+      '<path d="M74 90 L118 90" stroke="'+C+'" stroke-width="7"/>'+          // hombros
+      '<path d="M96 90 L96 120" stroke="'+C+'" stroke-width="6"/>'+          // tronco
+      '<path d="M118 90 L142 68 L124 50" stroke="'+C+'" stroke-width="5"/>'+ // brazo hacia la frente
+      '<path d="M112 44 L120 48" stroke="'+A+'" stroke-width="5"/>'+         // mano en la frente
+      '<path d="M74 40 L60 40" stroke="'+A+'" stroke-width="3.5"/>',          // resistencia
+
+    /* ── CARDIO / correr ── */
+    run: fig([124,28],
+      '<path d="M120 40 L108 74" stroke="'+C+'" stroke-width="6"/>'+
+      '<path d="M108 74 L78 92 L60 118" stroke="'+C+'" stroke-width="5"/>'+
+      '<path d="M108 74 L130 100 L154 108" stroke="'+C+'" stroke-width="5"/>'+
+      '<path d="M118 48 L146 62 M118 48 L88 54" stroke="'+C+'" stroke-width="4.5"/>'),
   };
-  var f=P[kind]||P.mob;
-  return S(f[0],f[1],f[2]);
+  return svg(P[kind]||P.mob);
 }
 function figFor(e){
+  var byId={
+    plank:'plank', 'bear-crawl':'plank', 'bear-hold':'plank', 'mountain-climber':'plank',
+    'scap-pushup':'plank', rollout:'plank',
+    hang:'hang', pullup:'hang', 'pullup-negative':'hang', 'scap-pull':'hang', lsit:'hang',
+    lunge:'lunge', 'squat-bulgarian':'lunge', 'psoas-lunge':'lunge', 'split-squat-heavy':'lunge',
+    'balance-1leg':'balance', 'ankle-balance-eyes':'balance', 'hip-airplane':'balance',
+    'deadlift-single':'balance', pistol:'balance', 'pistol-assisted':'balance',
+    'toe-splay':'foot', 'toe-yoga':'foot', 'short-foot':'foot', 'foot-roll':'foot',
+    'plantar-release':'foot', 'walk-barefoot':'foot', 'heel-toe-walk':'foot', 'ankle-alphabet':'foot',
+    'neck-iso':'neck', 'chin-tuck-neck':'neck',
+    burpee:'run', 'jump-rope':'run', skater:'run', pogo:'run', 'broad-jump':'run', 'jump-squat':'run',
+    deadbug:'core', hollow:'core', 'glute-bridge':'core', 'side-plank-lift':'core', clamshell:'core',
+    copenhagen:'core', 'nordic-curl':'core', 'hip-thrust':'core',
+  };
+  if(byId[e.id]) return FIG(byId[e.id]);
   if(e.mat==='maza') return FIG('club');
   if(e.mat==='goma') return FIG('band');
+  if(e.mat==='inercial') return FIG('flywheel');
   if(e.mat==='peso') return FIG(e.pat==='cadera'?'hinge':'weight');
-  var m={empuje:'push',traccion:'pull',rodilla:'squat',cadera:'hinge',core:'core',rotacion:'mob',locomocion:'plank'};
-  if(e.id==='hang'||e.id==='pullup'||e.id==='pullup-negative') return FIG('hang');
-  if(e.id==='lunge'||e.id==='squat-bulgarian') return FIG('lunge');
-  if(e.id==='plank'||e.id==='bear-crawl') return FIG('plank');
-  if(e.cap==='movilidad') return FIG('mob');
-  return FIG(m[e.pat]||'mob');
+  var byPat={ empuje:'push', traccion:'hang', rodilla:'squat', cadera:'hinge',
+              core:'core', rotacion:'rot', locomocion:'run' };
+  if(e.cap==='movilidad'&&e.pat!=='rodilla') return FIG('mob');
+  return FIG(byPat[e.pat]||'mob');
 }
+
 
 /* ══ BIBLIOTECA ══ */
 var BF='todos';

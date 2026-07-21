@@ -18,6 +18,7 @@ const MAT = {
   maza: { es: 'Mazas / clubs', icon: 'club' },
   goma: { es: 'Gomas elásticas', icon: 'band' },
   peso: { es: 'Kettlebell / mancuernas', icon: 'weight' },
+  inercial: { es: 'Polea isoinercial', icon: 'flywheel' },
 }
 
 const CAPS = {
@@ -1586,4 +1587,49 @@ const RACE_PLANS = [
     'band-lateral':[], 'monster-walk':[], 'clamshell':[],
   };
   EX.forEach(function(e){ if(risky[e.id] && risky[e.id].length) e.risk = risky[e.id]; });
+})()
+
+/* ── POLEA ISOINERCIAL (Handy Gym y similares) ───────────────────
+ * La resistencia la genera un volante de inercia: no hay peso fijo.
+ * Tú aceleras en la fase concéntrica y el disco te devuelve esa energía
+ * en la excéntrica, donde puedes recibir MÁS carga de la que generaste.
+ * Ese sobrepeso excéntrico es su ventaja real frente al peso libre.
+ */
+EX.push(
+{id:'iner-row',cap:'fuerza',pat:'traccion',mat:'inercial',lvl:2,seg:55,sets:4,reps:8,
+ n:'Remo isoinercial',s:'Tracción con sobrecarga excéntrica',
+ why:'Tiras con fuerza y el volante devuelve la energía: recibes más carga al ceder que al tirar. Ese sobrepeso excéntrico es difícil de conseguir con peso libre sin ayuda, y es un estímulo potente para la espalda.',
+ steps:['Ancla la polea baja, de pie o en bisagra','Tira con fuerza llevando los codos atrás','Resiste la vuelta: NO dejes que el cable te lleve','Frena progresivamente hasta el final del recorrido'],
+ tip:'El primer tirón carga el disco: hazlo fuerte. Si tiras flojo, no habrá excéntrico que resistir.'},
+{id:'iner-squat',cap:'fuerza',pat:'rodilla',mat:'inercial',lvl:2,seg:60,sets:4,reps:8,
+ n:'Sentadilla isoinercial',s:'Piernas sin carga axial',
+ why:'Permite cargar mucho el cuádriceps y el glúteo sin comprimir la columna, porque la resistencia viene del cable y no de un peso sobre los hombros. Muy útil si tienes molestias lumbares.',
+ steps:['Polea anclada baja, cable entre las piernas o al pecho','Sube extendiendo con fuerza','Deja que el cable te baje resistiendo','Controla especialmente el último tercio de la bajada'],
+ tip:'La clave está en frenar abajo, no arriba. Ahí es donde el volante devuelve toda la energía.'},
+{id:'iner-hinge',cap:'fuerza',pat:'cadera',mat:'inercial',lvl:2,seg:60,sets:4,reps:8,
+ n:'Bisagra isoinercial',s:'Cadena posterior en excéntrico',
+ why:'El excéntrico con sobrecarga es el estímulo con más evidencia para prevenir lesiones de isquiotibiales. La polea inercial lo permite de forma segura y con más carga que el peso libre.',
+ steps:['Polea anclada al frente, a la altura de la cadera','Bisagra: cadera atrás con espalda recta','Extiende la cadera con fuerza apretando el glúteo','Resiste la vuelta hasta el estiramiento'],
+ tip:'No pierdas la espalda recta al ceder. Si se redondea, acorta el recorrido: la lumbar manda sobre la carga.'},
+{id:'iner-press',cap:'fuerza',pat:'empuje',mat:'inercial',lvl:2,seg:55,sets:4,reps:8,
+ n:'Press isoinercial',s:'Empuje con freno excéntrico',
+ why:'Empuja fuerte y resiste la vuelta. El hombro se beneficia especialmente del control excéntrico, que es lo que le da capacidad de frenar y lo protege en gestos de lanzamiento y natación.',
+ steps:['Polea anclada detrás, cable a la altura del pecho','Empuja al frente extendiendo los brazos','Resiste activamente la vuelta','Codos algo cerrados, no abiertos del todo'],
+ tip:'Si el cable te gana y vuelve solo, has soltado. El ejercicio es frenarlo, no dejarlo ir.'},
+{id:'iner-rot',cap:'potencia',pat:'rotacion',mat:'inercial',lvl:3,seg:55,sets:3,reps:10,
+ n:'Rotación isoinercial',s:'Potencia rotacional específica',
+ why:'Reproduce el gesto de lanzar, golpear o girar bajo carga, algo casi imposible de cargar bien con peso libre. Muy transferible a pádel, tenis, golf y deportes de raqueta.',
+ steps:['Polea anclada al lado, a la altura del pecho','Gira el tronco con fuerza alejando las manos','El giro sale de la cadera, no de los brazos','Resiste la vuelta controlando la rotación'],
+ tip:'Los pies pivotan: si los mantienes clavados, la rotación se la come la lumbar en vez de la cadera.'},
+{id:'iner-lunge',cap:'fuerza',pat:'rodilla',mat:'inercial',lvl:3,seg:60,sets:3,reps:8,
+ n:'Zancada isoinercial',s:'Unilateral con sobrecarga',
+ why:'Combina trabajo a una pierna con sobrecarga excéntrica: expone asimetrías y carga la fase de frenado, que es donde se lesiona la rodilla al cambiar de dirección.',
+ steps:['Polea anclada baja al frente','Da un paso atrás bajando controlado','Empuja con fuerza para volver','Resiste la bajada del siguiente ciclo'],
+ tip:'Compara lados. La diferencia entre piernas se nota mucho más aquí que en la sentadilla.'}
+)
+
+;(function(){
+  var r={ 'iner-hinge':['lumbar'], 'iner-squat':['rodilla'], 'iner-lunge':['rodilla','cintilla'],
+          'iner-press':['hombro'], 'iner-rot':['lumbar'] };
+  EX.forEach(function(e){ if(r[e.id]) e.risk=r[e.id]; });
 })()
