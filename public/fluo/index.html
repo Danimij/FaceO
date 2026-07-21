@@ -255,7 +255,7 @@ nav button.on{color:var(--ac)}
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=14"></script>
+<script src="data.js?v=15"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -852,8 +852,11 @@ function renderPlan(){
 
   if(!g || !S.planStart){
     h+='<div class="lbl">'+(pro?'Elige tu objetivo':'Los seis planes')+'</div>';
-    h+=GOALS.map(function(x){
-      return '<div class="card" style="margin-bottom:9px">'+
+    h+=GOAL_GROUPS.map(function(grp){
+      return '<div style="font-size:11.5px;font-weight:700;color:var(--ac);text-transform:uppercase;letter-spacing:.1em;margin:18px 0 8px">'+grp.n+'</div>'+
+      grp.ids.map(function(gid){
+        var x=GOALS.filter(function(q){return q.id===gid;})[0]; if(!x) return '';
+        return '<div class="card" style="margin-bottom:9px">'+
         '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">'+
         '<span style="font-size:15px;font-weight:700">'+x.n+'</span>'+
         '<span style="font-size:11px;color:var(--tx2);flex-shrink:0">'+x.meses+' meses</span></div>'+
@@ -864,7 +867,8 @@ function renderPlan(){
         '</div>'+
         (pro? '<button class="btn sm" onclick="startGoal(\''+x.id+'\')">Empezar este plan</button>'
             : '<div style="font-size:11.5px;color:var(--tx2);border-top:1px solid var(--br);padding-top:9px">Premium</div>')+
-      '</div>';
+        '</div>';
+      }).join('');
     }).join('');
     document.getElementById('plan-body').innerHTML=h;
     return;
