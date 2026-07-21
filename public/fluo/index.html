@@ -265,7 +265,7 @@ nav button.on{color:var(--ac)}
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=17"></script>
+<script src="data.js?v=18"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -343,16 +343,37 @@ function toggleNiggle(k){
   if(i>=0) a.splice(i,1); else a.push(k);
   S.niggles=a; save(); renderNiggles(); renderWeek(); renderLog(); renderCardio(); renderCare(); renderProfile(); renderRace(); vib(20);
 }
-var NIGGLES = { cintilla:'Cintilla / rodilla', hombro:'Hombro' };
+var NIGGLES = {
+  cervical:'Cuello / cervicales',
+  hombro:'Hombro',
+  codo:'Codo / antebrazo',
+  muneca:'Muñeca',
+  lumbar:'Lumbar',
+  cadera:'Cadera / ingle',
+  aductor:'Aductores / ingle',
+  isquios:'Isquiotibiales',
+  rodilla:'Rodilla',
+  cintilla:'Cintilla / rodilla lateral',
+  aquiles:'Aquiles / gemelo',
+  tobillo:'Tobillo',
+  pie:'Pie / fascia plantar',
+};
 function renderNiggles(){
   var el=document.getElementById('nig-list'); if(!el) return;
+  var n=niggles().length;
+  var pool=EX.filter(function(e){ return S.mats.indexOf(e.mat)>=0; });
+  var libres=pool.filter(function(e){ return !e.risk || !e.risk.some(function(r){ return niggles().indexOf(r)>=0; }); }).length;
+  var aviso = n>=4
+    ? '<div class="card" style="border-left:3px solid var(--ac2);margin-bottom:10px"><p style="font-size:12px;color:var(--tx2)">Con '+n+' zonas marcadas quedan <b style="color:var(--tx)">'+libres+' ejercicios</b> disponibles. Si son muy pocos, desmarca alguna: mejor adaptar el ejercicio que quedarte sin opciones. Y con varias molestias a la vez, merece la pena que te vea un fisio.</p></div>'
+    : '';
   el.innerHTML = Object.keys(NIGGLES).map(function(k){
     var on = niggles().indexOf(k)>=0;
-    return '<button class="row'+(on?' sel':'')+'" onclick="toggleNiggle(\''+k+'\')">'+
-      '<span class="rb"><span class="rt">'+NIGGLES[k]+'</span>'+
-      '<span class="rs">'+(on?'Evito lo que carga la zona y priorizo prevención':'Sin molestias')+'</span></span>'+
+    return '<button class="row'+(on?' sel':'')+'" style="padding:12px 14px" onclick="toggleNiggle(\''+k+'\')">'+
+      '<span class="rb"><span class="rt" style="font-size:13.5px">'+NIGGLES[k]+'</span>'+
+      (on?'<span class="rs">Evito lo que la carga y priorizo prevención</span>':'')+'</span>'+
       '<span class="chev">'+(on?'✓':'')+'</span></button>';
   }).join('');
+  el.innerHTML = aviso + el.innerHTML;
 }
 
 /* ══ ENERGÍA ══ */

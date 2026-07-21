@@ -377,14 +377,7 @@ EX.push(
  tip:'Con la rodilla recta trabajas el gemelo. Con ella doblada, el sóleo. La diferencia importa para correr.'}
 )
 
-// Ejercicios que cargan zonas sensibles (se filtran si marcas la molestia)
-;(function(){
-  var risky = { 'club-mill':['hombro'], 'club-swing':['hombro'], 'club-shield':['hombro'],
-    'turkish':['hombro'], 'pushup-archer':['hombro'], 'pullup':['hombro'], 'pullup-negative':['hombro'],
-    'jump-squat':['cintilla'], 'burpee':['cintilla'], 'lunge':['cintilla'], 'pistol':['cintilla'],
-    'pistol-assisted':['cintilla'], 'squat-bulgarian':['cintilla'] };
-  EX.forEach(function(e){ if(risky[e.id]) e.risk = risky[e.id]; });
-})()
+
 
 /* ── PLAN DE 3 MESES ─────────────────────────────────────────────
  * 12 semanas en tres bloques. Cada bloque tiene un objetivo distinto
@@ -1554,3 +1547,43 @@ const RACE_PLANS = [
       { n:'Sprints', tipo:'series', reps:10, dist:25, rec:'45 s', z:'sprint', d:'Velocidad máxima' },
     ]},
 ]
+
+// Ejercicios que cargan zonas sensibles (se filtran si marcas la molestia)
+;(function(){
+  var risky = {
+    // Hombro: todo lo que carga por encima de la cabeza o con palanca larga
+    'club-mill':['hombro'], 'club-swing':['hombro'], 'club-shield':['hombro'], 'club-360':['hombro'],
+    'club-inside':['hombro'], 'club-front':['hombro'], 'turkish':['hombro'], 'kb-tgu-half':['hombro'],
+    'pushup-archer':['hombro'], 'pullup':['hombro'], 'pullup-negative':['hombro'], 'kb-press':['hombro'],
+    'lsit':['hombro','muneca'],
+    // Cintilla y rodilla: impacto, saltos y flexión profunda a una pierna
+    'jump-squat':['cintilla','rodilla'], 'burpee':['cintilla','rodilla'], 'lunge':['cintilla','rodilla'],
+    'pistol':['cintilla','rodilla'], 'pistol-assisted':['cintilla','rodilla'], 'squat-bulgarian':['cintilla','rodilla'],
+    'broad-jump':['cintilla','rodilla','tobillo'], 'skater':['cintilla','rodilla','tobillo'],
+    'jump-rope':['tobillo','aquiles'], 'pogo':['tobillo','aquiles'], 'mountain-climber':['muneca'],
+    'split-squat-heavy':['cintilla','rodilla'], 'step-up':['rodilla'],
+    // Lumbar: carga axial y flexión con peso
+    'hinge':['lumbar'], 'deadlift-single':['lumbar'], 'kb-swing':['lumbar'], 'kb-clean':['lumbar'],
+    'jefferson-curl':['lumbar'], 'band-goodmorning':['lumbar'], 'hip-thrust':['lumbar'],
+    'bridge':['lumbar','hombro'], 'rollout':['lumbar','hombro'],
+    // Muñeca: apoyo de manos en el suelo
+    'plank':['muneca'], 'pushup':['muneca'], 'pushup-decline':['muneca'], 'bear-crawl':['muneca'],
+    'scap-pushup':['muneca'], 'bear-hold':['muneca'], 'wrist-mob':[],
+    // Codo: tracción intensa y agarre sostenido
+    'row-inverted':['codo'], 'kb-row':['codo'], 'hang':['codo','hombro'], 'scap-pull':['hombro'],
+    // Cadera e isquios
+    'copenhagen':['aductor','cadera'], 'nordic-curl':['isquios'], 'hip-airplane':['cadera'],
+    'psoas-lunge':['cadera'], 'adductor-deep':['aductor'],
+    // Cervical
+    'neck-iso':[], 'wall-slide':[],
+    // Aquiles y pie
+    'calf-eccentric':[], 'calf-raise-heavy':['aquiles'], 'walk-barefoot':['aquiles','pie'],
+    'heel-toe-walk':['aquiles'], 'squat-hold':['rodilla'], 'sled-push-sim':['rodilla'],
+    'ankle-balance-eyes':[], 'balance-1leg':[],
+    'deep-squat':['rodilla','tobillo'], 'squat-bw':['rodilla'], 'squat-box':[], 'kb-goblet':['rodilla'],
+    'club-squat':['rodilla'], 'nordic-curl':['isquios','rodilla'], 'copenhagen':['aductor','cadera'],
+    'hip-airplane':['cadera'], 'hip-90-90':['cadera'], 'psoas-lunge':['cadera'],
+    'band-lateral':[], 'monster-walk':[], 'clamshell':[],
+  };
+  EX.forEach(function(e){ if(risky[e.id] && risky[e.id].length) e.risk = risky[e.id]; });
+})()
