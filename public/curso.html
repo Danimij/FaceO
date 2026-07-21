@@ -90,7 +90,7 @@
 <div class="hero">
   <div class="eyebrow">Curso · Salud Real</div>
   <h1>El método completo para tu rostro, cuerpo y mente</h1>
-  <p>8 semanas, paso a paso. La ciencia de las dos apps convertida en un plan guiado que sí se sostiene.</p>
+  <p>8 semanas, paso a paso. La ciencia de las tres apps convertida en un plan guiado que sí se sostiene.</p>
   <div class="pill"><span>9 módulos</span><span>Vídeo + acción</span><span>Retos semanales</span><span>Comunidad</span><span>Acceso de por vida</span></div>
 </div>
 
@@ -98,7 +98,7 @@
   <div class="value">
     <h3>Qué incluye</h3>
     <div class="vrow"><svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25l2.6 5.5 6 .8-4.3 4.2 1 6L12 15.9 6.7 18.75l1-6L3.4 8.55l6-.8L12 2.25z" clip-rule="evenodd"/></svg><span>9 módulos en vídeo, del pilar de la luz a tu protocolo definitivo.</span></div>
-    <div class="vrow"><svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25l2.6 5.5 6 .8-4.3 4.2 1 6L12 15.9 6.7 18.75l1-6L3.4 8.55l6-.8L12 2.25z" clip-rule="evenodd"/></svg><span>Un reto práctico por semana, integrado con FACEO e INSPIRAPP.</span></div>
+    <div class="vrow"><svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25l2.6 5.5 6 .8-4.3 4.2 1 6L12 15.9 6.7 18.75l1-6L3.4 8.55l6-.8L12 2.25z" clip-rule="evenodd"/></svg><span>Un reto práctico por semana, integrado con FACEO, INSPIRAPP y FLUO.</span></div>
     <div class="vrow"><svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25l2.6 5.5 6 .8-4.3 4.2 1 6L12 15.9 6.7 18.75l1-6L3.4 8.55l6-.8L12 2.25z" clip-rule="evenodd"/></svg><span>Seguimiento de tu progreso y comunidad privada de apoyo.</span></div>
     <div class="vrow"><svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25l2.6 5.5 6 .8-4.3 4.2 1 6L12 15.9 6.7 18.75l1-6L3.4 8.55l6-.8L12 2.25z" clip-rule="evenodd"/></svg><span>Pago único, acceso para siempre. Sin suscripción.</span></div>
   </div>
@@ -130,7 +130,7 @@
   <div class="comm" id="comm">
     <h3>Comunidad Salud Real</h3>
     <p>Comparte tu progreso, resuelve dudas y no lo hagas en solitario. Acceso incluido con el curso.</p>
-    <a class="btn" id="commbtn" href="https://t.me/+xxxxxxxx" target="_blank" rel="noopener">Unirme a la comunidad →</a>
+    <button class="btn" id="commbtn" onclick="alert('La comunidad abre con el lanzamiento del curso. Si ya lo has comprado, recibirás el enlace por correo.')">Unirme a la comunidad →</button>
   </div>
 </div>
 <footer>Contenido educativo. No sustituye consejo médico. Consulta a un profesional ante cualquier condición.<br>© Salud Real · FACEO + INSPIRAPP</footer>
@@ -230,7 +230,7 @@ function render(){
   MODULES.forEach(function(m,i){
     var done=prog.indexOf(m.id)!==-1;
     var open=false;
-    var vid=m.video?('<iframe src="https://www.youtube.com/embed/'+m.video+'" title="'+m.title+'" allowfullscreen loading="lazy"></iframe>'):'<div class="ph">Vídeo próximamente</div>';
+    var vid=m.video?('<iframe src="https://www.youtube.com/embed/'+m.video+'" title="'+m.title+'" allowfullscreen loading="lazy"></iframe>'):'<div class="ph">El vídeo de este módulo se publica en breve.<br><span style="font-size:11.5px;opacity:.7">El contenido escrito de abajo ya está completo y es suficiente para hacer el módulo.</span></div>';
     var acc=m.acc.map(function(a){return '<li>'+a+'</li>';}).join('');
     var content = unlocked ? (
       '<div class="mcontent">'+
