@@ -1398,3 +1398,159 @@ const SISTEMAS = {
   anaerobico: { n:'Anaeróbico',  c:'#b07cff', d:'Esfuerzos cortos y máximos con descanso largo' },
   potencia:   { n:'Circuitos',   c:'#5ad2ff', d:'Fuerza y cardio combinados, sin material' },
 }
+
+/* ── ZONAS Y RITMOS ──────────────────────────────────────────────
+ * Calcula ritmos de entrenamiento a partir de una marca reciente,
+ * al estilo de las tablas clásicas (Daniels/Jack Tupper) simplificadas.
+ *
+ * REGLA IMPORTANTE: se calcula sobre lo que corres HOY, no sobre tu
+ * mejor marca histórica. Entrenar con ritmos de hace años es la vía
+ * rápida a la lesión al volver.
+ */
+
+// Factores sobre el ritmo umbral (min/km). Umbral ≈ ritmo sostenible ~1 h.
+const PACE_F = {
+  facil:    [1.28, 1.42],  // zona 2 conversacional
+  maraton:  [1.10, 1.14],
+  umbral:   [1.00, 1.03],
+  vo2:      [0.90, 0.94],
+  series:   [0.84, 0.89],
+}
+
+// Distancias de referencia -> factor para estimar ritmo umbral desde ese ritmo
+const RACE_TO_THRESHOLD = { '5k':1.06, '10k':1.02, 'media':0.97, 'maraton':0.93 }
+
+function mmss(sec){
+  sec=Math.round(sec);
+  var m=Math.floor(sec/60), s=sec%60;
+  return m+':'+(s<10?'0':'')+s;
+}
+function parsePace(txt){            // "4:15" -> 255
+  if(!txt) return null;
+  var p=String(txt).split(':');
+  if(p.length!==2) return null;
+  var m=parseInt(p[0],10), s=parseInt(p[1],10);
+  if(isNaN(m)||isNaN(s)) return null;
+  return m*60+s;
+}
+// Devuelve las zonas de carrera en seg/km a partir de una marca
+function runZones(racePaceSec, dist){
+  var thr = racePaceSec * (RACE_TO_THRESHOLD[dist]||1);
+  var z={};
+  Object.keys(PACE_F).forEach(function(k){
+    z[k]=[Math.round(thr*PACE_F[k][0]), Math.round(thr*PACE_F[k][1])];
+  });
+  z.umbralSec=Math.round(thr);
+  return z;
+}
+// Zonas de potencia en bici a partir del FTP
+function bikeZones(ftp){
+  return {
+    facil:[Math.round(ftp*0.55), Math.round(ftp*0.75)],
+    tempo:[Math.round(ftp*0.76), Math.round(ftp*0.87)],
+    umbral:[Math.round(ftp*0.88), Math.round(ftp*1.04)],
+    vo2:[Math.round(ftp*1.05), Math.round(ftp*1.20)],
+    anaerobico:[Math.round(ftp*1.21), Math.round(ftp*1.50)],
+  }
+}
+// Zonas de natación: ritmo por 100 m desde un test de 400 m
+function swimZones(t400sec){
+  var per100 = t400sec/4;
+  var thr = per100*1.03;
+  return {
+    facil:[Math.round(thr*1.12), Math.round(thr*1.20)],
+    aerobico:[Math.round(thr*1.05), Math.round(thr*1.11)],
+    umbral:[Math.round(thr*0.99), Math.round(thr*1.04)],
+    vo2:[Math.round(thr*0.93), Math.round(thr*0.98)],
+    sprint:[Math.round(thr*0.85), Math.round(thr*0.92)],
+  }
+}
+// Zonas de pulso desde FC máxima
+function hrZones(fcmax){
+  return {
+    z1:[Math.round(fcmax*0.50), Math.round(fcmax*0.60)],
+    z2:[Math.round(fcmax*0.60), Math.round(fcmax*0.70)],
+    z3:[Math.round(fcmax*0.70), Math.round(fcmax*0.80)],
+    z4:[Math.round(fcmax*0.80), Math.round(fcmax*0.90)],
+    z5:[Math.round(fcmax*0.90), Math.round(fcmax*1.00)],
+  }
+}
+
+/* ── PLANES POR DISTANCIA ───────────────────────────────────────
+ * Sesiones tipo Garmin: estructura fija, intensidad calculada.
+ * z: clave de zona · reps/dist/rec en metros o segundos.
+ */
+const RACE_PLANS = [
+  { id:'run5k', dep:'carrera', n:'5K', s:'Velocidad y umbral', sem:8,
+    intro:'El 5K exige un porcentaje alto de VO2máx. El plan combina series cortas rápidas con trabajo de umbral, sobre una base aeróbica.',
+    ses:[
+      { n:'Rodaje fácil', tipo:'continuo', min:40, z:'facil', d:'Base aeróbica conversacional' },
+      { n:'Series 400', tipo:'series', reps:8, dist:400, rec:'90 s trote', z:'series', d:'Velocidad específica' },
+      { n:'Series 1000', tipo:'series', reps:5, dist:1000, rec:'2 min trote', z:'vo2', d:'Potencia aeróbica' },
+      { n:'Tempo 20 min', tipo:'continuo', min:20, z:'umbral', d:'Umbral continuo, con 15 min de calentamiento' },
+      { n:'Tirada larga', tipo:'continuo', min:70, z:'facil', d:'Volumen aeróbico' },
+    ]},
+  { id:'run10k', dep:'carrera', n:'10K', s:'Umbral y resistencia', sem:10,
+    intro:'El 10K se corre justo por encima del umbral. El grueso del trabajo específico va ahí, con VO2máx para elevar el techo.',
+    ses:[
+      { n:'Rodaje fácil', tipo:'continuo', min:50, z:'facil', d:'Base aeróbica' },
+      { n:'Series 1000', tipo:'series', reps:6, dist:1000, rec:'2 min trote', z:'vo2', d:'Potencia aeróbica' },
+      { n:'Intervalos umbral', tipo:'series', reps:4, dist:2000, rec:'90 s trote', z:'umbral', d:'Ritmo específico de 10K' },
+      { n:'Tempo 30 min', tipo:'continuo', min:30, z:'umbral', d:'Umbral sostenido' },
+      { n:'Tirada larga', tipo:'continuo', min:80, z:'facil', d:'Resistencia aeróbica' },
+    ]},
+  { id:'runhalf', dep:'carrera', n:'Media maratón', s:'Resistencia al umbral', sem:12,
+    intro:'La media se corre ligeramente por debajo del umbral. Prioridad al volumen aeróbico y a bloques largos a ritmo objetivo.',
+    ses:[
+      { n:'Rodaje fácil', tipo:'continuo', min:55, z:'facil', d:'Base aeróbica' },
+      { n:'Bloques de umbral', tipo:'series', reps:3, dist:3000, rec:'3 min trote', z:'umbral', d:'Resistencia al umbral' },
+      { n:'Ritmo objetivo', tipo:'continuo', min:40, z:'maraton', d:'Ritmo de carrera sostenido' },
+      { n:'Series 1000', tipo:'series', reps:5, dist:1000, rec:'2 min', z:'vo2', d:'Mantener el techo aeróbico' },
+      { n:'Tirada larga', tipo:'continuo', min:110, z:'facil', d:'Hasta 18-20 km progresivos' },
+    ]},
+  { id:'runmara', dep:'carrera', n:'Maratón', s:'Volumen y ritmo objetivo', sem:16,
+    intro:'El maratón lo decide la base aeróbica y la eficiencia. Mucho volumen fácil, tiradas largas y bloques a ritmo objetivo.',
+    ses:[
+      { n:'Rodaje fácil', tipo:'continuo', min:60, z:'facil', d:'La mayoría de tus kilómetros' },
+      { n:'Ritmo maratón', tipo:'continuo', min:50, z:'maraton', d:'Ritmo objetivo sostenido' },
+      { n:'Bloques de umbral', tipo:'series', reps:3, dist:3000, rec:'3 min', z:'umbral', d:'Elevar el umbral' },
+      { n:'Tirada larga', tipo:'continuo', min:150, z:'facil', d:'Hasta 30-32 km' },
+      { n:'Larga con ritmo', tipo:'continuo', min:120, z:'maraton', d:'Últimos 30 min a ritmo objetivo' },
+    ]},
+  { id:'bike40', dep:'bici', n:'40 km / triatlón olímpico', s:'Potencia sostenida', sem:10,
+    intro:'El segmento de bici se corre cerca del umbral. Trabajo específico de potencia sostenible y capacidad de repetir esfuerzos.',
+    ses:[
+      { n:'Salida en Z2', tipo:'continuo', min:90, z:'facil', d:'Base aeróbica, cadencia 85-95' },
+      { n:'Sweet spot', tipo:'series', reps:3, dist:0, min:12, rec:'5 min suave', z:'tempo', d:'Volumen de calidad' },
+      { n:'Intervalos umbral', tipo:'series', reps:3, min:10, rec:'5 min', z:'umbral', d:'Potencia sostenible' },
+      { n:'VO2 4x4', tipo:'series', reps:4, min:4, rec:'3 min', z:'vo2', d:'Elevar el techo' },
+      { n:'Salida larga', tipo:'continuo', min:150, z:'facil', d:'Resistencia' },
+    ]},
+  { id:'bikegran', dep:'bici', n:'Marcha larga / gran fondo', s:'Resistencia y subidas', sem:12,
+    intro:'Las marchas largas exigen tolerar horas en zona baja-media y responder en los puertos. Volumen alto y trabajo específico de subida.',
+    ses:[
+      { n:'Salida larga', tipo:'continuo', min:210, z:'facil', d:'Progresa hasta 4-5 h' },
+      { n:'Subidas largas', tipo:'series', reps:4, min:8, rec:'bajada', z:'umbral', d:'Específico de puerto' },
+      { n:'Sweet spot', tipo:'series', reps:4, min:12, rec:'4 min', z:'tempo', d:'Calidad sostenida' },
+      { n:'Rodaje suave', tipo:'continuo', min:75, z:'facil', d:'Recuperación activa' },
+      { n:'Fuerza-resistencia', tipo:'series', reps:5, min:5, rec:'5 min', z:'tempo', d:'Cadencia baja 50-60 rpm en llano' },
+    ]},
+  { id:'swim1500', dep:'nado', n:'1500 m / aguas abiertas', s:'Ritmo continuo', sem:10,
+    intro:'Nadar 1500 m seguidos exige ritmo sostenible y economía. El plan combina técnica, series de umbral y continuos progresivos.',
+    ses:[
+      { n:'Técnica', tipo:'series', reps:8, dist:50, rec:'20 s', z:'facil', d:'Ejercicios de técnica, calidad sobre velocidad' },
+      { n:'Series 100', tipo:'series', reps:10, dist:100, rec:'20 s', z:'umbral', d:'Ritmo específico' },
+      { n:'Series 200', tipo:'series', reps:6, dist:200, rec:'30 s', z:'aerobico', d:'Resistencia aeróbica' },
+      { n:'Continuo', tipo:'continuo', dist:1500, z:'aerobico', d:'Simulacro de distancia' },
+      { n:'Velocidad', tipo:'series', reps:12, dist:25, rec:'30 s', z:'sprint', d:'Potencia y técnica a velocidad' },
+    ]},
+  { id:'swim400', dep:'nado', n:'400-800 m', s:'Velocidad y umbral', sem:8,
+    intro:'Distancias cortas con alto componente de umbral y VO2. Series más intensas y descansos más cortos.',
+    ses:[
+      { n:'Técnica', tipo:'series', reps:8, dist:50, rec:'20 s', z:'facil', d:'Base técnica' },
+      { n:'Series 50', tipo:'series', reps:16, dist:50, rec:'15 s', z:'vo2', d:'Potencia aeróbica' },
+      { n:'Series 100', tipo:'series', reps:8, dist:100, rec:'15 s', z:'umbral', d:'Umbral con poca recuperación' },
+      { n:'Series 200', tipo:'series', reps:4, dist:200, rec:'30 s', z:'umbral', d:'Resistencia al ritmo' },
+      { n:'Sprints', tipo:'series', reps:10, dist:25, rec:'45 s', z:'sprint', d:'Velocidad máxima' },
+    ]},
+]

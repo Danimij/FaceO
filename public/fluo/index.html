@@ -135,7 +135,7 @@ nav button.on{color:var(--ac)}
       <span class="chev">›</span>
     </button>
 
-    <button class="row" onclick="openEnergy()" style="border-color:rgba(255,106,31,.4);background:linear-gradient(135deg,rgba(255,106,31,.12),rgba(255,106,31,.03))">
+    <button class="row" onclick="askReadiness()" style="border-color:rgba(255,106,31,.4);background:linear-gradient(135deg,rgba(255,106,31,.12),rgba(255,106,31,.03))">
       <span class="ic" style="background:rgba(255,106,31,.15);color:var(--ac2)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span>
       <span class="rb"><span class="rt">Entrenar según mi energía</span><span class="rs">Se adapta a cómo vengas hoy</span></span>
       <span class="chev">›</span>
@@ -195,9 +195,17 @@ nav button.on{color:var(--ac)}
     <div id="care-body"></div>
   </section>
 
+  <!-- CARRERAS -->
+  <section class="sc" id="sc-race">
+    <div id="race-body"></div>
+  </section>
+
   <!-- AJUSTES -->
   <section class="sc" id="sc-ajustes">
-    <div class="lbl">Material disponible</div>
+    <div class="lbl">Perfil de rendimiento</div>
+    <div id="perf-body"></div>
+
+    <div class="lbl" style="margin-top:24px">Material disponible</div>
     <div id="mat-list"></div>
 
     <div class="lbl" style="margin-top:24px">Molestias</div>
@@ -228,6 +236,7 @@ nav button.on{color:var(--ac)}
   <button data-s="plan" onclick="go('plan')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Plan</button>
   <button data-s="cardio" onclick="go('cardio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>Resistencia</button>
   <button data-s="biblio" onclick="go('biblio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.04A9 9 0 006 3.75c-1.05 0-2.06.18-3 .51v14.25A9 9 0 016 18c2.3 0 4.4.87 6 2.29m0-14.25a9 9 0 016-2.29c1.05 0 2.06.18 3 .51v14.25A9 9 0 0018 18a9 9 0 00-6 2.29m0-14.25v14.25"/></svg>Ejercicios</button>
+  <button data-s="race" onclick="go('race')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4c3-2 7 2 10 0v9c-3 2-7-2-10 0"/></svg>Objetivos</button>
   <button data-s="cuidado" onclick="go('cuidado')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-9-9a5 5 0 019-3 5 5 0 019 3c-2 4.5-9 9-9 9z"/></svg>Cuidado</button>
   <button data-s="ajustes" onclick="go('ajustes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9v0a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Ajustes</button>
 </nav>
@@ -250,12 +259,13 @@ nav button.on{color:var(--ac)}
 <div class="mo" id="mo-ex"><div class="md" id="mo-ex-body"></div></div>
 <div class="mo" id="mo-energy"><div class="md" id="mo-energy-body"></div></div>
 <div class="mo" id="mo-log"><div class="md" id="mo-log-body"></div></div>
+<div class="mo" id="mo-ready"><div class="md" id="mo-ready-body"></div></div>
 <div class="mo" id="mo-welcome"><div class="md" id="mo-welcome-body"></div></div>
 <div class="mo" id="mo-done"><div class="md" id="mo-done-body"></div></div>
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=16"></script>
+<script src="data.js?v=17"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -290,6 +300,7 @@ function go(s){
           plan:['12 semanas','Plan de 3 meses','Progresiones que sí llevan a algún sitio'],
           cardio:['Resistencia','Nado · Bici · Carrera','Sesiones con estructura y evidencia'],
           cuidado:['Cuidado','Readaptación y pies','Volver bien, y desde el suelo'],
+          race:['Objetivos','Planes por distancia','Ritmos calculados sobre tus datos'],
           biblio:['Biblioteca','Ejercicios','Qué trabaja cada uno y por qué'],
           ajustes:['Ajustes','Tu configuración','Material, pulsómetro y sesión'] }[s];
   document.getElementById('hd-eyebrow').textContent=H[0];
@@ -330,7 +341,7 @@ function niggles(){ S.niggles=S.niggles||[]; return S.niggles; }
 function toggleNiggle(k){
   var a=niggles(), i=a.indexOf(k);
   if(i>=0) a.splice(i,1); else a.push(k);
-  S.niggles=a; save(); renderNiggles(); renderWeek(); renderLog(); renderCardio(); renderCare(); vib(20);
+  S.niggles=a; save(); renderNiggles(); renderWeek(); renderLog(); renderCardio(); renderCare(); renderProfile(); renderRace(); vib(20);
 }
 var NIGGLES = { cintilla:'Cintilla / rodilla', hombro:'Hombro' };
 function renderNiggles(){
@@ -945,9 +956,9 @@ function logList(){ S.log=S.log||[]; return S.log; }
 function addLog(type,min,km,rpe,note){
   logList().unshift({ t:type, min:+min||0, km:+km||0, rpe:+rpe||0, note:note||'', d:new Date().toISOString() });
   if(S.log.length>200) S.log.pop();
-  save(); renderWeek(); renderLog(); renderCardio(); renderCare();
+  save(); renderWeek(); renderLog(); renderCardio(); renderCare(); renderProfile(); renderRace();
 }
-function delLog(i){ logList().splice(i,1); save(); renderWeek(); renderLog(); renderCardio(); renderCare(); }
+function delLog(i){ logList().splice(i,1); save(); renderWeek(); renderLog(); renderCardio(); renderCare(); renderProfile(); renderRace(); }
 
 function weekStart(){
   var d=new Date(); var day=(d.getDay()+6)%7;          // lunes = 0
@@ -1295,6 +1306,166 @@ function renderFotos(){
   return h;
 }
 
+/* ══ PERFIL DE RENDIMIENTO ══ */
+function prof(){ S.perf=S.perf||{}; return S.perf; }
+function saveProf(){
+  var g=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};
+  var p=prof();
+  p.racePace=g('pf-pace'); p.raceDist=g('pf-dist')||'10k';
+  p.ftp=parseInt(g('pf-ftp'),10)||0;
+  p.t400=parsePace(g('pf-400'));
+  p.fcmax=parseInt(g('pf-fc'),10)||0;
+  S.perf=p; save(); vib(30); toast('Perfil guardado'); renderProfile(); renderRace();
+}
+function myRunZones(){
+  var p=prof(); var sec=parsePace(p.racePace);
+  return sec? runZones(sec, p.raceDist||'10k') : null;
+}
+function myBikeZones(){ var f=prof().ftp; return f? bikeZones(f) : null; }
+function mySwimZones(){ var t=prof().t400; return t? swimZones(t) : null; }
+function myHrZones(){ var f=prof().fcmax; return f? hrZones(f) : null; }
+
+function renderProfile(){
+  var el=document.getElementById('perf-body'); if(!el) return;
+  var p=prof(), rz=myRunZones(), bz=myBikeZones(), sz=mySwimZones(), hz=myHrZones();
+  var h='<div class="card" style="border-left:3px solid var(--ac);margin-bottom:14px">'+
+    '<p style="font-size:12.5px;color:var(--tx2);line-height:1.55">Introduce lo que tengas. Con una sola marca reciente ya se calculan todos tus ritmos. '+
+    '<b style="color:var(--tx)">Usa lo que corres HOY</b>, no tu mejor marca de hace años: entrenar con ritmos antiguos es la vía rápida a la lesión.</p></div>';
+
+  h+='<div class="lbl">Carrera</div><div class="card" style="margin-bottom:12px">'+
+    '<div style="display:flex;gap:8px;margin-bottom:8px">'+
+    '<div style="flex:1"><label class="lbl" style="display:block">Ritmo (min/km)</label>'+
+    '<input id="pf-pace" placeholder="5:20" value="'+(p.racePace||'')+'" style="width:100%;background:var(--surface);border:1px solid var(--br);border-radius:12px;padding:11px;color:var(--tx);text-align:center;font-family:inherit;font-size:15px"></div>'+
+    '<div style="flex:1"><label class="lbl" style="display:block">En distancia</label>'+
+    '<select id="pf-dist" style="width:100%;background:var(--surface);border:1px solid var(--br);border-radius:12px;padding:11px;color:var(--tx);font-family:inherit;font-size:14px">'+
+    ['5k','10k','media','maraton'].map(function(d){return '<option value="'+d+'"'+((p.raceDist||'10k')===d?' selected':'')+'>'+d+'</option>';}).join('')+
+    '</select></div></div>'+
+    '<p style="font-size:11px;color:var(--tx2)">Tu ritmo medio en una carrera o rodaje exigente reciente.</p></div>';
+
+  h+='<div class="lbl">Bici y natación</div><div class="card" style="margin-bottom:12px">'+
+    '<div style="display:flex;gap:8px">'+
+    '<div style="flex:1"><label class="lbl" style="display:block">FTP (vatios)</label>'+
+    '<input id="pf-ftp" type="number" placeholder="220" value="'+(p.ftp||'')+'" style="width:100%;background:var(--surface);border:1px solid var(--br);border-radius:12px;padding:11px;color:var(--tx);text-align:center;font-family:inherit;font-size:15px"></div>'+
+    '<div style="flex:1"><label class="lbl" style="display:block">400 m nadando</label>'+
+    '<input id="pf-400" placeholder="7:00" value="'+(p.t400?mmss(p.t400):'')+'" style="width:100%;background:var(--surface);border:1px solid var(--br);border-radius:12px;padding:11px;color:var(--tx);text-align:center;font-family:inherit;font-size:15px"></div>'+
+    '</div></div>';
+
+  h+='<div class="lbl">Pulso</div><div class="card" style="margin-bottom:12px">'+
+    '<label class="lbl" style="display:block">FC máxima (ppm)</label>'+
+    '<input id="pf-fc" type="number" placeholder="185" value="'+(p.fcmax||'')+'" style="width:100%;background:var(--surface);border:1px solid var(--br);border-radius:12px;padding:11px;color:var(--tx);text-align:center;font-family:inherit;font-size:15px">'+
+    '<p style="font-size:11px;color:var(--tx2);margin-top:8px">Medida en un test real, no la fórmula 220-edad: puede fallar en 10-20 ppm. Si tienes banda, conéctala en Ajustes.</p></div>';
+
+  h+='<button class="btn" onclick="saveProf()">Guardar y calcular zonas</button>';
+
+  if(rz){
+    h+='<div class="lbl" style="margin-top:22px">Tus ritmos de carrera</div><div class="card" style="margin-bottom:10px">'+
+      [['facil','Fácil / Z2'],['maraton','Ritmo maratón'],['umbral','Umbral'],['vo2','VO2 máx'],['series','Series cortas']].map(function(o,i){
+        return '<div style="display:flex;justify-content:space-between;padding:8px 0'+(i?';border-top:1px solid var(--br)':'')+'">'+
+          '<span style="font-size:13px;color:var(--tx2)">'+o[1]+'</span>'+
+          '<span style="font-size:13.5px;font-weight:700;color:var(--ac)">'+mmss(rz[o[0]][0])+' - '+mmss(rz[o[0]][1])+' /km</span></div>';
+      }).join('')+'</div>';
+  }
+  if(bz){
+    h+='<div class="lbl">Zonas de potencia</div><div class="card" style="margin-bottom:10px">'+
+      [['facil','Z2 fácil'],['tempo','Tempo'],['umbral','Umbral'],['vo2','VO2 máx'],['anaerobico','Anaeróbico']].map(function(o,i){
+        return '<div style="display:flex;justify-content:space-between;padding:8px 0'+(i?';border-top:1px solid var(--br)':'')+'">'+
+          '<span style="font-size:13px;color:var(--tx2)">'+o[1]+'</span>'+
+          '<span style="font-size:13.5px;font-weight:700;color:var(--ac)">'+bz[o[0]][0]+' - '+bz[o[0]][1]+' W</span></div>';
+      }).join('')+'</div>';
+  }
+  if(sz){
+    h+='<div class="lbl">Ritmos de natación (por 100 m)</div><div class="card" style="margin-bottom:10px">'+
+      [['facil','Suave'],['aerobico','Aeróbico'],['umbral','Umbral'],['vo2','VO2 máx'],['sprint','Sprint']].map(function(o,i){
+        return '<div style="display:flex;justify-content:space-between;padding:8px 0'+(i?';border-top:1px solid var(--br)':'')+'">'+
+          '<span style="font-size:13px;color:var(--tx2)">'+o[1]+'</span>'+
+          '<span style="font-size:13.5px;font-weight:700;color:var(--ac)">'+mmss(sz[o[0]][0])+' - '+mmss(sz[o[0]][1])+'</span></div>';
+      }).join('')+'</div>';
+  }
+  if(hz){
+    h+='<div class="lbl">Zonas de pulso</div><div class="card">'+
+      ['z1','z2','z3','z4','z5'].map(function(k,i){
+        return '<div style="display:flex;justify-content:space-between;padding:8px 0'+(i?';border-top:1px solid var(--br)':'')+'">'+
+          '<span style="font-size:13px;color:var(--tx2)">Zona '+(i+1)+'</span>'+
+          '<span style="font-size:13.5px;font-weight:700;color:var(--ac)">'+hz[k][0]+' - '+hz[k][1]+' ppm</span></div>';
+      }).join('')+'</div>';
+  }
+  el.innerHTML=h;
+}
+
+/* ══ PLANES POR DISTANCIA ══ */
+var RF='carrera';
+function setRF(f){ RF=f; renderRace(); }
+function zoneLabel(dep, z){
+  var rz=myRunZones(), bz=myBikeZones(), sz=mySwimZones();
+  if(dep==='carrera'&&rz&&rz[z]) return mmss(rz[z][0])+'-'+mmss(rz[z][1])+'/km';
+  if(dep==='bici'&&bz&&bz[z]) return bz[z][0]+'-'+bz[z][1]+' W';
+  if(dep==='nado'&&sz&&sz[z]) return mmss(sz[z][0])+'-'+mmss(sz[z][1])+'/100m';
+  var RPE={facil:'RPE 3-4',maraton:'RPE 5-6',aerobico:'RPE 4-5',tempo:'RPE 6-7',umbral:'RPE 7-8',vo2:'RPE 8-9',series:'RPE 9',sprint:'RPE 9-10',anaerobico:'RPE 9-10'};
+  return RPE[z]||'RPE 5';
+}
+function renderRace(){
+  var el=document.getElementById('race-body'); if(!el) return;
+  var deps=[['carrera','Carrera'],['bici','Bici'],['nado','Natación']];
+  var h='<div class="chips">'+deps.map(function(d){
+    return '<div class="chip'+(RF===d[0]?' on':'')+'" onclick="setRF(\''+d[0]+'\')">'+d[1]+'</div>';
+  }).join('')+'</div>';
+
+  var hasData = (RF==='carrera'&&myRunZones())||(RF==='bici'&&myBikeZones())||(RF==='nado'&&mySwimZones());
+  if(!hasData){
+    h+='<div class="card" style="border-left:3px solid var(--ac2);margin-bottom:12px">'+
+      '<p style="font-size:12.5px;color:var(--tx2)">Sin tus datos, las sesiones se muestran por <b style="color:var(--tx)">sensación (RPE)</b>. '+
+      'Rellena tu perfil en Ajustes y verás ritmos y vatios exactos.</p></div>';
+  }
+
+  h+=RACE_PLANS.filter(function(p){return p.dep===RF;}).map(function(p){
+    return '<div class="card" style="margin-bottom:10px">'+
+      '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">'+
+      '<span style="font-size:16px;font-weight:700">'+p.n+'</span>'+
+      '<span style="font-size:11px;color:var(--tx2);flex-shrink:0">'+p.sem+' semanas</span></div>'+
+      '<p style="font-size:12.5px;color:var(--tx2);margin:4px 0 8px">'+p.s+'</p>'+
+      '<p style="font-size:12.5px;color:var(--tx);margin-bottom:12px">'+p.intro+'</p>'+
+      p.ses.map(function(x,i){
+        var det = x.tipo==='series'
+          ? x.reps+' × '+(x.dist? x.dist+' m' : x.min+' min')+' · rec '+x.rec
+          : (x.dist? x.dist+' m' : x.min+' min')+' continuos';
+        return '<div style="padding:9px 0'+(i?';border-top:1px solid var(--br)':'')+'">'+
+          '<div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline">'+
+          '<span style="font-size:13.5px;font-weight:600">'+x.n+'</span>'+
+          '<span style="font-size:12px;font-weight:700;color:var(--ac);flex-shrink:0">'+zoneLabel(p.dep,x.z)+'</span></div>'+
+          '<div style="font-size:11.5px;color:var(--tx2);margin-top:2px">'+det+' · '+x.d+'</div>'+
+          '<button class="btn sm ghost" style="margin-top:7px;padding:8px" onclick="logRace(\''+p.dep+'\','+(x.min||30)+',\''+x.n.replace(/'/g,"")+'\')">Hecha</button>'+
+        '</div>';
+      }).join('')+'</div>';
+  }).join('');
+  el.innerHTML=h;
+}
+function logRace(dep,min,name){ addLog(dep,min,0,3,name); vib(30); toast('Registrada: '+name); }
+
+/* ══ CHEQUEO PREVIO ══ */
+var PENDING_SESSION=null;
+function askReadiness(fn){
+  PENDING_SESSION=fn;
+  document.getElementById('mo-ready-body').innerHTML=
+    '<div class="mh"><div class="mt">¿Cómo vienes hoy?</div><button class="pl-x" onclick="cm(\'mo-ready\')">✕</button></div>'+
+    '<p style="font-size:13px;color:var(--tx2);margin-bottom:14px">Sé honesto. La sesión se adapta a lo que traes, no a lo que te gustaría traer.</p>'+
+    [[5,'Fresco','Sesión completa'],[3,'Normal','Sin cambios'],[2,'Cansado','Se acorta un 30%'],[1,'Fundido','Solo movilidad y prevención']].map(function(o){
+      return '<button class="row" onclick="applyReadiness('+o[0]+')">'+
+        '<span class="rb"><span class="rt">'+o[1]+'</span><span class="rs">'+o[2]+'</span></span>'+
+        '<span class="chev">›</span></button>';
+    }).join('');
+  om('mo-ready');
+}
+function applyReadiness(r){
+  S.readiness=r; save(); cm('mo-ready');
+  var base = S.planStart ? blockFor(planWeek()) : { focus:'mixto', minutes:20 };
+  var caps = r<=1 ? ['movilidad','control'] : (r===2 ? ['fuerza','control','movilidad'] : base.focus);
+  var mult = r>=5?1 : r===3?1 : r===2?0.7 : 0.5;
+  var mins = Math.max(8, Math.round(base.minutes*mult));
+  var sess = buildSession(caps, mins);
+  if(!sess){ toast('Revisa tu material'); return; }
+  SESSION=sess; FROM_PLAN=(r>1); startSession();
+}
+
 /* ══ ESTADÍSTICAS ══ */
 function renderStats(){
   document.getElementById('st-streak').textContent=S.streak||0;
@@ -1360,7 +1531,7 @@ function obDone(){
 /* ══ INIT ══ */
 document.getElementById('tg-voice').classList.toggle('on',PREF.voice);
 document.getElementById('tg-hap').classList.toggle('on',PREF.hap);
-renderMats(); renderGen(); renderBiblio(); renderPresets(); renderStats(); initHR(); renderPlan(); renderToday(); renderNiggles(); renderWeek(); renderLog(); renderCardio(); renderCare();
+renderMats(); renderGen(); renderBiblio(); renderPresets(); renderStats(); initHR(); renderPlan(); renderToday(); renderNiggles(); renderWeek(); renderLog(); renderCardio(); renderCare(); renderProfile(); renderRace();
 document.querySelectorAll('.mo').forEach(function(o){ o.addEventListener('click',function(e){ if(e.target===o) o.classList.remove('on'); }); });
 if(!S.onboarded){ setTimeout(function(){ renderWelcome(); om('mo-welcome'); }, 1400); }
 window.addEventListener('load', function(){
