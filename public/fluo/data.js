@@ -1286,3 +1286,115 @@ const GOAL_GROUPS = [
   { n:'Resistencia',          ids:['correr','ciclismo','natacion','triatlon'] },
   { n:'Deporte específico',   ids:['btt','trail','equipo','escalada'] },
 ]
+
+/* ── ACONDICIONAMIENTO ───────────────────────────────────────────
+ * Sistema completo: aeróbico, umbral, VO2máx, anaeróbico y potencia.
+ * Cada bloque estimula un sistema energético distinto.
+ *
+ * Referencias del enfoque:
+ *  · 4x4 noruego (NTNU, Helgerud 2007): ~7-9% de VO2máx en 8 semanas.
+ *    Intervalos largos mantienen más tiempo cerca del VO2máx que los cortos.
+ *  · Distribución polarizada: ~80% del volumen en baja intensidad.
+ *  · Anaeróbico: descansos largos, series cortas. Si no descansas, no es anaeróbico.
+ *
+ * modo: 'libre' = corre, pedalea, nada o rema, lo que prefieras.
+ */
+const COND = [
+  /* ── AERÓBICO BASE ── */
+  { id:'z2-base', sis:'aerobico', n:'Zona 2 continua', min:60, int:1, modo:'libre',
+    s:'El pilar del 80% del volumen',
+    why:'La intensidad baja y sostenida desarrolla densidad mitocondrial, capilarización y capacidad de usar grasa como combustible. Es aburrido y es lo que más importa: la mayoría entrena demasiado fuerte los días fáciles y demasiado flojo los días duros.',
+    steps:['10 min progresivos hasta llegar a zona 2','Mantén una intensidad conversacional: puedes hablar en frases completas','Si te falta el aire para hablar, vas demasiado fuerte','5-10 min de vuelta a la calma'],
+    tip:'La prueba de la conversación es más fiable que cualquier pulsómetro. Si no puedes charlar, no es zona 2.' },
+  { id:'z2-long', sis:'aerobico', n:'Salida larga', min:120, int:1, modo:'libre',
+    s:'Resistencia de base y eficiencia grasa',
+    why:'Las sesiones largas a baja intensidad mejoran la oxidación de grasas y la resistencia a la fatiga. Son el cimiento sobre el que se apoya todo lo demás: sin base aeróbica, la intensidad no cunde.',
+    steps:['Empieza muy suave, más de lo que crees necesario','Mantén intensidad conversacional todo el rato','Come e hidrátate si pasas de 90 min','Termina sintiendo que podrías seguir'],
+    tip:'Si terminas destrozado, no era una salida larga: era una carrera. El objetivo es acumular tiempo, no sufrir.' },
+  { id:'z2-fasted', sis:'aerobico', n:'Aeróbico en ayunas', min:45, int:1, modo:'libre',
+    s:'Flexibilidad metabólica',
+    why:'Entrenar suave con las reservas bajas potencia la señalización para usar grasa como sustrato. Es una herramienta puntual, no una norma: hecho a diario compromete la recuperación y la calidad de las sesiones duras.',
+    steps:['Por la mañana, antes de desayunar','Intensidad muy baja: conversacional cómoda','Máximo 45-60 min','Desayuna con proteína al terminar'],
+    tip:'Nunca hagas sesiones de intensidad en ayunas. Para eso necesitas glucógeno, y forzarlo solo trae sesiones malas.' },
+
+  /* ── UMBRAL ── */
+  { id:'tempo', sis:'umbral', n:'Tempo continuo', min:50, int:3, modo:'libre',
+    s:'Ritmo cómodamente duro',
+    why:'El trabajo sostenido cerca del umbral mejora la capacidad de mantener intensidades altas durante más tiempo. Es la intensidad que más se parece a una prueba de media distancia.',
+    steps:['15 min de calentamiento progresivo','20-30 min a ritmo "cómodamente duro"','Puedes decir frases cortas, no conversar','10 min de vuelta a la calma'],
+    tip:'El error clásico es ir demasiado fuerte. El tempo debe dejarte con la sensación de poder haber seguido 10 min más.' },
+  { id:'threshold-int', sis:'umbral', n:'Intervalos de umbral', min:60, int:3, modo:'libre',
+    s:'Bloques largos cerca del umbral',
+    why:'Fraccionar el trabajo de umbral permite acumular más tiempo total a esa intensidad que en continuo. Mejora la potencia sostenible, que es lo que determina el rendimiento en pruebas de 20-60 min.',
+    steps:['20 min de calentamiento','3 × 10 min a ritmo de umbral, 3 min suaves entre bloques','Mantén la misma intensidad en los tres','10 min de vuelta a la calma'],
+    tip:'Si el tercer bloque se te cae, saliste demasiado fuerte. Todos deben ser iguales: esa es la señal de haberlo hecho bien.' },
+  { id:'sweet-spot', sis:'umbral', n:'Sweet spot', min:55, int:3, modo:'libre',
+    s:'Justo por debajo del umbral',
+    why:'Trabajar ligeramente por debajo del umbral permite acumular mucho volumen de calidad con menos fatiga que en el umbral estricto. Es la zona con mejor relación estímulo/recuperación cuando el tiempo escasea.',
+    steps:['15 min de calentamiento','2 × 15 min a intensidad justo por debajo de umbral','5 min suaves entre bloques','10 min de vuelta a la calma'],
+    tip:'Debe costar, pero terminar cada bloque sin agonía. Si acabas reventado, era umbral, no sweet spot.' },
+
+  /* ── VO2 MÁX ── */
+  { id:'4x4', sis:'vo2', n:'4x4 noruego', min:40, int:5, modo:'libre',
+    s:'El protocolo más estudiado para VO2máx',
+    why:'Desarrollado en la universidad noruega NTNU, es el protocolo de intervalos con más respaldo para elevar el VO2máx: en torno a un 7-9% de mejora en 8 semanas haciéndolo 3 veces por semana. Los 4 minutos son clave: obligan al corazón a sostener el volumen sistólico máximo, algo que los sprints de 30 s no consiguen.',
+    steps:['10 min de calentamiento progresivo','4 × 4 min a intensidad muy alta (no máxima: debes completar los cuatro)','3 min de recuperación activa entre series','5 min de vuelta a la calma'],
+    tip:'El primer intervalo debe parecer casi fácil. Si el cuarto no lo terminas, empezaste demasiado fuerte: el objetivo es completar los cuatro iguales.' },
+  { id:'5x3', sis:'vo2', n:'5 × 3 minutos', min:38, int:5, modo:'libre',
+    s:'Variante algo más intensa',
+    why:'Intervalos algo más cortos permiten una intensidad ligeramente superior manteniendo un tiempo total elevado cerca del VO2máx. Buena alternativa al 4x4 para variar el estímulo.',
+    steps:['12 min de calentamiento','5 × 3 min a intensidad muy alta','2:30 de recuperación entre series','8 min suaves'],
+    tip:'Alterna esta sesión con el 4x4 en semanas distintas. Variar el estímulo evita el estancamiento.' },
+  { id:'30-30', sis:'vo2', n:'30-30 (Billat)', min:35, int:4, modo:'libre',
+    s:'Mucho tiempo a alta intensidad, más llevadero',
+    why:'Alternar 30 s fuertes y 30 s suaves permite acumular mucho tiempo cerca del VO2máx con una percepción de esfuerzo menor que los intervalos largos. Muy útil para quien no tolera bien los bloques de 4 min.',
+    steps:['15 min de calentamiento','2 bloques de 10 × (30 s fuerte / 30 s suave)','5 min entre bloques','10 min de vuelta a la calma'],
+    tip:'Los 30 s suaves son trote o pedaleo ligero, no parada. La recuperación activa mantiene el pulso alto, que es la gracia.' },
+
+  /* ── ANAERÓBICO ── */
+  { id:'sprints', sis:'anaerobico', n:'Sprints máximos', min:35, int:5, modo:'libre',
+    s:'Potencia y capacidad anaeróbica',
+    why:'Los esfuerzos máximos y breves con descanso completo entrenan la vía anaeróbica y la potencia neuromuscular. La clave es el descanso largo: si no te recuperas, bajas la intensidad y dejas de entrenar lo que querías.',
+    steps:['15 min de calentamiento con progresiones','6-8 × 15-20 s a intensidad MÁXIMA','2-3 min de recuperación completa entre sprints','10 min muy suaves'],
+    tip:'Si el último sprint es mucho más lento que el primero, descansa más o haz menos repeticiones. La calidad manda.' },
+  { id:'lactic', sis:'anaerobico', n:'Tolerancia al lactato', min:40, int:5, modo:'libre',
+    s:'Aguantar con las piernas ardiendo',
+    why:'Series de 60-90 s a intensidad muy alta con recuperación incompleta entrenan la capacidad de tamponar y tolerar la acidosis. Es una sesión dura: máximo una por semana y nunca en fase de descarga.',
+    steps:['15 min de calentamiento completo','5 × 90 s muy fuerte','90 s de recuperación (incompleta a propósito)','10-15 min de vuelta a la calma larga'],
+    tip:'Esta sesión deja fatiga. No la pongas el día antes de algo importante ni dos veces en la misma semana.' },
+  { id:'hill-sprints', sis:'anaerobico', n:'Cuestas cortas', min:35, int:5, modo:'libre',
+    s:'Potencia con menos impacto',
+    why:'La cuesta limita la velocidad y por tanto reduce el impacto y el riesgo de tirón, mientras exige potencia máxima. Es la forma más segura de introducir trabajo de velocidad en corredores.',
+    steps:['15 min de calentamiento','8 × 10-15 s subiendo a tope','Baja caminando: esa es la recuperación','10 min suaves al terminar'],
+    tip:'Ideal si vuelves de una lesión de isquios: la cuesta protege porque no puedes alcanzar velocidad máxima.' },
+
+  /* ── POTENCIA / CIRCUITOS ── */
+  { id:'emom', sis:'potencia', n:'EMOM de fuerza-resistencia', min:20, int:4, modo:'casa',
+    s:'Cada minuto en punto',
+    why:'Formato de densidad: haces un número fijo de repeticiones al inicio de cada minuto y descansas el resto. Mantiene la calidad técnica mientras sube la carga cardiovascular, y controla la fatiga mejor que un AMRAP.',
+    steps:['Elige 2 ejercicios y alterna cada minuto','Ejemplo: minuto 1, 10 sentadillas; minuto 2, 8 flexiones','Haz las repeticiones y descansa lo que sobre del minuto','20 minutos en total'],
+    tip:'Si no te sobran al menos 15 s de descanso, has elegido demasiadas repeticiones. Baja el número.' },
+  { id:'circuit', sis:'potencia', n:'Circuito metabólico', min:25, int:4, modo:'casa',
+    s:'Fuerza y cardio a la vez',
+    why:'Encadenar ejercicios con poco descanso mantiene el pulso alto mientras se trabaja la musculatura. Es eficiente cuando hay poco tiempo, aunque no sustituye ni al trabajo de fuerza pesada ni al aeróbico específico.',
+    steps:['5 ejercicios seguidos, 40 s de trabajo y 20 s de transición','Alterna tren superior e inferior para repartir la fatiga','Descansa 2 min al terminar la vuelta','3-4 vueltas'],
+    tip:'Alternar arriba y abajo permite mantener la intensidad sin que un grupo muscular se convierta en el limitante.' },
+  { id:'tabata', sis:'potencia', n:'Tabata', min:15, int:5, modo:'casa',
+    s:'4 minutos que duelen',
+    why:'20 s a intensidad máxima y 10 s de descanso, ocho veces. Es un protocolo muy intenso y muy breve: útil como estímulo puntual, pero no como base de un plan. Su fama excede lo que aporta si se abusa.',
+    steps:['10 min de calentamiento serio: es intenso desde el segundo uno','8 × (20 s máximo / 10 s descanso) = 4 min','Elige un ejercicio cíclico: bici, remo, burpees','5 min de vuelta a la calma'],
+    tip:'Un Tabata bien hecho basta como sesión de intensidad. Encadenar varios es una forma de acumular fatiga sin más beneficio.' },
+  { id:'active-recovery', sis:'aerobico', n:'Recuperación activa', min:30, int:1, modo:'libre',
+    s:'El día después de la sesión dura',
+    why:'El movimiento muy suave favorece el flujo sanguíneo sin añadir carga. No es entrenamiento: es facilitar la recuperación, y es lo que permite entrenar con calidad al día siguiente.',
+    steps:['Intensidad muy baja: debes poder cantar, no solo hablar','20-30 min','Termina con movilidad suave','Si dudas, ve más flojo'],
+    tip:'La tentación es acelerar porque te sientes bien. Resístela: convertir la recuperación en entrenamiento medio es el error más común.' },
+]
+
+const SISTEMAS = {
+  aerobico:   { n:'Aeróbico',    c:'#2ee6c8', d:'Base: el 80% de tu volumen debería estar aquí' },
+  umbral:     { n:'Umbral',      c:'#c9f24d', d:'Ritmo sostenible: mejora tu velocidad de crucero' },
+  vo2:        { n:'VO2 máx',     c:'#ff6a1f', d:'Intervalos largos: el mayor estímulo cardíaco' },
+  anaerobico: { n:'Anaeróbico',  c:'#b07cff', d:'Esfuerzos cortos y máximos con descanso largo' },
+  potencia:   { n:'Circuitos',   c:'#5ad2ff', d:'Fuerza y cardio combinados, sin material' },
+}

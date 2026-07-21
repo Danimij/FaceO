@@ -255,7 +255,7 @@ nav button.on{color:var(--ac)}
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=15"></script>
+<script src="data.js?v=16"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -936,6 +936,7 @@ var DISC = {
   nado:    { n:'Natación', c:'#2ee6c8', ic:"<path d='M2 18c2 0 2-1.5 4-1.5S8 18 10 18s2-1.5 4-1.5S16 18 18 18s2-1.5 4-1.5'/><path d='M6 12l5-3 4 3'/><circle cx='17' cy='7' r='1.6'/>" },
   bici:    { n:'Bici',     c:'#c9f24d', ic:"<circle cx='6' cy='17' r='3.4'/><circle cx='18' cy='17' r='3.4'/><path d='M6 17l4-8h5l3 8M9 9h4'/>" },
   carrera: { n:'Carrera',  c:'#ff6a1f', ic:"<circle cx='14' cy='5' r='1.8'/><path d='M6 20l3-5 3 2 2-4M9 15l-1-4 5-1 2 3 3 1'/>" },
+  cardio:  { n:'Cardio',   c:'#5ad2ff', ic:"<path d='M3 12h4l2-6 4 12 2-6h6'/>" },
   fuerza:  { n:'Fuerza',   c:'#b07cff', ic:"<path d='M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12'/>" },
 };
 function svgD(k,sz){ return "<svg viewBox='0 0 24 24' width='"+(sz||20)+"' height='"+(sz||20)+"' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'>"+DISC[k].ic+"</svg>"; }
@@ -957,7 +958,7 @@ function weekEntries(){
   return logList().filter(function(e){ return new Date(e.d).getTime()>=ws; });
 }
 function weekTally(){
-  var t={nado:0,bici:0,carrera:0,fuerza:0}, mins=0;
+  var t={nado:0,bici:0,carrera:0,cardio:0,fuerza:0}, mins=0;
   weekEntries().forEach(function(e){ if(t[e.t]!==undefined){ t[e.t]++; mins+=e.min; } });
   return { t:t, mins:mins };
 }
@@ -993,7 +994,7 @@ function saveLog(){
 function renderWeek(){
   var el=document.getElementById('week-card'); if(!el) return;
   var w=weekTally();
-  var goals={nado:2,bici:2,carrera:1,fuerza:2};
+  var goals={nado:2,bici:2,carrera:1,cardio:2,fuerza:2};
   el.innerHTML='<div class="lbl" style="margin-top:22px">Tu semana</div>'+
     '<div class="card" style="margin-bottom:9px">'+
     '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">'+
@@ -1042,27 +1043,72 @@ function triPhase(){
   return { n:f.n, name:f.name, meses:f.meses };
 }
 var CF='todas';
-function setCF(f){ CF=f; renderCardio(); renderCare(); }
+function setCF(f){ CF=f; renderCardio(); }
 function renderCardio(){
-  var tf = triPhase();
-  var opts=[['todas','Todas'],['nado','Natación'],['bici','Bici'],['carrera','Carrera']];
+  var tf=triPhase();
+  var opts=[['todas','Todas']].concat(Object.keys(SISTEMAS).map(function(k){return [k,SISTEMAS[k].n];}));
   document.getElementById('cardio-filter').innerHTML = opts.map(function(o){
-    return '<div class="chip'+(CF===o[0]?' on':'')+'" onclick="setCF(\''+o[0]+'\')">'+o[1]+'</div>';
+    return '<div class="chip'+(CF===o[0]?' on':'')+'" style="font-size:12px" onclick="setCF(\''+o[0]+'\')">'+o[1]+'</div>';
   }).join('');
-  var list = ENDUR.filter(function(e){ return CF==='todas' || e.d===CF; });
-  var INT={ baja:['Suave','var(--ac)'], media:['Medio','var(--lime)'], alta:['Fuerte','var(--ac2)'] };
-  document.getElementById('cardio-list').innerHTML =
-    (tf? '<p style="font-size:11.5px;color:var(--tx2);margin-bottom:12px">Fase '+tf.n+' · <b style="color:var(--ac)">'+tf.name+'</b> (meses '+tf.meses+'). Las marcadas encajan con tu fase.</p>':'')+
-    list.map(function(e){
-      var ok = tf ? e.fase.indexOf(tf.n)>=0 : false;
-      return '<button class="row" onclick="openEndur(\''+e.id+'\')">'+
-        '<span class="ic" style="color:'+DISC[e.d].c+'">'+svgD(e.d,20)+'</span>'+
-        '<span class="rb"><span class="rt">'+e.n+
-          (ok?'<span class="pill" style="color:var(--ac);border-color:rgba(46,230,200,.4)">tu fase</span>':'')+
-          '</span><span class="rs">'+e.s+' · '+e.min+' min</span></span>'+
-        '<span class="pill" style="color:'+INT[e.int][1]+';border-color:'+INT[e.int][1]+'55">'+INT[e.int][0]+'</span>'+
-        '</button>';
-    }).join('');
+
+  var h='';
+  if(CF!=='todas'){
+    h+='<div class="card" style="border-left:3px solid '+SISTEMAS[CF].c+';margin-bottom:12px">'+
+       '<p style="font-size:12.5px;color:var(--tx2)">'+SISTEMAS[CF].d+'</p></div>';
+  } else {
+    h+='<div class="card" style="border-left:3px solid var(--ac);margin-bottom:12px">'+
+       '<p style="font-size:12.5px;color:var(--tx2);line-height:1.55">Reparte tu semana: en torno al <b style="color:var(--tx)">80% en aeróbico suave</b> y el resto en intensidad. El error más común es entrenar demasiado fuerte los días fáciles y demasiado flojo los duros.</p></div>';
+  }
+
+  var list = COND.filter(function(e){ return CF==='todas' || e.sis===CF; });
+  var INT={1:'Suave',2:'Suave',3:'Medio',4:'Fuerte',5:'Máximo'};
+  h+=list.map(function(e){
+    var S1=SISTEMAS[e.sis];
+    return '<button class="row" onclick="openCond(\''+e.id+'\')">'+
+      '<span class="ic" style="color:'+S1.c+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg></span>'+
+      '<span class="rb"><span class="rt">'+e.n+'</span><span class="rs">'+e.s+' · '+e.min+' min</span></span>'+
+      '<span class="pill" style="color:'+S1.c+';border-color:'+S1.c+'55">'+INT[e.int]+'</span>'+
+      '</button>';
+  }).join('');
+
+  // Las sesiones específicas de triatlón siguen disponibles
+  if(CF==='todas'){
+    h+='<div class="lbl" style="margin-top:22px">Específicas por disciplina</div>'+
+      (tf? '<p style="font-size:11.5px;color:var(--tx2);margin-bottom:10px">Fase '+tf.n+' · <b style="color:var(--ac)">'+tf.name+'</b>. Las marcadas encajan con tu fase.</p>':'')+
+      ENDUR.map(function(e){
+        var ok = tf ? e.fase.indexOf(tf.n)>=0 : false;
+        return '<button class="row" onclick="openEndur(\''+e.id+'\')">'+
+          '<span class="ic" style="color:'+DISC[e.d].c+'">'+svgD(e.d,20)+'</span>'+
+          '<span class="rb"><span class="rt">'+e.n+(ok?'<span class="pill" style="color:var(--ac);border-color:rgba(46,230,200,.4)">tu fase</span>':'')+
+          '</span><span class="rs">'+DISC[e.d].n+' · '+e.s+' · '+e.min+' min</span></span>'+
+          '<span class="chev">›</span></button>';
+      }).join('');
+  }
+  document.getElementById('cardio-list').innerHTML=h;
+}
+function openCond(id){
+  var e=COND.filter(function(x){return x.id===id;})[0]; if(!e) return;
+  var S1=SISTEMAS[e.sis];
+  var INT={1:'Suave',2:'Suave',3:'Medio',4:'Fuerte',5:'Máximo'};
+  document.getElementById('mo-ex-body').innerHTML=
+    '<div class="mh"><div class="mt">'+e.n+'</div><button class="pl-x" onclick="cm(\'mo-ex\')">✕</button></div>'+
+    '<p style="font-size:13px;color:var(--tx2)">'+e.s+'</p>'+
+    '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">'+
+      '<span class="pill" style="color:'+S1.c+';border-color:'+S1.c+'55">'+S1.n+'</span>'+
+      '<span class="pill" style="color:var(--tx2);border-color:var(--br)">'+e.min+' min</span>'+
+      '<span class="pill" style="color:var(--tx2);border-color:var(--br)">'+INT[e.int]+'</span>'+
+      '<span class="pill" style="color:var(--tx2);border-color:var(--br)">'+(e.modo==='casa'?'En casa':'Corre, pedalea o nada')+'</span></div>'+
+    '<div class="why"><div class="wl">Por qué esta sesión</div><p>'+e.why+'</p></div>'+
+    '<div class="lbl">La sesión</div>'+
+    '<ul class="pl-steps" style="margin:0">'+e.steps.map(function(x,i){return '<li><b>'+(i+1)+'</b>'+x+'</li>';}).join('')+'</ul>'+
+    '<div class="tipbox">'+e.tip+'</div>'+
+    '<button class="btn" style="margin-top:16px" onclick="logCond(\''+e.id+'\')">Hecha · registrar</button>';
+  om('mo-ex');
+}
+function logCond(id){
+  var e=COND.filter(function(x){return x.id===id;})[0]; if(!e) return;
+  addLog('cardio', e.min, 0, Math.min(5,e.int), e.n);
+  cm('mo-ex'); vib(35); toast('Registrada: '+e.n);
 }
 function openEndur(id){
   var e=ENDUR.filter(function(x){return x.id===id;})[0]; if(!e) return;
@@ -1071,8 +1117,7 @@ function openEndur(id){
     '<p style="font-size:13px;color:var(--tx2)">'+e.s+'</p>'+
     '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">'+
       '<span class="pill" style="color:'+DISC[e.d].c+';border-color:'+DISC[e.d].c+'55">'+DISC[e.d].n+'</span>'+
-      '<span class="pill" style="color:var(--tx2);border-color:var(--br)">'+e.min+' min</span>'+
-      '<span class="pill" style="color:var(--tx2);border-color:var(--br)">Fases '+e.fase.join(', ')+'</span></div>'+
+      '<span class="pill" style="color:var(--tx2);border-color:var(--br)">'+e.min+' min</span></div>'+
     '<div class="why"><div class="wl">Por qué esta sesión</div><p>'+e.why+'</p></div>'+
     '<div class="lbl">La sesión</div>'+
     '<ul class="pl-steps" style="margin:0">'+e.steps.map(function(x,i){return '<li><b>'+(i+1)+'</b>'+x+'</li>';}).join('')+'</ul>'+
@@ -1085,6 +1130,7 @@ function logEndur(id){
   addLog(e.d, e.min, 0, e.int==='alta'?4:(e.int==='media'?3:2), e.n);
   cm('mo-ex'); vib(35); toast('Registrada: '+e.n);
 }
+
 
 /* ══ READAPTACIÓN Y PIES ══ */
 var CARE='rehab', CAREA=null, FCA={};
