@@ -1288,6 +1288,13 @@ const GOAL_GROUPS = [
  * Referencias del enfoque:
  *  · 4x4 noruego (NTNU, Helgerud 2007): ~7-9% de VO2máx en 8 semanas.
  *    Intervalos largos mantienen más tiempo cerca del VO2máx que los cortos.
+ *  · 40/20 de Rønnestad y 4x8 de Seiler: alternativas con respaldo que
+ *    igualan o superan al 4x4 según el trabajo. Variar el estímulo evita
+ *    el estancamiento; ninguno es "el mejor" para siempre.
+ *  · Para SUBIR VO2máx: 2 sesiones duras/semana (nunca en días seguidos),
+ *    sobre una base amplia de zona 2. Rota el protocolo cada 3-4 semanas
+ *    y mete una semana suave de cada cuatro. La mejora vive en la
+ *    recuperación, no en acumular sesiones duras.
  *  · Distribución polarizada: ~80% del volumen en baja intensidad.
  *  · Anaeróbico: descansos largos, series cortas. Si no descansas, no es anaeróbico.
  *
@@ -1344,6 +1351,16 @@ const COND = [
     why:'Alternar 30 s fuertes y 30 s suaves permite acumular mucho tiempo cerca del VO2máx con una percepción de esfuerzo menor que los intervalos largos. Muy útil para quien no tolera bien los bloques de 4 min.',
     steps:['15 min de calentamiento','2 bloques de 10 × (30 s fuerte / 30 s suave)','5 min entre bloques','10 min de vuelta a la calma'],
     tip:'Los 30 s suaves son trote o pedaleo ligero, no parada. La recuperación activa mantiene el pulso alto, que es la gracia.' },
+  { id:'40-20', sis:'vo2', n:'40-20 (Rønnestad)', min:42, int:5, modo:'libre',
+    s:'Intervalos cortos que baten al 4x4 en algunos estudios',
+    why:'Estudiados por Rønnestad en ciclistas: 3 bloques de 13 repeticiones de 40 s fuerte / 20 s suave. En varios trabajos igualan o superan al 4x4 en ganancia de VO2máx y potencia, porque el estímulo se reparte y permite mantener más potencia media en cada intervalo. La recuperación de solo 20 s mantiene el consumo de oxígeno alto sin dejarte caer.',
+    steps:['15 min de calentamiento progresivo','3 bloques de 13 × (40 s fuerte / 20 s suave)','3 min de recuperación entre bloques','10 min de vuelta a la calma'],
+    tip:'El "fuerte" no es sprint: es la mayor intensidad que puedas repetir 13 veces sin desplomarte. Ajusta por el primer bloque, no por el primer intervalo.' },
+  { id:'4x8', sis:'vo2', n:'4 × 8 minutos (Seiler)', min:55, int:4, modo:'libre',
+    s:'Intervalos largos, intensidad algo menor, gran volumen de calidad',
+    why:'Seiler comparó 4×4, 4×8 y 4×16 y el 4×8 salió como el que mejor equilibrio ofrecía entre intensidad y volumen tolerable. Ocho minutos obligan a una intensidad algo por debajo del 4x4 pero acumulas mucho más tiempo total en la zona alta. Excelente cuando ya tienes base y quieres progresar sin destrozarte.',
+    steps:['15 min de calentamiento','4 × 8 min a ritmo "duro sostenible" (algo por debajo del 4x4)','2 min de recuperación entre series','10 min de vuelta a la calma'],
+    tip:'Regula para terminar los cuatro al mismo ritmo. Si el primero va muy por encima de los demás, empezaste demasiado fuerte.' },
 
   /* ── ANAERÓBICO ── */
   { id:'sprints', sis:'anaerobico', n:'Sprints máximos', min:35, int:5, modo:'libre',

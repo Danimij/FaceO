@@ -271,7 +271,7 @@ nav button.on{color:var(--ac)}
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=20"></script>
+<script src="data.js?v=21"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -917,7 +917,7 @@ function renderPresets(){
 function quick(cap,min){ GEN.cap=cap; GEN.min=min; var s=buildSession(cap,min); if(!s){toast('Sin ejercicios para tu material');return;} SESSION=s; startSession(); }
 
 /* ══ PREMIUM ══ */
-var CODES=['FLUO-7K2M-XQ4P','FLUO-B3N8-LT9V','FLUO-D5R1-WY6C','FLUO-H9F4-ZP2S','FLUO-J2T7-MK5A',
+var CODES=['DANIMIJ-FULL','FLUO-7K2M-XQ4P','FLUO-B3N8-LT9V','FLUO-D5R1-WY6C','FLUO-H9F4-ZP2S','FLUO-J2T7-MK5A',
 'FLUO-L6X0-QN8E','FLUO-N4C3-VB1G','FLUO-P8W5-RD7H','FLUO-S1Y9-JF3K','FLUO-U7A2-GH6L',
 'FLUO-V3E6-NC9M','FLUO-X5I8-BQ4R','FLUO-Z9O1-TP2W','FLUO-A4U7-DK5Y','FLUO-C6M2-XS8B',
 'FLUO-E8Q4-HL1N','FLUO-G2S9-YV6P','FLUO-I5W3-FA7T','FLUO-K7Z6-MJ2D','FLUO-M1B8-QG9X'];

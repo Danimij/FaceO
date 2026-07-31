@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext'
 const GUMROAD_URL = 'https://danimij.gumroad.com/l/ikoaq'
 
 // Códigos válidos — añade más cuando quieras
-const VALID_CODES = ['FACEO2024', 'FACEOPROX', 'FACEOPRO1']
+const VALID_CODES = ['FACEO2024', 'FACEOPROX', 'FACEOPRO1', 'DANIMIJ-FULL']
 
 export default function ProModal({ onClose }) {
   const { lang, setIsPro } = useApp()
