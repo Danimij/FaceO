@@ -118,6 +118,24 @@ export default function Home() {
           </div>
         </button>
 
+        {/* Autoevaluación */}
+        <button onClick={() => navigate('/assess')}
+          className="w-full text-left rounded-2xl overflow-hidden border border-border active:scale-[0.98] transition-transform flex items-center gap-3 bg-card p-4">
+          <div className="w-10 h-10 rounded-xl bg-accent/12 flex items-center justify-center flex-shrink-0 text-accent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <div className="text-[10px] uppercase tracking-widest text-accent mb-0.5">{lang === 'es' ? 'Autoevaluación' : 'Self-check'}</div>
+            <div className="text-warm font-semibold text-sm">{lang === 'es' ? '¿Por dónde empiezo?' : 'Where do I start?'}</div>
+            <div className="text-muted text-xs">{lang === 'es' ? 'Responde y te digo en qué centrarte' : 'Answer and I point you to what matters'}</div>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-stone-600 flex-shrink-0">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
         {/* Generador de rutinas */}
         <button onClick={() => navigate('/generate')}
           className="w-full text-left rounded-2xl overflow-hidden border border-border active:scale-[0.98] transition-transform flex items-center gap-3 bg-card p-4">
