@@ -197,6 +197,11 @@ nav button.on{color:var(--ac)}
 
   <!-- CARRERAS -->
   <section class="sc" id="sc-race">
+    <div onclick="openRecommender()" style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(46,230,200,.12),rgba(255,106,31,.04));border:1px solid rgba(46,230,200,.35);border-radius:16px;padding:14px 16px;margin-bottom:16px;cursor:pointer">
+      <span style="flex-shrink:0;width:38px;height:38px;border-radius:11px;background:rgba(46,230,200,.15);display:flex;align-items:center;justify-content:center;color:var(--ac)"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+      <span style="flex:1"><span style="display:block;font-weight:700;font-size:14.5px;color:var(--tx)">¿Qué plan es para mí?</span><span style="display:block;font-size:12px;color:var(--tx2)">4 preguntas y te recomiendo uno</span></span>
+      <span style="flex-shrink:0;color:var(--tx2);font-size:18px">›</span>
+    </div>
     <div id="race-body"></div>
   </section>
 
@@ -260,12 +265,13 @@ nav button.on{color:var(--ac)}
 <div class="mo" id="mo-energy"><div class="md" id="mo-energy-body"></div></div>
 <div class="mo" id="mo-log"><div class="md" id="mo-log-body"></div></div>
 <div class="mo" id="mo-ready"><div class="md" id="mo-ready-body"></div></div>
+<div class="mo" id="mo-rec"><div class="md" id="mo-rec-body"></div></div>
 <div class="mo" id="mo-welcome"><div class="md" id="mo-welcome-body"></div></div>
 <div class="mo" id="mo-done"><div class="md" id="mo-done-body"></div></div>
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=19"></script>
+<script src="data.js?v=20"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -1594,6 +1600,69 @@ function renderRace(){
   el.innerHTML=h;
 }
 function logRace(dep,min,name){ addLog(dep,min,0,3,name); vib(30); toast('Registrada: '+name); }
+
+/* ══ RECOMENDADOR DE PLAN ══ */
+var RQ=[
+  { q:'¿Cuál es tu objetivo principal?',
+    o:[ {t:'Ponerme en forma en general', w:{general:3}},
+        {t:'Ganar fuerza', w:{fuerza:3}},
+        {t:'Ganar movilidad y soltura', w:{movilidad:3}},
+        {t:'Preparar una prueba o deporte', w:{_deporte:3}} ]},
+  { q:'¿Cuánto hace que no entrenas de forma regular?',
+    o:[ {t:'Entreno ya', w:{}},
+        {t:'Unos meses', w:{}},
+        {t:'Más de un año / empiezo de cero', w:{volver:4}} ]},
+  { q:'Si eliges deporte, ¿cuál?',
+    dep:true,
+    o:[ {t:'Correr', w:{correr:4}},
+        {t:'Ciclismo carretera', w:{ciclismo:4}},
+        {t:'BTT / montaña en bici', w:{btt:4}},
+        {t:'Natación', w:{natacion:4}},
+        {t:'Trail / montaña a pie', w:{trail:4}},
+        {t:'Triatlón', w:{triatlon:4}},
+        {t:'Deporte de equipo', w:{equipo:4}},
+        {t:'Escalada', w:{escalada:4}},
+        {t:'Ninguno, salta', w:{}} ]},
+  { q:'¿Cómo llevas las molestias?',
+    o:[ {t:'Sin molestias', w:{}},
+        {t:'Alguna zona sensible', w:{movilidad:1}},
+        {t:'Vengo de una lesión', w:{volver:2,movilidad:1}} ]},
+];
+var RS={ i:0, sc:{}, dep:false };
+function openRecommender(){ RS={i:0,sc:{},dep:false}; renderRecommender(); om('mo-rec'); }
+function renderRecommender(){
+  var b=document.getElementById('mo-rec-body');
+  // saltar la pregunta de deporte si no eligió "deporte"
+  while(RS.i<RQ.length && RQ[RS.i].dep && !RS.dep) RS.i++;
+  if(RS.i<RQ.length){
+    var q=RQ[RS.i];
+    b.innerHTML='<div class="mh"><div class="mt">¿Qué plan es para mí?</div><button class="pl-x" onclick="cm(\'mo-rec\')">✕</button></div>'+
+      '<div style="display:flex;gap:4px;margin-bottom:16px">'+RQ.map(function(_,i){return '<span style="flex:1;height:3px;border-radius:2px;background:'+(i<=RS.i?'var(--ac)':'var(--br)')+'"></span>';}).join('')+'</div>'+
+      '<div style="font-size:17px;font-weight:700;margin-bottom:14px">'+q.q+'</div>'+
+      q.o.map(function(o,oi){ return '<button class="row" style="margin-bottom:8px" onclick="answerRec('+oi+')"><span class="rb"><span class="rt" style="font-size:14px">'+o.t+'</span></span><span class="chev">›</span></button>'; }).join('');
+  } else {
+    var best=null,max=-1;
+    Object.keys(RS.sc).forEach(function(k){ if(k[0]!=='_'&&RS.sc[k]>max){max=RS.sc[k];best=k;} });
+    if(!best) best='general';
+    var g=GOALS.filter(function(x){return x.id===best;})[0];
+    b.innerHTML='<div style="text-align:center">'+
+      '<div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:8px">Tu plan recomendado</div>'+
+      '<div style="font-family:\'Fraunces\',serif;font-size:26px;font-weight:600;margin-bottom:4px">'+g.n+'</div>'+
+      '<div style="font-size:12.5px;color:var(--tx2);margin-bottom:12px">'+g.meses+' meses · '+g.fases.length+' fases</div>'+
+      '<p style="font-size:13.5px;color:var(--tx);line-height:1.55;margin-bottom:18px;text-align:left">'+g.intro+'</p>'+
+      (isPro()
+        ? '<button class="btn" onclick="cm(\'mo-rec\');startGoal(\''+g.id+'\')">Empezar este plan →</button>'
+        : '<button class="btn" onclick="cm(\'mo-rec\');go(\'plan\')">Ver el plan (premium) →</button>')+
+      '<button style="background:none;border:none;color:var(--tx2);font-size:12px;margin-top:14px;cursor:pointer;text-decoration:underline" onclick="openRecommender()">Repetir</button>'+
+      '</div>';
+  }
+}
+function answerRec(oi){
+  var q=RQ[RS.i], w=q.o[oi].w;
+  if(w._deporte) RS.dep=true;
+  Object.keys(w).forEach(function(k){ if(k[0]!=='_') RS.sc[k]=(RS.sc[k]||0)+w[k]; });
+  RS.i++; renderRecommender();
+}
 
 /* ══ CHEQUEO PREVIO ══ */
 var PENDING_SESSION=null;
