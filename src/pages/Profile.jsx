@@ -122,6 +122,20 @@ export default function Profile() {
             {tx.cancel}
           </button>
         )}
+
+        {/* Confianza: privacidad real + aviso honesto */}
+        <div className="mt-2 px-1 space-y-2 text-center">
+          <p className="text-muted text-[11px] leading-relaxed">
+            🔒 {lang === 'es'
+              ? 'Tus datos se quedan en tu dispositivo. Sin cuentas, sin tracking, sin servidor.'
+              : 'Your data stays on your device. No accounts, no tracking, no server.'}
+          </p>
+          <p className="text-stone-700 text-[11px] leading-relaxed">
+            {lang === 'es'
+              ? 'Orientación, no diagnóstico. Consulta a un profesional de salud.'
+              : 'Guidance, not diagnosis. Consult a health professional.'}
+          </p>
+        </div>
       </div>
 
       {showPro && <ProModal onClose={() => setShowPro(false)}/>}
