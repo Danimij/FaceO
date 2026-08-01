@@ -191,6 +191,24 @@ export default function Home() {
           </svg>
         </a>
 
+        {/* Las tres apps */}
+        <a href="apps.html" target="_blank" rel="noopener noreferrer"
+          className="w-full text-left rounded-2xl overflow-hidden border border-border active:scale-[0.98] transition-transform flex items-center gap-3 bg-card p-4">
+          <div className="w-10 h-10 rounded-xl bg-accent/12 flex items-center justify-center flex-shrink-0 text-accent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zm0 9.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zm9.75-9.75A2.25 2.25 0 0115.75 3.75H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zm0 9.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <div className="text-[10px] uppercase tracking-widest text-accent mb-0.5">{lang === 'es' ? 'Las tres apps' : 'All three apps'}</div>
+            <div className="text-warm font-semibold text-sm">{lang === 'es' ? 'Descubre FACEO, INSPIRAPP y FLUO' : 'Discover FACEO, INSPIRAPP and FLUO'}</div>
+            <div className="text-muted text-xs">{lang === 'es' ? 'Cara, respiración y entreno · e instálalas' : 'Face, breathing and training · and install them'}</div>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-stone-600 flex-shrink-0">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+
         {/* Today's plan routine */}
         {todayRoutine && doneCount < totalCount && (
           <div>
