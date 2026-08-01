@@ -1,5 +1,21 @@
 export const routines = [
   {
+    id: 'mouth-myo',
+    pro: false,
+    durationMin: 10,
+    exercises: ['resting-posture', 'tongue-suction-hold', 'tongue-click', 'correct-swallow', 'lip-seal-water', 'lip-button-pull', 'cheek-puff'],
+    es: {
+      name: 'Boca — Miofuncional',
+      subtitle: 'Reeduca lengua, labios y mejillas',
+      description: 'Programa completo de terapia miofuncional: postura de lengua, sellado de labios, deglución y control de mejillas. Reeduca los músculos de la boca y acompaña al tratamiento del ortodoncista. No sustituye lo estructural, lo potencia.',
+    },
+    en: {
+      name: 'Mouth — Myofunctional',
+      subtitle: 'Retrain tongue, lips and cheeks',
+      description: 'Complete myofunctional therapy program: tongue posture, lip sealing, swallowing and cheek control. Retrains the mouth muscles and supports orthodontic treatment. It does not replace the structural work, it enhances it.',
+    },
+  },
+  {
     id: 'morning',
     pro: false,
     durationMin: 8,

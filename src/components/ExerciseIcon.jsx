@@ -6,6 +6,7 @@ const COLORS = {
   face:     '#9a7a9a',
   fascia:   '#5aa89a',
   chain:    '#8a9ac4',
+  mouth:    '#c98a8a',
 }
 
 export default function ExerciseIcon({ type, category, size = 28, color }) {
@@ -105,6 +106,23 @@ export default function ExerciseIcon({ type, category, size = 28, color }) {
     <svg {...p}>
       <path d="M16 4c-2 3 2 5 0 8s2 5 0 8 2 5 0 8" stroke={c} strokeWidth="1.5" strokeLinecap="round"/>
       <path d="M12 7h8M12 13h8M12 19h8M12 25h8" stroke={c} strokeWidth="1.2" strokeLinecap="round" opacity="0.5"/>
+    </svg>
+  )
+
+  if (type === 'lips') return (
+    <svg {...p}>
+      <path d="M6 16 Q11 11 16 13 Q21 11 26 16 Q21 21 16 19 Q11 21 6 16Z" stroke={c} strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M6 16 H26" stroke={c} strokeWidth="1.2" strokeLinecap="round" opacity="0.6"/>
+      <path d="M16 13 V19" stroke={c} strokeWidth="1" strokeLinecap="round" opacity="0.35"/>
+    </svg>
+  )
+
+  if (type === 'cheek') return (
+    <svg {...p}>
+      <circle cx="16" cy="16" r="10" stroke={c} strokeWidth="1.5"/>
+      <path d="M11 15 Q13 13 15 15" stroke={c} strokeWidth="1.3" strokeLinecap="round"/>
+      <path d="M17 15 Q19 13 21 15" stroke={c} strokeWidth="1.3" strokeLinecap="round"/>
+      <path d="M12 20 Q16 23 20 20" stroke={c} strokeWidth="1.3" strokeLinecap="round"/>
     </svg>
   )
 
