@@ -1,5 +1,21 @@
 export const routines = [
   {
+    id: 'nivel-inicial',
+    pro: false,
+    durationMin: 5,
+    exercises: ['nasal-breathing', 'resting-posture', 'mewing'],
+    es: {
+      name: 'Nivel inicial',
+      subtitle: 'Tu punto de partida: lo básico que sostiene el resto',
+      description: 'El primer nivel. Si es tu primer día, no necesitas hacerlo todo. Empieza por lo que sostiene el resto: respirar por la nariz y colocar bien la lengua y la postura. Tres cosas fáciles, cinco minutos. Hazlas unos días y, cuando te salgan solas, sube al siguiente nivel con las demás rutinas. No busques hacerlo perfecto, busca hacerlo hoy.',
+    },
+    en: {
+      name: 'Beginner level',
+      subtitle: 'Your starting point: the basics that hold up the rest',
+      description: 'The first level. If it is your first day, you do not need to do everything. Start with what holds up the rest: breathing through your nose and placing the tongue and posture correctly. Three easy things, five minutes. Do them for a few days and, once they come naturally, move up to the other routines. Do not aim for perfect, aim for today.',
+    },
+  },
+  {
     id: 'mouth-myo',
     pro: false,
     durationMin: 10,

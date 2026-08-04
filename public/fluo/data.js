@@ -1301,6 +1301,12 @@ const GOAL_GROUPS = [
  * modo: 'libre' = corre, pedalea, nada o rema, lo que prefieras.
  */
 const COND = [
+  /* ── NIVEL INICIAL ── */
+  { id:'nivel-inicial', sis:'aerobico', n:'Nivel inicial · tu primer día', min:20, int:1, modo:'libre',
+    s:'Para quien no entrena nada. Empieza por moverte',
+    why:'Si llevas tiempo parado, el error es empezar demasiado fuerte y abandonar en una semana. Tu nivel inicial no es correr rápido: es moverte de forma cómoda y repetible. La forma llega sola cuando el hábito ya está. No busques agotarte, busca volver mañana.',
+    steps:['5 min de caminar o pedalear suave, soltando el cuerpo','10 min a un ritmo cómodo en el que puedas hablar sin ahogarte','Si te falta el aire para hablar, baja: vas demasiado fuerte','5 min bajando el ritmo hasta pararte','Termina con la sensación de "podría haber hecho más". Esa es la clave para repetir'],
+    tip:'El objetivo de las primeras semanas no es la forma física, es crear el hábito. Mejor 20 min fáciles cuatro días que 1 hora dura que no repites. Cuando esto te sepa a poco, sube al Nivel siguiente (Zona 2 continua).' },
   /* ── AERÓBICO BASE ── */
   { id:'z2-base', sis:'aerobico', n:'Zona 2 continua', min:60, int:1, modo:'libre',
     s:'El pilar del 80% del volumen',
