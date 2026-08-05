@@ -619,6 +619,7 @@ function finishSession(){
   // Solo cuenta el trabajo realmente hecho: saltar no acredita nada.
   var mins = Math.max(1, Math.round(P.secs/60));
   var credited = P.done > 0;
+  var newMilestone = 0;
   if(credited){
     S.sessions=(S.sessions||0)+1; S.min=(S.min||0)+mins;
     var today=new Date().toDateString();
@@ -626,6 +627,9 @@ function finishSession(){
       var yest=new Date(Date.now()-86400000).toDateString();
       S.streak = (S.lastDate===yest) ? (S.streak||0)+1 : 1;
       S.lastDate=today;
+      S.best=Math.max(S.best||0,S.streak);
+      var MILES=[3,7,14,21,30,50,75,100,150,200,365];
+      if(MILES.indexOf(S.streak)>=0 && S.streak>(S.lastMilestone||0)){ newMilestone=S.streak; S.lastMilestone=S.streak; }
     }
     save();
     if(FROM_PLAN) markWeekSession();
@@ -653,6 +657,23 @@ function finishSession(){
                      : 'Primer día de tu racha. Lo difícil no es empezar: es volver mañana.')+'</p>'+
     '<button class="btn" style="margin-top:16px" onclick="cm(\'mo-done\')">Continuar</button></div>';
   om('mo-done');
+  if(newMilestone) setTimeout(function(){celebrate(newMilestone);},350);
+}
+function celebrate(n){
+  var MSG={3:'¡3 días seguidos! Ya no es casualidad, es el principio de un hábito.',7:'¡Una semana entera! Aquí es donde la mayoría lo deja. Tú no.',14:'¡2 semanas! Tu constancia ya pesa más que tu motivación.',21:'¡21 días! El tiempo que tarda un gesto en volverse automático.',30:'¡Un mes completo! Esto ya forma parte de quién eres.',50:'¡50 días! La disciplina se ha vuelto identidad.',75:'¡75 días! Muy pocos llegan aquí. Sigue.',100:'¡100 días! Cien decisiones buenas seguidas. Impresionante.',150:'¡150 días! Ya no es un reto, es tu forma de vivir.',200:'¡200 días! Eres la prueba de que la constancia gana.',365:'¡UN AÑO ENTERO! Has cambiado de verdad. Enhorabuena.'};
+  var msg=MSG[n]||('¡'+n+' días de racha!');
+  if(!document.getElementById('celebrate-css')){
+    var st=document.createElement('style');st.id='celebrate-css';
+    st.textContent='.celebrate-ov{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.86);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:0 30px;animation:cel-fade .3s ease}@keyframes cel-fade{from{opacity:0}to{opacity:1}}.celebrate-conf{position:absolute;inset:0;overflow:hidden;pointer-events:none}.celebrate-conf span{position:absolute;top:-10%;width:9px;height:9px;animation:cel-fall linear infinite}@keyframes cel-fall{0%{transform:translateY(-10vh) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:.9}}.celebrate-in{position:relative;text-align:center;max-width:340px}.celebrate-fire{font-size:74px;filter:drop-shadow(0 0 22px rgba(46,230,200,.6))}.celebrate-num{font-size:64px;font-weight:800;color:#fff;line-height:1}.celebrate-lbl{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--ac);margin:4px 0 18px}.celebrate-msg{font-size:15px;line-height:1.6;color:#dfeee8;margin-bottom:26px}';
+    document.head.appendChild(st);
+  }
+  var ov=document.createElement('div');ov.className='celebrate-ov';
+  ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+  var C=['#2ee6c8','#ff6a1f','#c9f24d','#5ad2ff','#b07cff'],conf='';
+  for(var i=0;i<60;i++){conf+='<span style="left:'+((i*37)%100)+'%;background:'+C[i%5]+';border-radius:'+(i%2?'50%':'2px')+';animation-duration:'+(2.4+(i%5)*0.5)+'s;animation-delay:'+((i%10)*0.18)+'s"></span>';}
+  ov.innerHTML='<div class="celebrate-conf">'+conf+'</div><div class="celebrate-in"><div class="celebrate-fire">🔥</div><div class="celebrate-num">'+n+'</div><div class="celebrate-lbl">días de racha</div><p class="celebrate-msg">'+msg+'</p><button class="btn" style="width:auto;padding:13px 34px" onclick="this.closest(\'.celebrate-ov\').remove()">Seguir</button></div>';
+  document.body.appendChild(ov);
+  vib([40,60,40,60,200]);
 }
 
 /* ══ WAKE LOCK ══ */
