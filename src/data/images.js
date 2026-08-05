@@ -60,6 +60,8 @@ export function exerciseImg(ex) {
 }
 
 export const ROUTINE_IMG = {
+  'nivel-inicial':  U(BREATH),
+  'mouth-myo':      U(PROFILE),
   'morning':        U(BREATH),
   'jaw-focus':      U(PROFILE),
   'night':          U(FACE),
