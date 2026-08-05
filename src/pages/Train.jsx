@@ -7,6 +7,12 @@ import { exerciseImg, ROUTINE_IMG } from '../data/images'
 import ExerciseIcon from '../components/ExerciseIcon'
 import ProModal from '../components/ProModal'
 
+const LVL = {
+  1: { es: 'Nivel inicial', en: 'Beginner level', color: '#7fb89a' },
+  2: { es: 'Nivel intermedio', en: 'Intermediate level', color: '#c9a96e' },
+  3: { es: 'Nivel avanzado', en: 'Advanced level', color: '#c98a8a' },
+}
+
 export default function Train() {
   const { lang, isPro } = useApp()
   const navigate = useNavigate()
@@ -46,7 +52,16 @@ export default function Train() {
       </div>
 
       <div className="px-5 space-y-3">
-        {tab === 'routines' && routines.map(r => {
+        {tab === 'routines' && [1, 2, 3].map(lvl => {
+          const group = routines.filter(r => (r.level || 1) === lvl)
+          if (!group.length) return null
+          return (
+            <div key={lvl} className="space-y-3 mb-5">
+              <div className="flex items-center gap-2 pt-1">
+                <span className="text-[11px] font-semibold tracking-[0.15em] uppercase" style={{ color: LVL[lvl].color }}>{LVL[lvl][lang]}</span>
+                <div className="h-px flex-1 bg-border"/>
+              </div>
+              {group.map(r => {
           const data = r[lang]
           const locked = r.pro && !isPro
           const img = ROUTINE_IMG[r.id]
@@ -98,6 +113,9 @@ export default function Train() {
                 </div>
               </div>
             </button>
+          )
+              })}
+            </div>
           )
         })}
 

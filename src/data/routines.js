@@ -1,6 +1,7 @@
 export const routines = [
   {
     id: 'nivel-inicial',
+    level: 1,
     pro: false,
     durationMin: 5,
     exercises: ['nasal-breathing', 'resting-posture', 'mewing'],
@@ -17,6 +18,7 @@ export const routines = [
   },
   {
     id: 'mouth-myo',
+    level: 2,
     pro: false,
     durationMin: 10,
     exercises: ['resting-posture', 'tongue-suction-hold', 'tongue-click', 'correct-swallow', 'lip-seal-water', 'lip-button-pull', 'cheek-puff'],
@@ -33,6 +35,7 @@ export const routines = [
   },
   {
     id: 'morning',
+    level: 1,
     pro: false,
     durationMin: 8,
     exercises: ['mewing', 'chin-tuck', 'nasal-breathing'],
@@ -49,6 +52,7 @@ export const routines = [
   },
   {
     id: 'jaw-focus',
+    level: 2,
     pro: false,
     durationMin: 6,
     exercises: ['jaw-clench', 'palate-expansion'],
@@ -65,6 +69,7 @@ export const routines = [
   },
   {
     id: 'night',
+    level: 1,
     pro: false,
     durationMin: 7,
     exercises: ['nasal-breathing', 'mewing', 'chin-tuck'],
@@ -81,6 +86,7 @@ export const routines = [
   },
   {
     id: 'breathing-deep',
+    level: 2,
     pro: true,
     durationMin: 10,
     exercises: ['nasal-breathing', 'co2-tolerance'],
@@ -97,6 +103,7 @@ export const routines = [
   },
   {
     id: 'full-face',
+    level: 3,
     pro: true,
     durationMin: 14,
     exercises: ['mewing', 'jaw-clench', 'palate-expansion', 'chin-tuck', 'face-yoga'],
@@ -113,6 +120,7 @@ export const routines = [
   },
   {
     id: 'posture-reset',
+    level: 2,
     pro: true,
     durationMin: 9,
     exercises: ['chin-tuck', 'neck-pull', 'nasal-breathing'],
@@ -129,6 +137,7 @@ export const routines = [
   },
   {
     id: 'fascia-release',
+    level: 3,
     pro: true,
     durationMin: 20,
     exercises: ['fascial-chains', 'suboccipital-release', 'myofascial-ball', 'temporal-release', 'platysma-release'],

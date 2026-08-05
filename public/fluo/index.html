@@ -274,7 +274,7 @@ nav button.on{color:var(--ac)}
 <div class="toast" id="toast"></div>
 
 <!-- Sube el número de versión al cambiar data.js: fuerza a los navegadores a recargarlo. -->
-<script src="data.js?v=22"></script>
+<script src="data.js?v=23"></script>
 <script>
 /* ══ ESTADO ══ */
 var S = { mats:['none'], streak:0, lastDate:null, sessions:0, min:0, onboarded:false };
@@ -1236,12 +1236,17 @@ function renderCardio(){
 
   var list = COND.filter(function(e){ return CF==='todas' || e.sis===CF; });
   var INT={1:'Suave',2:'Suave',3:'Medio',4:'Fuerte',5:'Máximo'};
+  var LVN={1:'Inicial',2:'Intermedio',3:'Avanzado'};
+  var LVC={1:'#2ee6c8',2:'#c9f24d',3:'#ff6a1f'};
+  function lvlOf(e){ return e.id==='nivel-inicial'?1:(e.int<=2?1:(e.int===3?2:3)); }
+  // Nivel inicial primero, luego el resto por intensidad
+  list=list.slice().sort(function(a,b){return lvlOf(a)-lvlOf(b);});
   h+=list.map(function(e){
-    var S1=SISTEMAS[e.sis];
+    var S1=SISTEMAS[e.sis]; var lv=lvlOf(e);
     return '<button class="row" onclick="openCond(\''+e.id+'\')">'+
       '<span class="ic" style="color:'+S1.c+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg></span>'+
-      '<span class="rb"><span class="rt">'+e.n+'</span><span class="rs">'+e.s+' · '+e.min+' min</span></span>'+
-      '<span class="pill" style="color:'+S1.c+';border-color:'+S1.c+'55">'+INT[e.int]+'</span>'+
+      '<span class="rb"><span class="rt">'+e.n+'</span><span class="rs">'+e.s+' · '+INT[e.int]+' · '+e.min+' min</span></span>'+
+      '<span class="pill" style="color:'+LVC[lv]+';border-color:'+LVC[lv]+'55">'+LVN[lv]+'</span>'+
       '</button>';
   }).join('');
 
