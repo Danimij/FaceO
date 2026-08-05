@@ -1,4 +1,7 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect, useRef } from 'react'
+
+// Hitos de racha que se celebran (enganche honesto: marcar el progreso real)
+const STREAK_MILESTONES = [3, 7, 14, 21, 30, 50, 75, 100, 150, 200, 365]
 
 const AppContext = createContext(null)
 
@@ -46,6 +49,16 @@ export function AppProvider({ children }) {
   const [photos, setPhotos] = useState(() => {
     try { return JSON.parse(localStorage.getItem('forma_photos')) || [] } catch { return [] }
   })
+
+  // Celebración de hitos de racha: se dispara cuando la racha CRECE hasta un hito.
+  const [celebration, setCelebration] = useState(null)
+  const prevStreakRef = useRef(progress.streak)
+  useEffect(() => {
+    if (progress.streak > prevStreakRef.current && STREAK_MILESTONES.includes(progress.streak)) {
+      setCelebration(progress.streak)
+    }
+    prevStreakRef.current = progress.streak
+  }, [progress.streak])
 
   useEffect(() => {
     localStorage.setItem('forma_lang', lang)
@@ -181,6 +194,7 @@ export function AppProvider({ children }) {
       onboarded, setOnboarded,
       goal, setGoal,
       photos, addPhoto, deletePhoto,
+      celebration, clearCelebration: () => setCelebration(null),
     }}>
       {children}
     </AppContext.Provider>

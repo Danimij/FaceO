@@ -67,6 +67,39 @@ export default function Home() {
 
       <div className="px-5 -mt-1 space-y-6">
 
+        {/* Streak hero — el gancho: fuego, racha y estado de hoy */}
+        <button onClick={() => navigate('/train')}
+          className="w-full text-left rounded-2xl p-5 border active:scale-[0.98] transition-transform relative overflow-hidden"
+          style={{
+            background: doneCount > 0
+              ? 'linear-gradient(135deg,rgba(127,184,154,0.14),#161009)'
+              : 'linear-gradient(135deg,rgba(201,169,110,0.16),#161009)',
+            borderColor: doneCount > 0 ? 'rgba(127,184,154,0.35)' : 'rgba(201,169,110,0.4)',
+          }}>
+          <div className="flex items-center gap-4">
+            <div className="text-5xl leading-none flex-shrink-0"
+              style={{ filter: progress.streak > 0 ? 'drop-shadow(0 0 14px rgba(201,169,110,.55))' : 'grayscale(0.7) opacity(0.6)' }}>🔥</div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-bold text-warm" style={{ fontVariantNumeric: 'tabular-nums' }}>{progress.streak}</span>
+                <span className="text-muted text-sm">
+                  {progress.streak === 1 ? (lang === 'es' ? 'día de racha' : 'day streak') : (lang === 'es' ? 'días de racha' : 'day streak')}
+                </span>
+                {progress.bestStreak > progress.streak && (
+                  <span className="text-[11px] text-muted ml-auto flex-shrink-0">{lang === 'es' ? 'mejor' : 'best'} {progress.bestStreak}</span>
+                )}
+              </div>
+              <div className="text-sm mt-1 font-medium" style={{ color: doneCount > 0 ? '#7fb89a' : '#c9a96e' }}>
+                {progress.streak === 0
+                  ? (lang === 'es' ? 'Empieza tu racha hoy — haz 1 ejercicio' : 'Start your streak today — do 1 exercise')
+                  : doneCount > 0
+                    ? (lang === 'es' ? '✓ Hoy hecho. Vuelve mañana y no la rompas.' : '✓ Done today. Come back tomorrow.')
+                    : (lang === 'es' ? '⚠ En riesgo hoy — haz 1 ejercicio para mantenerla' : '⚠ At risk today — do 1 exercise to keep it')}
+              </div>
+            </div>
+          </div>
+        </button>
+
         {/* Stats row */}
         <div className="flex items-center gap-4 bg-card border border-border rounded-2xl p-4">
           {/* Ring */}

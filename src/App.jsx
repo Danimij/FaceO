@@ -12,6 +12,7 @@ import Profile from './pages/Profile'
 import Learn from './pages/Learn'
 import Generate from './pages/Generate'
 import Assess from './pages/Assess'
+import Celebration from './components/Celebration'
 
 function Shell() {
   const { onboarded } = useApp()
@@ -32,6 +33,7 @@ function Shell() {
           <Route path="/profile" element={<Profile />} />
         </Routes>
         <BottomNav />
+        <Celebration />
       </div>
     </BrowserRouter>
   )
