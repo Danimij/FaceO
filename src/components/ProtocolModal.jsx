@@ -53,7 +53,7 @@ export default function ProtocolModal({ onClose }) {
               </ul>
             </div>
           ))}
-          <a href="https://danimij.github.io/Respirapp/" target="_blank" rel="noopener noreferrer"
+          <a href="https://inspirapp-saludreal.netlify.app/" target="_blank" rel="noopener noreferrer"
             className="block w-full bg-accent font-semibold py-4 rounded-2xl text-sm tracking-wide text-center mt-4 active:scale-95 transition-transform"
             style={{ color: '#15100b' }}>{tx.cta}</a>
         </div>

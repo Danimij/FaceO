@@ -328,7 +328,7 @@ export default function Home() {
           </div>
         )}
         {/* Cross-promo INSPIRAPP */}
-        <a href="https://danimij.github.io/Respirapp/" target="_blank" rel="noopener noreferrer"
+        <a href="https://inspirapp-saludreal.netlify.app/" target="_blank" rel="noopener noreferrer"
           className="block rounded-2xl overflow-hidden border border-border active:scale-[0.98] transition-transform">
           <div className="relative h-24">
             <img src="https://picsum.photos/id/137/700/300" alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover"/>
@@ -349,7 +349,7 @@ export default function Home() {
         </a>
 
         {/* Cross-promo FLUO */}
-        <a href="https://danimij.github.io/fluo/" target="_blank" rel="noopener noreferrer"
+        <a href="https://fluo-saludreal.netlify.app/" target="_blank" rel="noopener noreferrer"
           className="block rounded-2xl overflow-hidden border border-border active:scale-[0.98] transition-transform">
           <div className="relative h-24">
             <img src="https://picsum.photos/id/1058/700/300" alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover"/>
