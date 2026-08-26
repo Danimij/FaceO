@@ -36,24 +36,34 @@
     <script type="module" src="/src/main.jsx"></script>
   <!-- INSTALL BANNER (autocontenido) -->
 <style>
-#instbn{position:fixed;left:12px;right:12px;bottom:12px;z-index:9998;background:#16211f;color:#eef6f4;border:1px solid #2a3a37;border-radius:16px;padding:14px 16px;display:none;align-items:center;gap:12px;box-shadow:0 8px 30px rgba(0,0,0,.5);font-family:-apple-system,'Inter',sans-serif;max-width:460px;margin:0 auto}
-#instbn .ib-ic{font-size:26px;flex-shrink:0}
-#instbn .ib-tx{flex:1;font-size:13px;line-height:1.45}
+#nl-badge-frame,iframe[id*="nl-badge"]{display:none!important}
+#instbn{position:fixed;left:12px;right:12px;bottom:14px;z-index:9998;background:#16211f;color:#eef6f4;border:1px solid #2a3a37;border-radius:16px;padding:14px 16px;display:none;align-items:center;gap:12px;box-shadow:0 8px 30px rgba(0,0,0,.5);font-family:-apple-system,'Inter',sans-serif;max-width:460px;margin:0 auto}
+#instbn .ib-ic{font-size:24px;flex-shrink:0}
+#instbn .ib-tx{flex:1;font-size:13px;line-height:1.4}
 #instbn .ib-tx b{color:#fff}
 #instbn .ib-go{flex-shrink:0;background:#2ee6c8;color:#062018;border:none;border-radius:11px;padding:9px 14px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
-#instbn .ib-x{flex-shrink:0;background:none;border:none;color:#8fa39e;font-size:20px;cursor:pointer;line-height:1;padding:2px 6px}
+#instbn .ib-x{flex-shrink:0;background:none;border:none;color:#8fa39e;font-size:20px;cursor:pointer;line-height:1;padding:2px 6px;align-self:flex-start}
 </style>
 <div id="instbn"><span class="ib-ic">📲</span><span class="ib-tx" id="ib-tx"></span><button class="ib-go" id="ib-go" style="display:none">Instalar</button><button class="ib-x" onclick="document.getElementById('instbn').style.display='none';try{localStorage.setItem('inst-dismiss','1')}catch(e){}">×</button></div>
 <script>(function(){
   try{ if(localStorage.getItem('inst-dismiss')==='1')return; }catch(e){}
-  var standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
-  if(standalone)return; // ya instalada
+  if(window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true)return;
   var isIOS=/iP(hone|ad|od)/.test(navigator.userAgent);
   var bn=document.getElementById('instbn'),tx=document.getElementById('ib-tx'),go=document.getElementById('ib-go');
-  var deferred=null;
-  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;tx.innerHTML='<b>Instala la app</b> en tu móvil — funciona sin conexión.';go.style.display='';bn.style.display='flex';});
+  var deferred=null,shown=false,watching=false;
+  function overlayUp(){
+    var vw=innerWidth,vh=innerHeight,els=document.body.getElementsByTagName('*');
+    for(var i=0;i<els.length;i++){var e=els[i];if(e.id==='instbn')continue;var s=getComputedStyle(e);
+      if((s.position==='fixed'||s.position==='absolute')&&s.display!=='none'&&s.visibility!=='hidden'&&parseFloat(s.opacity||'1')>0.5){
+        var r=e.getBoundingClientRect();
+        if(r.width>=vw*0.85&&r.height>=vh*0.65&&(parseInt(s.zIndex)||0)>=10)return true;}}
+    return false;
+  }
+  function reveal(){ if(shown||overlayUp())return; shown=true; bn.style.display='flex'; }
+  function startWatch(){ if(watching)return; watching=true; var t=0; var iv=setInterval(function(){t++; if(shown){clearInterval(iv);return;} if(!overlayUp()){reveal();clearInterval(iv);} if(t>24)clearInterval(iv);},2500); }
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;tx.innerHTML='<b>Instala la app</b> en tu móvil — funciona sin conexión.';go.style.display='';startWatch();});
   go.addEventListener('click',function(){if(deferred){deferred.prompt();deferred=null;bn.style.display='none';}});
-  if(isIOS){ tx.innerHTML='<b>Añádela a tu inicio:</b> pulsa el botón Compartir (cuadrado con flecha ↑) abajo, y luego "Añadir a pantalla de inicio".'; setTimeout(function(){bn.style.display='flex';},1800); }
+  if(isIOS){ tx.innerHTML='<b>Añádela a tu inicio:</b> pulsa el botón Compartir (cuadrado con flecha ↑) abajo, y luego "Añadir a pantalla de inicio".'; startWatch(); }
 })();</script>
 
 </body>
