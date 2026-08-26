@@ -18,7 +18,7 @@ function Shell() {
   const { onboarded } = useApp()
   if (!onboarded) return <Onboarding />
   return (
-    <BrowserRouter basename="/FaceO/">
+    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '') || '/'}>
       <div className="relative min-h-svh bg-base text-warm">
         <Routes>
           <Route path="/" element={<Home />} />
