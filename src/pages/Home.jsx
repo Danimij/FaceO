@@ -151,6 +151,25 @@ export default function Home() {
           </div>
         </button>
 
+        {/* Postura ahora — acceso rápido para el día */}
+        <button onClick={() => navigate('/exercise/resting-posture')}
+          className="w-full text-left rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform flex items-center gap-3 p-4"
+          style={{ background: 'linear-gradient(135deg,rgba(127,184,154,0.16),#161009)', borderColor: 'rgba(127,184,154,0.4)' }}>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(127,184,154,0.18)', color: '#7fb89a' }}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <div className="text-[10px] uppercase tracking-widest mb-0.5" style={{ color: '#7fb89a' }}>{lang === 'es' ? 'Ahora mismo · 60s' : 'Right now · 60s'}</div>
+            <div className="text-warm font-semibold text-sm">{lang === 'es' ? 'Postura ahora' : 'Posture now'}</div>
+            <div className="text-muted text-xs">{lang === 'es' ? 'Recoloca lengua, mandíbula y respiración nasal' : 'Reset tongue, jaw and nasal breathing'}</div>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-stone-600 flex-shrink-0">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
         {/* Autoevaluación */}
         <button onClick={() => navigate('/assess')}
           className="w-full text-left rounded-2xl overflow-hidden border border-border active:scale-[0.98] transition-transform flex items-center gap-3 bg-card p-4">
