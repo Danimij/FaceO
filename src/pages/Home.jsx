@@ -128,29 +128,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Premium combined protocol */}
-        <button onClick={() => (isPro ? setShowProtocol(true) : setShowPro(true))}
-          className="w-full text-left rounded-2xl p-4 border active:scale-[0.98] transition-transform"
-          style={{ background: 'linear-gradient(135deg,#241d16,#1a150f)', borderColor: 'rgba(201,169,110,0.3)' }}>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-accent/15 flex items-center justify-center flex-shrink-0 text-accent">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" className="w-5 h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.5a.56.56 0 011.04 0l2.12 5.11a.56.56 0 00.48.35l5.52.44c.5.04.7.66.32.99l-4.2 3.6a.56.56 0 00-.18.56l1.28 5.38a.56.56 0 01-.84.61l-4.72-2.88a.56.56 0 00-.59 0l-4.72 2.88a.56.56 0 01-.84-.61l1.28-5.38a.56.56 0 00-.18-.56l-4.2-3.6a.56.56 0 01.32-.99l5.52-.44a.56.56 0 00.48-.35L11.48 3.5z" />
-              </svg>
-            </div>
-            <div className="flex-1">
-              <div className="text-[10px] uppercase tracking-widest text-accent mb-0.5">{lang === 'es' ? 'Premium · FACEO + INSPIRAPP' : 'Premium · FACEO + INSPIRAPP'}</div>
-              <div className="text-warm font-semibold text-sm">{lang === 'es' ? 'Protocolo combinado del día' : 'Daily combined protocol'}</div>
-              <div className="text-muted text-xs">{lang === 'es' ? 'Mañana, día y noche: cara, respiración, frío y mente' : 'Morning, day and night: face, breath, cold, mind'}</div>
-            </div>
-            {!isPro && (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-4 h-4 text-accent flex-shrink-0">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 11V8a4 4 0 018 0v3" /><rect x="4" y="11" width="14" height="9" rx="2" />
-              </svg>
-            )}
-          </div>
-        </button>
-
         {/* Postura ahora — acceso rápido para el día */}
         <button onClick={() => navigate('/exercise/resting-posture')}
           className="w-full text-left rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform flex items-center gap-3 p-4"
@@ -242,6 +219,29 @@ export default function Home() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </a>
+
+        {/* Premium combined protocol */}
+        <button onClick={() => (isPro ? setShowProtocol(true) : setShowPro(true))}
+          className="w-full text-left rounded-2xl p-4 border active:scale-[0.98] transition-transform"
+          style={{ background: 'linear-gradient(135deg,#241d16,#1a150f)', borderColor: 'rgba(201,169,110,0.3)' }}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-accent/15 flex items-center justify-center flex-shrink-0 text-accent">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.5a.56.56 0 011.04 0l2.12 5.11a.56.56 0 00.48.35l5.52.44c.5.04.7.66.32.99l-4.2 3.6a.56.56 0 00-.18.56l1.28 5.38a.56.56 0 01-.84.61l-4.72-2.88a.56.56 0 00-.59 0l-4.72 2.88a.56.56 0 01-.84-.61l1.28-5.38a.56.56 0 00-.18-.56l-4.2-3.6a.56.56 0 01.32-.99l5.52-.44a.56.56 0 00.48-.35L11.48 3.5z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <div className="text-[10px] uppercase tracking-widest text-accent mb-0.5">{lang === 'es' ? 'Premium · FACEO + INSPIRAPP' : 'Premium · FACEO + INSPIRAPP'}</div>
+              <div className="text-warm font-semibold text-sm">{lang === 'es' ? 'Protocolo combinado del día' : 'Daily combined protocol'}</div>
+              <div className="text-muted text-xs">{lang === 'es' ? 'Mañana, día y noche: cara, respiración, frío y mente' : 'Morning, day and night: face, breath, cold, mind'}</div>
+            </div>
+            {!isPro && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-4 h-4 text-accent flex-shrink-0">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 11V8a4 4 0 018 0v3" /><rect x="4" y="11" width="14" height="9" rx="2" />
+              </svg>
+            )}
+          </div>
+        </button>
 
         {/* Las tres apps */}
         <a href="apps.html" target="_blank" rel="noopener noreferrer"

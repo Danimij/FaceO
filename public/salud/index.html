@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mi Salud — Dani</title>
+<meta name="description" content="Tu plan personal: menú del día, hábitos, entreno según horario y suplementos.">
+<meta name="theme-color" content="#0a0f0e">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#0a0f0e;--card:#121a18;--card2:#18211f;--br:#243330;--tx:#eef6f4;--tx2:#8fa39e;
+  --ac:#2ee6c8;--ac2:#ff6a1f;--sun:#f2b34d;--faceo:#c9a96e;--inspir:#4b9c72;--fluo:#2ee6c8}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',-apple-system,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh;padding-bottom:76px}
+.serif{font-family:'Fraunces',Georgia,serif;letter-spacing:-.02em}
+.wrap{max-width:560px;margin:0 auto;padding:0 18px}
+header{padding:38px 0 14px;text-align:center}
+header .k{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--tx2);font-weight:600;margin-bottom:6px}
+header h1{font-family:'Fraunces',serif;font-size:25px;font-weight:600}
+.sc{display:none}.sc.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.stats{display:flex;gap:10px;margin:16px 0}
+.stat{flex:1;background:var(--card);border:1px solid var(--br);border-radius:15px;padding:13px;text-align:center}
+.stat .v{font-family:'Fraunces',serif;font-size:27px;font-weight:600;line-height:1;color:var(--ac)}
+.stat .v.w{color:var(--ac2)}
+.stat .l{font-size:9.5px;color:var(--tx2);text-transform:uppercase;letter-spacing:.08em;margin-top:5px}
+.h{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx2);font-weight:600;margin:22px 0 11px}
+.card{background:var(--card);border:1px solid var(--br);border-radius:15px;padding:14px 16px;margin-bottom:10px}
+.card .t{font-size:14.5px;font-weight:700;margin-bottom:3px}
+.card p{font-size:12.5px;color:var(--tx2);line-height:1.5}
+.meal .mh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
+.meal .mn{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ac);font-weight:700}
+.meal .mt{font-size:10.5px;color:var(--tx2)}
+.meal p{font-size:13.5px;color:var(--tx)}
+.meal.sp{border-color:rgba(255,106,31,.45);background:linear-gradient(135deg,rgba(255,106,31,.1),var(--card))}
+.meal.sp .mn{color:var(--ac2)}
+.it{display:flex;align-items:flex-start;gap:11px;padding:12px 14px;background:var(--card);border:1px solid var(--br);border-radius:14px;margin-bottom:8px;cursor:pointer;transition:border-color .2s}
+.it.on{border-color:var(--ac)}
+.it .ck{width:23px;height:23px;border-radius:7px;border:1.7px solid var(--br);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:#062018;margin-top:1px}
+.it.on .ck{background:var(--ac);border-color:var(--ac)}
+.it .b{flex:1}.it .n{font-size:13.5px;font-weight:600}
+.it.on .n{color:var(--tx2);text-decoration:line-through}
+.it .d{font-size:11.5px;color:var(--tx2);margin-top:1px;line-height:1.4}
+.win{background:rgba(242,179,77,.08);border:1px solid rgba(242,179,77,.3);border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:#e7d8bd;line-height:1.5}
+.win b{color:var(--sun)}
+.note{font-size:11.5px;color:var(--tx2);line-height:1.5;background:var(--card2);border:1px solid var(--br);border-radius:13px;padding:12px 14px;margin-top:10px}
+.note b{color:var(--tx)}
+.done{text-align:center;background:linear-gradient(135deg,rgba(46,230,200,.14),var(--card));border:1px solid rgba(46,230,200,.4);border-radius:15px;padding:15px;margin-top:6px}
+.done .f{font-size:30px}.done .m{font-family:'Fraunces',serif;font-size:16.5px;font-weight:600;margin-top:2px}
+.done .s{font-size:12px;color:var(--tx2);margin-top:3px}
+.day{display:flex;gap:11px;align-items:flex-start;padding:13px 15px;background:var(--card);border:1px solid var(--br);border-radius:14px;margin-bottom:8px}
+.day.today{border-color:var(--ac);background:linear-gradient(135deg,rgba(46,230,200,.1),var(--card))}
+.day .dd{width:38px;flex-shrink:0;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;letter-spacing:.06em;padding-top:2px}
+.day .db{flex:1}.day .dn{font-size:13.5px;font-weight:600}
+.day .ds{font-size:11.5px;color:var(--tx2);margin-top:1px}
+.sup .sn{font-size:14.5px;font-weight:700}
+.sup.on{opacity:.5}.sup.on .sn{text-decoration:line-through;color:var(--tx2)}
+.sup .sd{font-size:11.5px;color:var(--ac);margin-top:1px}
+.sup .sw{font-size:11.5px;color:var(--tx2);margin-top:4px;line-height:1.45}
+.buy{display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:#062018;background:var(--ac);border-radius:9px;padding:7px 13px;text-decoration:none}
+.app{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--br);border-radius:15px;padding:14px;margin-bottom:9px;text-decoration:none;border-left-width:3px}
+.app.f{border-left-color:var(--faceo)}.app.i{border-left-color:var(--inspir)}.app.l{border-left-color:var(--fluo)}
+.app .ic{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Fraunces',serif;font-size:19px;font-weight:600}
+.app.f .ic{background:rgba(201,169,110,.14);color:var(--faceo)}
+.app.i .ic{background:rgba(75,156,114,.16);color:#57c98d}
+.app.l .ic{background:rgba(46,230,200,.14);color:var(--fluo)}
+.app .ab{flex:1;min-width:0}.app .an{font-size:14.5px;font-weight:700;color:var(--tx)}
+.app .as{font-size:11.5px;color:var(--tx2)}
+.app .ch{color:var(--tx2);font-size:17px;flex-shrink:0}
+nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,15,14,.96);backdrop-filter:blur(12px);border-top:1px solid var(--br);display:flex;padding:8px 4px calc(8px + env(safe-area-inset-bottom));z-index:50}
+nav button{flex:1;background:none;border:none;color:var(--tx2);font-family:inherit;font-size:9.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;padding:5px 2px;display:flex;flex-direction:column;align-items:center;gap:4px}
+nav button.on{color:var(--ac)}
+nav svg{width:21px;height:21px}
+.reset{background:none;border:none;color:#5a6b67;font-size:11.5px;text-decoration:underline;cursor:pointer}
+.foot{text-align:center;color:#5a6b67;font-size:11px;padding:26px 0 10px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="k" id="hk">Mi Salud</div><h1 class="serif" id="hd">Hoy</h1></header>
+
+  <!-- HOY -->
+  <section class="sc on" id="sc-hoy">
+    <div class="stats">
+      <div class="stat"><div class="v w" id="st-streak">0</div><div class="l">Racha 🔥</div></div>
+      <div class="stat"><div class="v" id="st-pct">0%</div><div class="l">Hoy</div></div>
+      <div class="stat"><div class="v" id="st-day">1</div><div class="l">Día de 30</div></div>
+    </div>
+    <div class="win">☀️ <b>Ventana:</b> Comida 1 ~13-14 h (la grande) · Comida 2 ~18-19 h, con luz. Ayuno nocturno ~16 h. Proteína en las dos.</div>
+    <div class="h">Qué comer hoy</div>
+    <div id="meals"></div>
+    <div class="h">Hábitos</div>
+    <div id="habits"></div>
+    <div id="doneMsg"></div>
+    <div class="note" id="tipNote"></div>
+    <div class="foot"><button class="reset" onclick="resetDay()">Desmarcar hoy</button></div>
+  </section>
+
+  <!-- PLAN -->
+  <section class="sc" id="sc-plan">
+    <div class="card" id="phaseCard"></div>
+    <div class="h">Tu semana de entreno</div>
+    <div id="week"></div>
+    <div class="note"><b>Con el peque o día malo:</b> haz un Break FLUO de 10 min y listo. Mejor eso que nada. Constancia imperfecta gana.</div>
+    <div class="h">Los pilares del plan</div>
+    <div class="card"><div class="t">🍽️ La cocina manda</div><p>La grasa de la barriga se pierde en la cocina, no con abdominales. Proteína alta (1,6-2 g/kg), comida real, menos ultraprocesados y alcohol.</p></div>
+    <div class="card"><div class="t">💪 Fuerza 2×/semana</div><p>Mantiene el músculo mientras pierdes grasa. Sin esto, adelgazas pero quedas fofo.</p></div>
+    <div class="card"><div class="t">🚶 8-12k pasos</div><p>Moverte todo el día quema más que la sesión. El enemigo es la silla.</p></div>
+    <div class="card"><div class="t">😴 Dormir y bajar estrés</div><p>El cortisol alto acumula grasa justo en la barriga — y te dispara los herpes y las aftas. Usa INSPIRAPP cada noche.</p></div>
+    <div class="note"><b>Prehab:</b> glúteo medio (almeja, plancha lateral) para la cintilla · trabajo escapular para el hombro. En FLUO.</div>
+  </section>
+
+  <!-- SUPLEMENTOS -->
+  <section class="sc" id="sc-sup">
+    <div class="foot" style="padding:4px 0 12px" id="supProg">0 de 0 comprados</div>
+    <div class="h">Base (valen la pena)</div><div id="supBase"></div>
+    <div class="h">Situacional</div><div id="supSit"></div>
+    <div class="h">Brote de herpes (farmacia)</div><div id="supFarm"></div>
+    <div class="note" style="background:rgba(255,106,31,.06);border-color:rgba(255,106,31,.25)"><b style="color:var(--ac2)">Lo que NO comprar:</b> complejos de hongos "para las defensas". Es marketing. El dinero rinde más durmiendo y bajando estrés.</div>
+    <div class="note">💡 Compara precios en <a href="https://www.idealo.es" target="_blank" style="color:var(--ac)">Idealo</a>. Marcas fiables y baratas: HSN, Prozis, Now Foods, Ana María Lajusticia.</div>
+    <div class="foot"><button class="reset" onclick="resetSup()">Desmarcar todo</button></div>
+  </section>
+
+  <!-- APPS / MÁS -->
+  <section class="sc" id="sc-apps">
+    <div class="h">Mis apps</div>
+    <a class="app f" href="https://faceo-saludreal.netlify.app/" target="_blank" rel="noopener">
+      <span class="ic">F</span><span class="ab"><span class="an">FACEO</span><span class="as">Rostro, mandíbula y postura</span></span><span class="ch">›</span></a>
+    <a class="app i" href="https://inspirapp-saludreal.netlify.app/" target="_blank" rel="noopener">
+      <span class="ic">I</span><span class="ab"><span class="an">INSPIRAPP</span><span class="as">Respiración · SOS Calma · Para dormir</span></span><span class="ch">›</span></a>
+    <a class="app l" href="https://fluo-saludreal.netlify.app/" target="_blank" rel="noopener">
+      <span class="ic">FL</span><span class="ab"><span class="an">FLUO</span><span class="as">Entreno · Break FLUO · Planes</span></span><span class="ch">›</span></a>
+    <div class="note">🔑 Tu código para desbloquear todo en las tres: <b>DANIMIJ-FULL</b></div>
+
+    <div class="h">Guías rápidas</div>
+    <div class="card"><div class="t">🦠 Brote de herpes / aftas</div><p><b style="color:var(--tx)">Salen por estrés.</b> Crema antiviral al primer cosquilleo + L-Lisina 1-3 g/día (4-5 días) + gel de ácido hialurónico para las aftas. Pausa frutos secos y chocolate (arginina); prioriza pescado, pollo, huevos (lisina). Y baja el estrés con INSPIRAPP: eso es lo que corta los brotes de raíz.</p></div>
+    <div class="card"><div class="t">💩 Diarrea puntual</div><p>Un síntoma que va y viene lo causa algo <b style="color:var(--tx)">que varía</b>, no lo constante (el agua de mar diaria o el café no cuadran). Sospechoso nº1: <b style="color:var(--tx)">el puré</b> — prueba sin cebolla (fructanos). Apunta comida-síntoma y en 1-2 semanas lo cazas.</p></div>
+    <div class="card"><div class="t">🍕 Comidas sociales</div><p>Pizza del viernes y paella del finde <b style="color:var(--tx)">no descarrilan nada</b>. Regla 80/20: si el 80% es proteína + comida real, el 20% es vida. Un plan que respeta tus rituales es el que dura.</p></div>
+    <div class="card"><div class="t">🩺 Chequeo pendiente</div><p>Por las aftas de repetición, cuando puedas pide analítica: celiaquía (<b style="color:var(--tx)">sin quitar el gluten antes</b>), B12, hierro/ferritina, folato, vitamina D y zinc. Sin prisa, como rutina.</p></div>
+    <div class="foot">Sin humo · Tus datos se quedan en tu móvil</div>
+  </section>
+</div>
+
+<nav>
+  <button class="on" data-s="hoy" onclick="go('hoy')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Hoy</button>
+  <button data-s="plan" onclick="go('plan')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Plan</button>
+  <button data-s="sup" onclick="go('sup')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 20.5a5 5 0 0 1-7-7l7-7a5 5 0 0 1 7 7z"/><path d="M8.5 8.5l7 7"/></svg>Suples</button>
+  <button data-s="apps" onclick="go('apps')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Apps</button>
+</nav>
+
+<script>
+var DAYS=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+var MENU={
+ 1:{c1:'3-4 huevos + boniato asado + espinacas en AOVE + aguacate + plátano', c2:'Salmón al horno + calabacín y zanahoria asados + nueces'},
+ 2:{c1:'Ternera o pollo a la plancha + arroz cocido y enfriado + brócoli + AOVE', c2:'Tortilla de 3 huevos + crema de calabaza + medio aguacate'},
+ 3:{c1:'Pescado azul (sardinas/caballa) + patata cocida + pimientos asados + AOVE', c2:'Pollo + verduras salteadas + arándanos'},
+ 4:{c1:'3-4 huevos + boniato + champiñones + espinacas + AOVE', c2:'Merluza + puré de patata y zanahoria + nueces'},
+ 5:{c1:'Carne magra o pollo + verduras + AOVE — más proteína y menos carbo (la pizza trae el carbo)', c2:'🍕 PIZZA de la pizzería del pueblo. Tu comida social: disfrútala. Agua, no refresco.', sp:2},
+ 6:{c1:'🥘 PAELLA en familia — arroz + proteína (marisco/pollo/conejo) + verdura. Ración generosa de proteína, sin repetir arroz.', c2:'Huevos revueltos + verdura cocinada + nueces', sp:1},
+ 0:{c1:'Pescado azul + boniato + verduras asadas + AOVE (o la paella si os toca domingo)', c2:'Reset ligero: caldo de verduras + 2 huevos + aguacate'}
+};
+var HABITS=[
+ {id:'prot',n:'Proteína en las dos comidas',d:'~70 g por comida. Tu prioridad nº1.'},
+ {id:'ventana',n:'Comí en mi ventana de sol',d:'Ayuno matutino respetado, última comida con luz.'},
+ {id:'mover',n:'Moverme: andar + Break FLUO',d:'10 min tras comer y pausas en el trabajo.'},
+ {id:'hidro',n:'Hidratación (+ sales si diarrea)',d:'Agua durante el día, también en ayuno.'},
+ {id:'dormir',n:'"Para dormir" por la noche',d:'INSPIRAPP. Baja cortisol y corta los brotes.'},
+ {id:'diario',n:'Apuntar comida-síntoma',d:'Una línea. Así cazas el gatillo de la tripa.'}
+];
+var WEEK=[
+ {d:1,n:'Fuerza cuerpo completo',s:'Mañana (libre) · 35-40 min · antes de tu tarde larga'},
+ {d:2,n:'Descanso / Break FLUO',s:'Tu día más cargado (mañana + tarde)'},
+ {d:3,n:'Zona 2',s:'Tarde libre · 35-45 min nadar, bici o correr suave'},
+ {d:4,n:'Fuerza cuerpo completo',s:'Tarde libre · 35-40 min'},
+ {d:5,n:'Intensidad corta (4×4 / 40-20)',s:'Mañana libre · 30 min · sube el VO2máx'},
+ {d:6,n:'Rodaje largo suave',s:'Libre · y paella en familia 🥘'},
+ {d:0,n:'Descanso activo',s:'Paseo largo con el peque'}
+];
+var PHASES=[
+ {t:'Semana 1',n:'Solo hábitos ancla',p:'Nada de entrenar aún (aunque si sale, bienvenido). Crea la base: come suave con la tripa, muévete y duerme. Sin pesarte ni contar calorías.'},
+ {t:'Semana 2',n:'Añade movimiento',p:'Mantén los hábitos y suma 2 sesiones de fuerza + 1 de zona 2. Prehab de cintilla y hombro. Proteína en cada comida.'},
+ {t:'Semana 3',n:'Sube un punto',p:'2 fuerza + 2 zona 2 + 1 intensidad si el intestino y la energía acompañan. Déficit suave: comer un poco menos, cena pronto.'},
+ {t:'Semana 4',n:'Consolidar',p:'La estructura de la semana 3 ya como rutina normal. Revisa el diario comida-síntoma y hazte una foto de control con la misma luz.'}
+];
+var SUPS={base:[
+ {id:'creatina',n:'Creatina monohidrato (Creapure)',d:'3-5 g/día · a cualquier hora',w:'La mejor para músculo y rendimiento. La más estudiada y segura.',u:'https://www.amazon.es/s?k=creatina+monohidrato+creapure'},
+ {id:'magnesio',n:'Magnesio bisglicinato',d:'200-350 mg · por la noche',w:'Estrés, sueño y suave con la tripa. Ana María Lajusticia va bien.',u:'https://www.amazon.es/s?k=magnesio+bisglicinato+ana+maria+lajusticia'},
+ {id:'vitd',n:'Vitamina D3',d:'2000 UI/día (confirma en analítica)',w:'Mucha gente en interior está baja. Defensas y hueso.',u:'https://www.amazon.es/s?k=vitamina+d3+2000+ui'},
+ {id:'omega',n:'Omega-3 de pescado, alto en DHA',d:'En la etiqueta: DHA (mg) > EPA · forma TG',w:'Concentración y memoria. Suele venir de aceite de atún. Ya comes pescado azul, así que suma.',u:'https://www.amazon.es/s?k=aceite+pescado+alto+dha+triglicerido'}
+],sit:[
+ {id:'lisina',n:'L-Lisina 1000 mg',d:'SOLO en brotes · 1-3 g/día, 4-5 días',w:'Compite con la arginina y frena la replicación del virus.',u:'https://www.amazon.es/s?k=l-lisina+1000+now+foods'}
+],farm:[
+ {id:'antiviral',n:'Crema antiviral (aciclovir)',d:'Al primer cosquilleo',w:'Lo que más frena el brote. Cuanto antes, mejor.',u:'https://www.amazon.es/s?k=aciclovir+crema+labial'},
+ {id:'aloclair',n:'Aloclair Plus (gel o spray)',d:'Para las aftas',w:'Ácido hialurónico: hace barrera y duele menos al comer.',u:'https://www.amazon.es/s?k=aloclair+plus'}
+]};
+var TIPS=['La báscula miente cuando ganas músculo y pierdes grasa. Mira la ropa y el espejo.',
+ 'No hay grasa localizada: las abdominales no quitan la barriga. La cocina sí.',
+ 'Mejor 3 sesiones que siempre haces que 5 que abandonas.',
+ 'La piel laxa es la huella de tu logro, no un fallo. Músculo debajo y tiempo.',
+ 'Los brotes de herpes te avisan de que vas pasado de estrés. Escúchalos.',
+ 'Comer despacio y masticar es media digestión ganada.',
+ 'El 90% del resultado: proteína, comida real, dormir y moverte. Lo demás es el 10%.'];
+
+function today(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function L(k,f){try{return JSON.parse(localStorage.getItem(k))||f;}catch(e){return f;}}
+function S(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function go(s){document.querySelectorAll('.sc').forEach(function(x){x.classList.toggle('on',x.id==='sc-'+s);});
+ document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-s')===s);});
+ var t={hoy:'Hoy',plan:'Mi plan',sup:'Suplementos',apps:'Más'};document.getElementById('hd').textContent=t[s];window.scrollTo(0,0);}
+
+function startDate(){var s=L('misalud-start',null);if(!s){s=today();S('misalud-start',s);}return s;}
+function dayNumber(){var p=startDate().split('-');var a=new Date(p[0],p[1]-1,p[2]);var n=new Date();
+ n=new Date(n.getFullYear(),n.getMonth(),n.getDate());return Math.min(30,Math.max(1,Math.round((n-a)/86400000)+1));}
+function streak(){var d0=L('misalud-days',{});var c=0;var d=new Date();d=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+ for(var i=0;i<70;i++){var k=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();var day=d0[k]||{};
+  var all=HABITS.every(function(h){return day[h.id];});
+  if(all)c++;else if(i>0)break;
+  d.setDate(d.getDate()-1);}
+ return c;}
+function toggleH(id){var d=L('misalud-days',{});var k=today();d[k]=d[k]||{};d[k][id]=!d[k][id];S('misalud-days',d);renderHoy();}
+function resetDay(){var d=L('misalud-days',{});delete d[today()];S('misalud-days',d);renderHoy();}
+function toggleS(id){var s=L('misalud-sup',{});s[id]=!s[id];S('misalud-sup',s);renderSup();}
+function resetSup(){S('misalud-sup',{});renderSup();}
+
+function renderHoy(){
+ var dow=new Date().getDay(),m=MENU[dow],d=L('misalud-days',{})[today()]||{};
+ document.getElementById('hk').textContent=DAYS[dow]+' · comer en horas de sol';
+ document.getElementById('meals').innerHTML=
+  '<div class="card meal'+(m.sp===1?' sp':'')+'"><div class="mh"><span class="mn">Comida 1</span><span class="mt">≈ 13-14 h · la grande</span></div><p>'+m.c1+'</p></div>'+
+  '<div class="card meal'+(m.sp===2?' sp':'')+'"><div class="mh"><span class="mn">Comida 2</span><span class="mt">≈ 18-19 h · ligera</span></div><p>'+m.c2+'</p></div>';
+ document.getElementById('habits').innerHTML=HABITS.map(function(h){var on=!!d[h.id];
+  return '<div class="it'+(on?' on':'')+'" onclick="toggleH(\''+h.id+'\')"><div class="ck">'+(on?'✓':'')+'</div><div class="b"><div class="n">'+h.n+'</div><div class="d">'+h.d+'</div></div></div>';}).join('');
+ var done=HABITS.filter(function(h){return d[h.id];}).length;
+ document.getElementById('st-pct').textContent=Math.round(done/HABITS.length*100)+'%';
+ document.getElementById('st-streak').textContent=streak();
+ document.getElementById('st-day').textContent=dayNumber();
+ document.getElementById('doneMsg').innerHTML= done===HABITS.length
+  ? '<div class="done"><div class="f">🔥</div><div class="m">Día redondo</div><div class="s">Racha de '+streak()+'. Mañana, otra.</div></div>' : '';
+ var tip = (dow===5)?'🍕 <b>Viernes de pizza.</b> Sin culpa: una a la semana no descarrila nada. El resto de la semana lo sostiene.'
+  : (dow===6)?'🥘 <b>Hoy toca paella.</b> Es comida real. Sírvete bien de la proteína y no repitas arroz.'
+  : '💡 '+TIPS[dayNumber()%TIPS.length];
+ document.getElementById('tipNote').innerHTML=tip;
+}
+function renderPlan(){
+ var w=Math.min(3,Math.floor((dayNumber()-1)/7)),p=PHASES[w];
+ document.getElementById('phaseCard').innerHTML='<div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:5px">'+p.t+' · día '+dayNumber()+' de 30</div>'+
+  '<div class="t serif" style="font-size:18px">'+p.n+'</div><p style="margin-top:5px">'+p.p+'</p>';
+ var dow=new Date().getDay();
+ document.getElementById('week').innerHTML=WEEK.map(function(x){
+  return '<div class="day'+(x.d===dow?' today':'')+'"><div class="dd">'+DAYS[x.d].slice(0,3)+'</div><div class="db"><div class="dn">'+x.n+'</div><div class="ds">'+x.s+'</div></div></div>';}).join('');
+}
+function supCard(it){var s=L('misalud-sup',{}),on=!!s[it.id];
+ return '<div class="card sup'+(on?' on':'')+'"><div style="display:flex;gap:11px;align-items:flex-start">'+
+ '<div class="ck" onclick="toggleS(\''+it.id+'\')" style="width:23px;height:23px;border-radius:7px;border:1.7px solid '+(on?'var(--ac)':'var(--br)')+';background:'+(on?'var(--ac)':'none')+';flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:#062018;margin-top:2px;cursor:pointer">'+(on?'✓':'')+'</div>'+
+ '<div style="flex:1"><div class="sn">'+it.n+'</div><div class="sd">'+it.d+'</div><div class="sw">'+it.w+'</div>'+
+ '<a class="buy" href="'+it.u+'" target="_blank" rel="noopener">Buscar / comprar →</a></div></div></div>';}
+function renderSup(){
+ document.getElementById('supBase').innerHTML=SUPS.base.map(supCard).join('');
+ document.getElementById('supSit').innerHTML=SUPS.sit.map(supCard).join('');
+ document.getElementById('supFarm').innerHTML=SUPS.farm.map(supCard).join('');
+ var all=SUPS.base.concat(SUPS.sit).concat(SUPS.farm),s=L('misalud-sup',{});
+ document.getElementById('supProg').textContent=all.filter(function(i){return s[i.id];}).length+' de '+all.length+' comprados';
+}
+startDate();renderHoy();renderPlan();renderSup();
+</script>
+</body>
+</html>
