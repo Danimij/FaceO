@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Suplementos — comprar</title>
+<meta name="theme-color" content="#0a0f0e">
+<link rel="manifest" href="habito-manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{--bg:#0a0f0e;--card:#121a18;--card2:#18211f;--br:#243330;--tx:#eef6f4;--tx2:#8fa39e;--ac:#2ee6c8;--ac2:#ff6a1f}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--tx);font-family:'Inter',-apple-system,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
+  .wrap{max-width:560px;margin:0 auto;padding:38px 20px 60px}
+  .serif{font-family:'Fraunces',Georgia,serif;letter-spacing:-.02em}
+  .top{text-align:center;margin-bottom:8px}
+  .kicker{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--tx2);font-weight:600;margin-bottom:8px}
+  h1{font-family:'Fraunces',serif;font-size:26px;font-weight:600}
+  .sub{text-align:center;color:var(--tx2);font-size:12.5px;margin-bottom:20px}
+  .h{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx2);font-weight:600;margin:20px 0 11px}
+  .item{background:var(--card);border:1px solid var(--br);border-radius:15px;padding:14px 15px;margin-bottom:10px;transition:border-color .2s}
+  .item.on{opacity:.55}
+  .item .row{display:flex;align-items:flex-start;gap:12px}
+  .item .ck{width:24px;height:24px;border-radius:8px;border:1.7px solid var(--br);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:#062018;margin-top:1px;cursor:pointer}
+  .item.on .ck{background:var(--ac);border-color:var(--ac)}
+  .item .tt{flex:1}
+  .item .n{font-size:15px;font-weight:700}
+  .item.on .n{text-decoration:line-through;color:var(--tx2)}
+  .item .dose{font-size:12px;color:var(--ac);margin-top:1px}
+  .item .why{font-size:12px;color:var(--tx2);margin-top:4px;line-height:1.45}
+  .item .buy{display:inline-block;margin-top:9px;font-size:12.5px;font-weight:700;color:#062018;background:var(--ac);border-radius:10px;padding:8px 14px;text-decoration:none}
+  .item.sit{border-style:dashed}
+  .note{font-size:11.5px;color:var(--tx2);line-height:1.5;background:var(--card2);border:1px solid var(--br);border-radius:14px;padding:13px 15px;margin-top:6px}
+  .note b{color:var(--tx)}
+  .no{background:rgba(255,106,31,.06);border:1px solid rgba(255,106,31,.25)}
+  .no b{color:var(--ac2)}
+  .foot{text-align:center;color:#5a6b67;font-size:11.5px;margin-top:24px;line-height:1.7}
+  .foot a{color:var(--ac)}
+  .reset{background:none;border:none;color:#5a6b67;font-size:11.5px;text-decoration:underline;cursor:pointer;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="kicker">Lista de la compra</div><h1 class="serif">Suplementos</h1></div>
+  <div class="sub" id="prog">0 de 0 comprados</div>
+
+  <div class="h">Base (los que valen la pena)</div>
+  <div id="base"></div>
+
+  <div class="h">Situacional</div>
+  <div id="sit"></div>
+
+  <div class="h">Para el brote (farmacia)</div>
+  <div id="farm"></div>
+
+  <div class="note no"><b>Lo que NO comprar:</b> complejos de hongos "para las defensas". Es marketing; el dinero rinde más durmiendo y bajando estrés.</div>
+  <div class="note">💡 <b>Compara precios</b> de todo en <a href="https://www.idealo.es" target="_blank" style="color:var(--ac)">Idealo</a>. Marcas fiables y baratas: HSN, Prozis, Now Foods, Ana María Lajusticia.</div>
+
+  <div class="foot">
+    Tus defensas se arreglan durmiendo y bajando estrés, no con un bote.<br>
+    <button class="reset" onclick="resetAll()">Desmarcar todo</button>
+  </div>
+</div>
+
+<script>
+var BASE=[
+  {id:'creatina', n:'Creatina monohidrato (Creapure)', dose:'3-5 g/día · a cualquier hora', why:'La mejor para músculo y rendimiento. La más estudiada y segura.', url:'https://www.amazon.es/s?k=creatina+monohidrato+creapure'},
+  {id:'magnesio', n:'Magnesio bisglicinato', dose:'200-350 mg · por la noche', why:'Estrés, sueño y suave con la tripa. Ana María Lajusticia va bien.', url:'https://www.amazon.es/s?k=magnesio+bisglicinato+ana+maria+lajusticia'},
+  {id:'vitd', n:'Vitamina D3', dose:'2000 UI/día (confirma nivel en analítica)', why:'Mucha gente en interior está baja. Defensas y hueso.', url:'https://www.amazon.es/s?k=vitamina+d3+2000+ui'},
+  {id:'omega', n:'Omega-3 de pescado, alto en DHA', dose:'En la etiqueta: DHA (mg) > EPA · forma TG', why:'Concentración/memoria. Suele venir de aceite de atún. Ya comes pescado azul, así que suma.', url:'https://www.amazon.es/s?k=aceite+pescado+alto+dha+triglicerido'}
+];
+var SIT=[
+  {id:'lisina', n:'L-Lisina 1000 mg', dose:'SOLO en brotes de herpes · 1-3 g/día, 4-5 días', why:'Compite con la arginina y frena la replicación del virus.', url:'https://www.amazon.es/s?k=l-lisina+1000+now+foods'}
+];
+var FARM=[
+  {id:'antiviral', n:'Crema antiviral (aciclovir/penciclovir)', dose:'Al primer cosquilleo', why:'Lo que más frena el brote de herpes. En farmacia.', url:'https://www.amazon.es/s?k=aciclovir+crema+labial'},
+  {id:'aloclair', n:'Aloclair Plus (gel o spray)', dose:'Para las aftas', why:'Ácido hialurónico: hace barrera y duele menos al comer/hablar.', url:'https://www.amazon.es/s?k=aloclair+plus'}
+];
+
+function load(){try{return JSON.parse(localStorage.getItem('suplementos'))||{};}catch(e){return{};}}
+function save(s){localStorage.setItem('suplementos',JSON.stringify(s));}
+function toggle(id){var s=load();s[id]=!s[id];save(s);render();}
+function resetAll(){save({});render();}
+
+function card(it,cls){
+  var s=load(); var on=!!s[it.id];
+  return '<div class="item'+(cls?' '+cls:'')+(on?' on':'')+'">'+
+    '<div class="row"><div class="ck" onclick="toggle(\''+it.id+'\')">'+(on?'✓':'')+'</div>'+
+    '<div class="tt"><div class="n">'+it.n+'</div><div class="dose">'+it.dose+'</div>'+
+    '<div class="why">'+it.why+'</div>'+
+    '<a class="buy" href="'+it.url+'" target="_blank" rel="noopener">Buscar / comprar →</a></div></div></div>';
+}
+function render(){
+  document.getElementById('base').innerHTML=BASE.map(function(i){return card(i);}).join('');
+  document.getElementById('sit').innerHTML=SIT.map(function(i){return card(i,'sit');}).join('');
+  document.getElementById('farm').innerHTML=FARM.map(function(i){return card(i,'sit');}).join('');
+  var all=BASE.concat(SIT).concat(FARM); var s=load();
+  var done=all.filter(function(i){return s[i.id];}).length;
+  document.getElementById('prog').textContent=done+' de '+all.length+' comprados';
+}
+render();
+</script>
+</body>
+</html>
