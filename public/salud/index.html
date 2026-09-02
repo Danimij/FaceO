@@ -76,6 +76,27 @@ nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,15,14,.96);backdro
 nav button{flex:1;background:none;border:none;color:var(--tx2);font-family:inherit;font-size:9.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;padding:5px 2px;display:flex;flex-direction:column;align-items:center;gap:4px}
 nav button.on{color:var(--ac)}
 nav svg{width:21px;height:21px}
+
+.log{background:var(--card);border:1px solid var(--br);border-radius:15px;padding:14px 16px;margin-bottom:10px}
+.log .lt{font-size:13px;font-weight:700;margin-bottom:8px}
+.log textarea{width:100%;background:var(--card2);border:1px solid var(--br);border-radius:11px;padding:11px;color:var(--tx);font-family:inherit;font-size:13px;line-height:1.5;resize:vertical;min-height:64px;outline:none}
+.log textarea:focus{border-color:var(--ac)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:12px;font-weight:600;padding:7px 12px;border-radius:10px;border:1px solid var(--br);color:var(--tx2);background:none;cursor:pointer;font-family:inherit}
+.chip.on{border-color:var(--ac);color:var(--ac);background:rgba(46,230,200,.1)}
+.chip.bad.on{border-color:var(--ac2);color:var(--ac2);background:rgba(255,106,31,.1)}
+.mins{width:62px;background:var(--card2);border:1px solid var(--br);border-radius:9px;padding:7px;color:var(--tx);font-family:inherit;font-size:12.5px;text-align:center;outline:none}
+.saved{font-size:11px;color:var(--ac);margin-top:6px;opacity:0;transition:opacity .3s}
+.saved.on{opacity:1}
+.ent{background:var(--card);border:1px solid var(--br);border-radius:14px;padding:13px 15px;margin-bottom:9px}
+.ent .ed{font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.ent .er{font-size:12.5px;color:var(--tx2);line-height:1.5;margin-top:3px}
+.ent .er b{color:var(--tx);font-weight:600}
+.ent .tag{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:7px;margin-right:5px}
+.tag.ok{background:rgba(46,230,200,.14);color:var(--ac)}
+.tag.warn{background:rgba(242,179,77,.14);color:var(--sun)}
+.tag.bad{background:rgba(255,106,31,.14);color:var(--ac2)}
+.tag.tr{background:rgba(90,210,255,.14);color:#5ad2ff}
 .reset{background:none;border:none;color:#5a6b67;font-size:11.5px;text-decoration:underline;cursor:pointer}
 .foot{text-align:center;color:#5a6b67;font-size:11px;padding:26px 0 10px;line-height:1.7}
 </style>
@@ -97,8 +118,42 @@ nav svg{width:21px;height:21px}
     <div class="h">Hábitos</div>
     <div id="habits"></div>
     <div id="doneMsg"></div>
+    <div class="h">Registro de hoy</div>
+    <div class="log">
+      <div class="lt">🍽️ Qué he comido de verdad</div>
+      <textarea id="lg-food" placeholder="Ej: mediodía arroz con pollo y ensalada (comida familiar) · cena tortilla y crema" oninput="saveLog()"></textarea>
+      <div class="saved" id="sv-food">Guardado ✓</div>
+    </div>
+    <div class="log">
+      <div class="lt">💪 Entreno de hoy</div>
+      <div class="chips" id="lg-train"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:9px">
+        <input class="mins" id="lg-min" type="number" min="0" placeholder="min" oninput="saveLog()">
+        <span style="font-size:12px;color:var(--tx2)">minutos (aunque sean 6 — cuentan)</span>
+      </div>
+      <div class="saved" id="sv-train">Guardado ✓</div>
+    </div>
+    <div class="log">
+      <div class="lt">💩 Cómo ha ido la tripa</div>
+      <div class="chips" id="lg-gut"></div>
+      <div style="font-size:11.5px;color:var(--tx2);margin-top:8px;line-height:1.45">Apúntalo cada día: cuando haya diarrea, mira en el Diario qué comiste el día antes. Así cazas el gatillo.</div>
+      <div class="saved" id="sv-gut">Guardado ✓</div>
+    </div>
     <div class="note" id="tipNote"></div>
     <div class="foot"><button class="reset" onclick="resetDay()">Desmarcar hoy</button></div>
+  </section>
+
+
+  <!-- DIARIO -->
+  <section class="sc" id="sc-diario">
+    <div class="stats">
+      <div class="stat"><div class="v" id="dr-days">0</div><div class="l">Días con registro</div></div>
+      <div class="stat"><div class="v" id="dr-train">0</div><div class="l">Entrenos</div></div>
+      <div class="stat"><div class="v w" id="dr-min">0</div><div class="l">Minutos</div></div>
+    </div>
+    <div class="note" id="dr-insight"></div>
+    <div class="h">Historial</div>
+    <div id="dr-list"></div>
   </section>
 
   <!-- PLAN -->
@@ -148,6 +203,7 @@ nav svg{width:21px;height:21px}
 
 <nav>
   <button class="on" data-s="hoy" onclick="go('hoy')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Hoy</button>
+  <button data-s="diario" onclick="go('diario')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Diario</button>
   <button data-s="plan" onclick="go('plan')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Plan</button>
   <button data-s="sup" onclick="go('sup')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 20.5a5 5 0 0 1-7-7l7-7a5 5 0 0 1 7 7z"/><path d="M8.5 8.5l7 7"/></svg>Suples</button>
   <button data-s="apps" onclick="go('apps')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Apps</button>
@@ -211,7 +267,7 @@ function L(k,f){try{return JSON.parse(localStorage.getItem(k))||f;}catch(e){retu
 function S(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 function go(s){document.querySelectorAll('.sc').forEach(function(x){x.classList.toggle('on',x.id==='sc-'+s);});
  document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-s')===s);});
- var t={hoy:'Hoy',plan:'Mi plan',sup:'Suplementos',apps:'Más'};document.getElementById('hd').textContent=t[s];window.scrollTo(0,0);}
+ var t={hoy:'Hoy',diario:'Mi diario',plan:'Mi plan',sup:'Suplementos',apps:'Más'};document.getElementById('hd').textContent=t[s];window.scrollTo(0,0);}
 
 function startDate(){var s=L('misalud-start',null);if(!s){s=today();S('misalud-start',s);}return s;}
 function dayNumber(){var p=startDate().split('-');var a=new Date(p[0],p[1]-1,p[2]);var n=new Date();
@@ -266,7 +322,78 @@ function renderSup(){
  var all=SUPS.base.concat(SUPS.sit).concat(SUPS.farm),s=L('misalud-sup',{});
  document.getElementById('supProg').textContent=all.filter(function(i){return s[i.id];}).length+' de '+all.length+' comprados';
 }
-startDate();renderHoy();renderPlan();renderSup();
+
+/* ── REGISTRO DIARIO (comida real, entreno, tripa) ── */
+var TRAINS=[{id:'fuerza',n:'💪 Fuerza'},{id:'z2',n:'🏃 Zona 2'},{id:'inten',n:'⚡ Intensidad'},
+ {id:'break',n:'🧘 Break FLUO'},{id:'paseo',n:'🚶 Paseo'},{id:'otro',n:'Otro'}];
+var GUTS=[{id:'bien',n:'👌 Bien'},{id:'hinchado',n:'😮‍💨 Hinchado',bad:1},{id:'diarrea',n:'💩 Diarrea',bad:1}];
+
+function logs(){return L('misalud-log',{});}
+function logToday(){return logs()[today()]||{};}
+function flash(id){var e=document.getElementById(id);if(!e)return;e.classList.add('on');
+ clearTimeout(e._t);e._t=setTimeout(function(){e.classList.remove('on');},1400);}
+function saveLog(){var a=logs(),k=today();a[k]=a[k]||{};
+ a[k].food=document.getElementById('lg-food').value;
+ a[k].min=document.getElementById('lg-min').value;
+ S('misalud-log',a);flash('sv-food');flash('sv-train');renderDiario();}
+function setTrain(id){var a=logs(),k=today();a[k]=a[k]||{};
+ var cur=a[k].train||[];var i=cur.indexOf(id);
+ if(i>=0)cur.splice(i,1);else cur.push(id);
+ a[k].train=cur;S('misalud-log',a);renderLog();flash('sv-train');renderDiario();}
+function setGut(id){var a=logs(),k=today();a[k]=a[k]||{};
+ a[k].gut=(a[k].gut===id)?null:id;S('misalud-log',a);renderLog();flash('sv-gut');renderDiario();}
+function renderLog(){
+ var d=logToday();
+ var f=document.getElementById('lg-food');if(f&&document.activeElement!==f)f.value=d.food||'';
+ var m=document.getElementById('lg-min');if(m&&document.activeElement!==m)m.value=d.min||'';
+ var tr=d.train||[];
+ document.getElementById('lg-train').innerHTML=TRAINS.map(function(t){
+  return '<button class="chip'+(tr.indexOf(t.id)>=0?' on':'')+'" onclick="setTrain(\''+t.id+'\')">'+t.n+'</button>';}).join('');
+ document.getElementById('lg-gut').innerHTML=GUTS.map(function(g){
+  return '<button class="chip'+(g.bad?' bad':'')+(d.gut===g.id?' on':'')+'" onclick="setGut(\''+g.id+'\')">'+g.n+'</button>';}).join('');
+}
+function renderDiario(){
+ var a=logs(),keys=Object.keys(a).sort(function(x,y){return new Date(y.replace(/-/g,'/'))-new Date(x.replace(/-/g,'/'));});
+ var withData=keys.filter(function(k){var e=a[k];return (e.food&&e.food.trim())||(e.train&&e.train.length)||e.gut;});
+ var nTrain=0,nMin=0;
+ withData.forEach(function(k){var e=a[k];if(e.train&&e.train.length)nTrain++;nMin+=parseInt(e.min||0,10)||0;});
+ document.getElementById('dr-days').textContent=withData.length;
+ document.getElementById('dr-train').textContent=nTrain;
+ document.getElementById('dr-min').textContent=nMin;
+
+ // pista: qué comiste el día antes de una diarrea
+ var ins='Apunta cada día lo que comes de verdad y cómo va la tripa. Con dos dietas en casa, esto es lo que te dirá qué te sienta mal.';
+ for(var i=0;i<withData.length;i++){
+  var e=a[withData[i]];
+  if(e.gut==='diarrea'){
+   var d=new Date(withData[i].replace(/-/g,'/'));d.setDate(d.getDate()-1);
+   var pk=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+   var prev=a[pk];
+   if(prev&&prev.food&&prev.food.trim()){
+    ins='🔍 <b>Pista:</b> el día antes de tu última diarrea comiste: "'+prev.food.trim().slice(0,140)+'". Busca lo que se repita en estos casos.';
+   } else { ins='🔍 Tuviste diarrea el '+withData[i]+'. No tienes apuntado qué comiste el día antes — apúntalo siempre y saldrá el patrón.'; }
+   break;
+  }
+ }
+ document.getElementById('dr-insight').innerHTML=ins;
+
+ var DN=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+ document.getElementById('dr-list').innerHTML = withData.length ? withData.slice(0,30).map(function(k){
+  var e=a[k],d=new Date(k.replace(/-/g,'/'));
+  var tags='';
+  (e.train||[]).forEach(function(t){var o=TRAINS.filter(function(x){return x.id===t;})[0];
+   if(o)tags+='<span class="tag tr">'+o.n+'</span>';});
+  if(e.min)tags+='<span class="tag tr">'+e.min+' min</span>';
+  if(e.gut){var g=GUTS.filter(function(x){return x.id===e.gut;})[0];
+   tags+='<span class="tag '+(e.gut==='bien'?'ok':(e.gut==='hinchado'?'warn':'bad'))+'">'+(g?g.n:e.gut)+'</span>';}
+  return '<div class="ent"><div class="ed">'+DN[d.getDay()]+' '+d.getDate()+'/'+(d.getMonth()+1)+'</div>'+
+   (tags?'<div style="margin-bottom:4px">'+tags+'</div>':'')+
+   (e.food&&e.food.trim()?'<div class="er"><b>Comí:</b> '+e.food.replace(/</g,'&lt;')+'</div>':'')+
+   '</div>';
+ }).join('') : '<div class="note">Aún no hay registros. Apunta hoy en la pestaña <b>Hoy</b> lo que has comido y entrenado.</div>';
+}
+
+startDate();renderHoy();renderPlan();renderSup();renderLog();renderDiario();
 </script>
 </body>
 </html>
