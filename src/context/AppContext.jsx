@@ -50,6 +50,18 @@ export function AppProvider({ children }) {
     try { return JSON.parse(localStorage.getItem('forma_photos')) || [] } catch { return [] }
   })
 
+  // MAGIC_PRO — enlace mágico: ?pro=CODIGO activa Pro sin escribir nada
+  useEffect(() => {
+    try {
+      const q = new URLSearchParams(window.location.search).get('pro')
+      if (!q) return
+      if (['FACEO2024', 'FACEOPROX', 'FACEOPRO1', 'DANIMIJ-FULL'].includes(q.trim().toUpperCase())) {
+        setIsPro(true)
+        window.history.replaceState({}, '', window.location.pathname)
+      }
+    } catch {}
+  }, [])
+
   // Celebración de hitos de racha: se dispara cuando la racha CRECE hasta un hito.
   const [celebration, setCelebration] = useState(null)
   const prevStreakRef = useRef(progress.streak)
